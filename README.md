@@ -3,7 +3,8 @@
 **[W.I.P]** Uhh...
 
 - **Libraries Used:**
-    - [Eris](https://github.com/abalabahaha/eris)
+    - Discord Library: [Eris](https://github.com/abalabahaha/eris)
+    - Database: [XenDB](https://github.com/NotMarx/xen.db)
 
 ## How to Setup:
 
