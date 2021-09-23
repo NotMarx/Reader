@@ -2,6 +2,9 @@
 
 **[W.I.P]** Uhh...
 
+- **Libraries Used:**
+    - [Eris](https://github.com/abalabahaha/eris)
+
 ## How to Setup:
 
 - Rename `config-example.json` to `config.json`

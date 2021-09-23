@@ -12,7 +12,7 @@ export const command: Command = {
     usage: "code <doujin_code>",
     nsfwOnly: true,
     run: async (client, message, args) => {
-        API.getCode(args[0] || "365546").then((res) => {
+        API.getCode(args[0]).then((res) => {
             const embed: EmbedOptions = {
                 author: {
                     name: args[0],
