@@ -1,0 +1,18 @@
+"use strict";
+
+import Reader from "./Extensions/client";
+import { TOKEN } from "./Interfaces/config.json";
+
+const client = new Reader(`Bot ${TOKEN}`, {
+    defaultImageFormat: "png",
+    defaultImageSize: 512,
+    intents: [
+        "guilds",
+        "guildMessages"
+    ],
+    maxShards: "auto",
+    messageLimit: 75
+});
+
+// Initialize the bot
+client.init();
