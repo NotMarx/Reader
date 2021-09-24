@@ -32,6 +32,10 @@ export default async function ButtonNavigator(client: Reader, interaction: Compo
                 case "nextPage":
                     i + 1 < embeds.length ? ++i : 0;
                     break;
+                case "stopPage":
+                    await client.database.delete(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
+                    await client.deleteMessage(interaction.channel.id, interaction.message.id).catch(() => { });
+                    break;
                 default:
                     break;
             }

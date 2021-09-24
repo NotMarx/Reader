@@ -103,7 +103,7 @@ export const event: Event = {
                                 style: 4,
                                 type: 2,
                                 label: "Stop",
-                                custom_id: "kill_prop"
+                                custom_id: "stopPage"
                             },
                             {
                                 style: 1,      
