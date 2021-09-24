@@ -90,7 +90,7 @@ export const command: Command = {
                 .setTimestamp()
                 .setFooter("Made by reinhardt");
 
-            let com = {};
+            let com: object = {};
 
             for (let comm of commands.values()) {
                 const category = comm.category || "Unknown";
@@ -104,7 +104,7 @@ export const command: Command = {
 
             for (const [key, value] of Object.entries(com)) {
                 let category: string = key;
-                let desc = "`" + (value as string[]).join("`, `") + "`";
+                let desc: string = "`" + (value as string[]).join("`, `") + "`";
 
                 embed.addField(`${category} [${(value as string[]).length}]`, desc);
             }
