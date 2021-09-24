@@ -44,9 +44,11 @@ export const event: Event = {
         ];
 
         if (!experience) {
-            if (message.channel.type !== 5) {
-                return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
-            } 
+                message.author.getDMChannel().then((dm) => {
+                    return dm.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
+                }).catch(() => {
+                    return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
+                });
         } else if (experience === true) {
             const messageArray: string[] = message.content.split(" ");
             const args: string[] = messageArray.slice(1);

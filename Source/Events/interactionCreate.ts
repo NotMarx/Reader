@@ -46,7 +46,7 @@ export const event: Event = {
                             ]
                         }
                     });
-                    client.database.set(`Database.${interaction.member.id}.Experience`, true);
+                    client.database.set(`Database.${interaction.member ? interaction.member.id : interaction.user.id}.Experience`, true);
                     break;
                 case "disagree_privacy":
                     const disagreeComponent: ActionRowComponents[] = [
@@ -84,7 +84,7 @@ export const event: Event = {
                             ]
                         }
                     });
-                    client.database.set(`Database.${interaction.member.id}.Experience`, false);
+                    client.database.set(`${interaction.member ? interaction.member.id : interaction.user.id}`, false);
                     break;
                 case "read_prop":
                     const code: string = await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
