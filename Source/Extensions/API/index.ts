@@ -26,12 +26,12 @@ interface Payload {
 export default class API {
     static getCode(code: string): Promise<Payload> {
         // Misc
-        const tagSpacerPatternn = /(\([0-9,]+\))([a-zA-Z])/g;
-        const tagSplitPattern = /(?<=\))\s(?=[a-zA-Z])/;
+        const tagSpacerPatternn: RegExp = /(\([0-9,]+\))([a-zA-Z])/g;
+        const tagSplitPattern: RegExp = /(?<=\))\s(?=[a-zA-Z])/;
 
-        const urlToID = /(https?:\/\/nhentai\.net\/g\/)(\d+)\/?.*/;
+        const urlToID: RegExp = /(https?:\/\/nhentai\.net\/g\/)(\d+)\/?.*/;
 
-        const ID = code.replace(urlToID, '$2');
+        const ID: string = code.replace(urlToID, '$2');
         return new Promise((resolve, reject) => {
             get(`https://nhentai.net/g/${ID}/`).then((res) => {
             const $ = load(res.text);
@@ -45,14 +45,14 @@ export default class API {
                     details[tag.substring(0, tag.length - 1).toLowerCase()] = tags[i + 1].replace(tagSpacerPatternn, '$1 $2').split(tagSplitPattern);
                 }
             });
-            const title = $('#info').find('h1').text();
-            const nativeTitle = $('#info').find('h2').text();
-            const thumbnails = Object.entries($('.gallerythumb').find('img')).map(image => {
+            const title: string = $('#info').find('h1').text();
+            const nativeTitle: string = $('#info').find('h2').text();
+            const thumbnails: string[] = Object.entries($('.gallerythumb').find('img')).map(image => {
                 return image[1].attribs
                     ? image[1].attribs['data-src']
                     : null;
             }).filter(link => link);
-            const images = Object.entries($('.gallerythumb').find('img')).map(image => {
+            const images: string[] = Object.entries($('.gallerythumb').find('img')).map(image => {
                 return image[1].attribs
                     ? image[1].attribs['data-src'].replace(/t(\.(jpg|png|gif))/, '$1').replace('t.nhentai', 'i.nhentai')
                     : null;
