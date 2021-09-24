@@ -13,8 +13,8 @@ export const command: Command = {
             title: `${client.user.username}'s Stats`,
             color: client.config.COLOUR,
             footer: {
-                text: `Made by ${client.users.get(client.config.ADMIN_ID[0]).username}`,
-                icon_url: client.users.get(client.config.ADMIN_ID[0]).avatarURL
+                text: `Made by reinhardt`,
+                icon_url: "https://cdn.discordapp.com/avatars/516186529547288576/0bf219f20a58380d381649dcde4d38e5.png?size=512"
             }
         }
 
