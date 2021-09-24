@@ -5,11 +5,11 @@ import { ActionRow, EmbedOptions } from "eris";
 import API, { Details } from "../../Extensions/API";
 
 export const command: Command = {
-    name: "code",
+    name: "read",
     description: "Read a Doujin",
     aliases: ["doujin"],
     category: "Main",
-    usage: "code <doujin_code>",
+    usage: "read <doujin_code>",
     nsfwOnly: true,
     run: async (client, message, args) => {
         const isReading: string = await client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
