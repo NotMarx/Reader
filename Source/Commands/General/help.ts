@@ -1,5 +1,6 @@
 "use strict";
 
+import Collection from "../../Extensions/collection";
 import { Command } from "../../Interfaces";
 import { EmbedOptions } from "eris";
 import RichEmbed from "../../Extensions/embed";
@@ -80,7 +81,7 @@ export const command: Command = {
 
             // If there is no args provided
         } else {
-            const commands: Map<string, Command> = await client.commands;
+            const commands = await client.commands.filter((cmd) => cmd.name !== "eval" && cmd.name !== "sweep");
 
             let embed: RichEmbed = new RichEmbed()
                 .setTitle(`${client.user.username}'s Commands`)
