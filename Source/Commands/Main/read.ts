@@ -14,6 +14,16 @@ export const command: Command = {
     run: async (client, message, args) => {
         const isReading: string = await client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
 
+        // Check if code is provided
+        if (!args[0]) {
+            const embed: EmbedOptions = {
+                description: "Wanna read something? Your keyword is a **6 Digits Code**.",
+                color: client.config.COLOUR
+            };
+            
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
+        }
+
         // Prevent double reading 
         if (isReading) {
             const embed: EmbedOptions = {
