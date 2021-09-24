@@ -1,6 +1,6 @@
 "use strict";
 
-import { ComponentInteraction, EmbedOptions, TextableChannel, InteractionButton, Interaction } from "eris";
+import { ComponentInteraction, EmbedOptions, TextableChannel, InteractionButton } from "eris";
 import Reader from "../client";
 
 export default async function ButtonNavigator(client: Reader, interaction: ComponentInteraction<TextableChannel>, embeds: EmbedOptions[], buttons: InteractionButton[]): Promise<void> {

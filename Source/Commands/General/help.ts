@@ -22,7 +22,7 @@ export const command: Command = {
             const description: string = command.description ? command.description : "No Description";
             const name: string = command.name;
             const nsfwOnly: "`True`" | "`False`" = command.nsfwOnly ? "`True`" : "`False`";
-            const usage: string = command.usage ? `\`${prefix}${command.usage}\`` : "No Usage`"
+            const usage: string = command.usage ? `\`${prefix}${command.usage}\`` : "No Usage"
 
             const helpEmbed: EmbedOptions = {
                 title: `${prefix}${name}`,
