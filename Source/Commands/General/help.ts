@@ -81,7 +81,7 @@ export const command: Command = {
 
             // If there is no args provided
         } else {
-            const commands = await client.commands.filter((cmd) => cmd.name !== "eval" && cmd.name !== "sweep");
+            const commands: Command[] = await client.commands.filter((cmd) => cmd.name !== "eval" && cmd.name !== "sweep");
 
             let embed: RichEmbed = new RichEmbed()
                 .setTitle(`${client.user.username}'s Commands`)
