@@ -1,7 +1,7 @@
 "use strict";
 
 import { Command } from "../../Interfaces";
-import { EmbedField, EmbedOptions } from "eris";
+import { EmbedOptions } from "eris";
 import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
@@ -76,7 +76,7 @@ export const command: Command = {
                 }
             };
 
-            message.channel.createMessage({ embeds: [helpEmbed], messageReference: { messageID: message.id } });
+            return message.channel.createMessage({ embeds: [helpEmbed], messageReference: { messageID: message.id } });
 
             // If there is no args provided
         } else {
