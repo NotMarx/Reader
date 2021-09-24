@@ -1,6 +1,7 @@
 "use strict";
 
 import { Client } from "eris";
+import Collection from "./collection";
 import { Command, Config, Event } from "../Interfaces";
 import ConfigJSON from "../Interfaces/config.json";
 import { Database } from "xen.db";
@@ -8,8 +9,8 @@ import path from "path";
 import { readdirSync } from "fs";
 
 export default class Reader extends Client {
-    public aliases: Map<string, Command> = new Map();
-    public commands: Map<string, Command> = new Map();
+    public aliases: Collection<Command> = new Collection();
+    public commands: Collection<Command> = new Collection();
     public config: Config = ConfigJSON;
     public events: Map<string, Event> = new Map();
     public database: Database = new Database("Database/ReaderBase.sql", { path: "Database", table: "READER", useWalMode: false });

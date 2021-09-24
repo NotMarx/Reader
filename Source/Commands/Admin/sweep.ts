@@ -6,7 +6,7 @@ export const command: Command = {
     name: "sweep",
     description: "Clean up the whole messages",
     aliases: ["cleanup", "purge"],
-    category: "General",
+    category: "Admin",
     adminOnly: true,
     run: async (client, message, args) => {
         const messageArray: string[] = (await client.getMessages(message.channel.id)).map((m) => m.id);
