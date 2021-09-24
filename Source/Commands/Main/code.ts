@@ -12,6 +12,25 @@ export const command: Command = {
     usage: "code <doujin_code>",
     nsfwOnly: true,
     run: async (client, message, args) => {
+        const isReading: string = await client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
+
+        // Prevent double reading 
+        if (isReading) {
+            const embed: EmbedOptions = {
+                title: "Ongoing",
+                color: client.config.COLOUR,
+                description: "You can only read one at a time!",
+                fields: [
+                    {
+                        name: "Need Help?",
+                        value: "We don't provide any Support for now"
+                    }
+                ]
+            }
+
+            return message.channel.createMessage({ embeds: [embed] });
+        }
+
         API.getCode(args[0]).then((res) => {
             const embed: EmbedOptions = {
                 author: {

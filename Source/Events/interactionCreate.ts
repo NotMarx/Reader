@@ -115,7 +115,7 @@ export const event: Event = {
                     });
                     break;
                 case "kill_prop":
-                    await client.database.delete(`Database.${interaction.guildID}.${interaction.message.member.id}.Book`);
+                    await client.database.delete(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
                     await client.deleteMessage(interaction.channel.id, interaction.message.id).catch(() => { });
                     break;
             }
