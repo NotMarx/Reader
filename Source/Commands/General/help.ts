@@ -1,7 +1,8 @@
 "use strict";
 
 import { Command } from "../../Interfaces";
-import { EmbedOptions } from "eris";
+import { EmbedField, EmbedOptions } from "eris";
+import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
     name: "help",
@@ -11,8 +12,9 @@ export const command: Command = {
     usage: "help <command_name>",
     run: async (client, message, args) => {
         const prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
-        const command = client.commands.get(args[0]) || client.aliases.get(args[0]);
+        const command: Command = client.commands.get(args[0]) || client.aliases.get(args[0]);
 
+        // If the first args (command name) is specified 
         if (args[0]) {
             if (!command) return;
 
@@ -74,7 +76,40 @@ export const command: Command = {
                 }
             };
 
-            message.channel.createMessage({ embeds: [helpEmbed], messageReference: { messageID: message.id }});
+            message.channel.createMessage({ embeds: [helpEmbed], messageReference: { messageID: message.id } });
+
+            // If there is no args provided
+        } else {
+            const commands: Map<string, Command> = await client.commands;
+
+            let embed: RichEmbed = new RichEmbed()
+                .setTitle(`${client.user.username}'s Commands`)
+                .setDescription(`Use \`${prefix}help <command_name>\` for a command detail`)
+                .setColor(client.config.COLOUR)
+                .setThumbnail(client.user.avatarURL)
+                .setTimestamp()
+                .setFooter("Made by reinhardt");
+
+            let com = {};
+
+            for (let comm of commands.values()) {
+                const category = comm.category || "Unknown";
+                const name = comm.name;
+
+                if (!com[category]) {
+                    com[category] = [];
+                }
+                com[category].push(name);
+            }
+
+            for (const [key, value] of Object.entries(com)) {
+                let category: string = key;
+                let desc = "`" + (value as string[]).join("`, `") + "`";
+
+                embed.addField(`${category} [${(value as string[]).length}]`, desc);
+            }
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
         }
     }
 }
