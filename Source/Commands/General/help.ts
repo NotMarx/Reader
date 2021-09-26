@@ -20,7 +20,7 @@ export const command: Command = {
             if (!command) return;
 
             const adminOnly: "`True`" | "`False`" = command.adminOnly ? "`True`" : "`False`";
-            const aliases: string = command.aliases ? `\`${command.aliases.join("`, `")}\`` : "No Aliases";
+            const aliases: string = command.aliases.length === 0 ? "No Aliases" : `\`${command.aliases.join("`, `")}\``;
             const category: string = command.category ? `\`${command.category}\`` : "No Category";
             const description: string = command.description ? command.description : "No Description";
             const name: string = command.name;
