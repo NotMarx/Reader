@@ -18,7 +18,7 @@ export const command: Command = {
         os.cpuUsage(async (cpu) => {
             const embed: EmbedOptions = {
                 title: `${client.user.username}'s Stats`,
-                description: `This is the current stats for **${client.user.username}**. \n Shard ID she's currently in: **${message.member.guild.shard.id}** \n\n **Fun Fact**: **${client.user.username}** is now Open-Source! You can find her [Here](https://github.com/NotMarx/Reader).`,
+                description: `This is the current stats for **${client.user.username}**. \n She's currently in shard ID: **${message.member.guild.shard.id}** \n\n **Fun Fact**: **${client.user.username}** is now Open-Source! You can find her [Here](https://github.com/NotMarx/Reader).`,
                 color: client.config.COLOUR,
                 fields: [
                     {
@@ -38,7 +38,7 @@ export const command: Command = {
                     },
                     {
                         name: "NodeJS",
-                        value: "14.16.0",
+                        value: process.versions.node,
                         inline: true
                     },
                     {
