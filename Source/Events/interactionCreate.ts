@@ -81,11 +81,49 @@ export const event: Event = {
                     });
                     interaction.acknowledge();
                     break;
+                case "bookmark_prop":
+                    const savedCode: string = await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
+                    const codeBank: string[] = await client.database.fetch(`Database.${interaction.member.id}.Bookmark`);
+                    const prefix: string = await client.database.fetch(`Database.${interaction.guildID}.Prefix`) || client.config.PREFIX;
+
+                    if (!codeBank) {
+                        client.database.set(`Database.${interaction.member.id}.Bookmark`, []);
+                        return interaction.createMessage({
+                            embeds: [
+                                {
+                                    title: "First Experience",
+                                    description: "It seems that this is your first time bookmarking therefore, I've created a Bookmark Database for you! \n\n Click the **Bookmark** button again to proceed",
+                                    color: client.config.COLOUR
+                                }
+                            ]
+                        });
+                    }
+
+                    if (codeBank.includes(savedCode)) {
+                        await client.database.extract(`Database.${interaction.member.id}.Bookmark`, savedCode);
+                        return interaction.createMessage({
+                            embeds: [
+                                {
+                                    description: "You've removed this Doujin!",
+                                    color: client.config.COLOUR
+                                }
+                            ],
+                            flags: 64
+                        });
+                    }
+
+                    client.database.push(`Database.${interaction.member.id}.Bookmark`, savedCode);
+
+                    return interaction.createMessage({ embeds: [{
+                        title: `You've bookmarked ${savedCode}`,
+                        description: `Successfully added [${savedCode}](https://nhentai.net/g/${savedCode}/) to your bookmarks! Use \`${prefix}bookmark\` to view them.`,
+                        color: client.config.COLOUR
+                    }], flags: 64 });
+                    break;
                 case "kill_prop":
                     client.database.delete(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
                     interaction.acknowledge();
                     interaction.message.delete();
-                    // client.deleteMessage(interaction.channel.id, interaction.message.id).catch(() => { });
                     break;
             }
         }
