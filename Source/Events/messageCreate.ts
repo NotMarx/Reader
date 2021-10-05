@@ -14,7 +14,7 @@ export const event: Event = {
         if (!message.content.startsWith(prefix)) return;
 
         // Check if user is using the bot for the first time
-        const experience: boolean = await client.database.fetch(`Database.${message.author.id}.Experience`);
+        const experience: boolean = client.database.fetch(`Database.${message.author.id}.Experience`);
         const experienceEmbed: EmbedOptions = {
             title: "First Experience",
             description: `Hey there, **${message.author.username}**! It seems that this is your first time using me. \n\n **Warning:** This bot is mostly works in channels that are marked as **NSFW**! \n\n See below for more details.`,
@@ -44,11 +44,11 @@ export const event: Event = {
         ];
 
         if (!experience) {
-                message.author.getDMChannel().then((dm) => {
-                    return dm.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
-                }).catch(() => {
-                    return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
-                });
+            message.author.getDMChannel().then((dm) => {
+                return dm.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
+            }).catch(() => {
+                return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
+            });
         } else if (experience === true) {
             const messageArray: string[] = message.content.split(" ");
             const args: string[] = messageArray.slice(1);
