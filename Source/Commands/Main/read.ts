@@ -3,6 +3,7 @@
 import { Command } from "../../Interfaces";
 import { ActionRow, EmbedOptions } from "eris";
 import API, { Details } from "../../Extensions/API";
+import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
     name: "read",
@@ -12,7 +13,7 @@ export const command: Command = {
     usage: "read <doujin_code>",
     nsfwOnly: true,
     run: async (client, message, args) => {
-        const isReading: string = await client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
+        const code: string = client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
 
         // Check if code is provided
         if (!args[0]) {
@@ -24,52 +25,23 @@ export const command: Command = {
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
         }
 
-        // Prevent double reading 
-        if (isReading) {
-            const embed: EmbedOptions = {
-                title: "Ongoing",
-                color: client.config.COLOUR,
-                description: "You can only read one at a time!",
-                fields: [
-                    {
-                        name: "Need Help?",
-                        value: "We don't provide any Support for now"
-                    }
-                ]
-            }
+        if (code) {
+            const embed = new RichEmbed()
+                .setDescription("You can only read one at a time!")
+                .setColor(client.config.COLOUR);
 
-            return message.channel.createMessage({ embeds: [embed] });
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
         }
 
         API.getCode(args[0]).then((res) => {
-            const embed: EmbedOptions = {
-                author: {
-                    name: args[0],
-                    url: res.url
-                },
-                color: client.config.COLOUR,
-                fields: [
-                    {
-                        name: "Title",
-                        value: `\`${res.title}\``
-                    },
-                    {
-                        name: "Pages",
-                        value: `\`${(res.details as Details).pages}\``
-                    },
-                    {
-                        name: "Uploaded Since",
-                        value: `\`${(res.details as Details).uploaded}\``
-                    },
-                    {
-                        name: "Tags",
-                        value: `\`${(res.details as Details).tags.join("`, `")}\``
-                    }
-                ],
-                thumbnail: {
-                    url: res.thumbnails[0]
-                }
-            };
+            const embed = new RichEmbed()
+                .setAuthor(args[0], res.url)
+                .setColor(client.config.COLOUR)
+                .addField("Title", `\`${res.title}\``)
+                .addField("Pages", `\`${(res.details as Details).pages}\``)
+                .addField("Uploaded Since", `\`${(res.details as Details).uploaded}\``)
+                .addField("Tags", `\`${(res.details as Details).tags.join("`, `")}\``)
+                .setThumbnail(res.thumbnails[0]);
 
             const component: ActionRow = {
                     type: 1,
@@ -85,6 +57,12 @@ export const command: Command = {
                             custom_id: "kill_prop",
                             style: 4,
                             type: 2,
+                        },
+                        {
+                            label: "Bookmark",
+                            custom_id: "bookmark_prop",
+                            style: 2,
+                            type: 2
                         }
                     ]
                 }
