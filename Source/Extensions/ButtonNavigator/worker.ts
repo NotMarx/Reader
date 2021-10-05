@@ -22,8 +22,14 @@ class ButtonNavigator {
                     type: 1,
                     components: [
                         { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
-                        { style: 4, type: 2, custom_id: `destroy_page`, label: "Stop" },
+                        { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
                         { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
                     ]
                 }
             ]
@@ -45,8 +51,14 @@ class ButtonNavigator {
                     type: 1,
                     components: [
                         { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
-                        { style: 4, type: 2, custom_id: `destroy_page`, label: "Stop" },
+                        { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
                         { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
                     ]
                 }
             ]
@@ -71,10 +83,6 @@ class ButtonNavigator {
                             this.embed--;
                             this.update();
                         }
-                        break;
-                    case `destroy_page`:
-                        interaction.acknowledge();
-                        this.message.delete();
                         break;
                 }
         });
