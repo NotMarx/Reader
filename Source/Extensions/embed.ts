@@ -102,7 +102,7 @@ export default class RichEmbed {
       return this;
     }
   
-    setAuthor(name: string, url: string, iconURL: string) {
+    setAuthor(name: string, url: string, iconURL?: string) {
       if (typeof name !== 'string') throw new TypeError(`Expected type 'string', received type ${typeof name}`);
       if (name.length > 256) throw new RangeError('Embed author names cannot exceed 256 characters');
       this.author = { name };
