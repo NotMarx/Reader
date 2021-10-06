@@ -2,8 +2,9 @@
 
 import { Command } from "../../Interfaces";
 import { ActionRow, EmbedOptions } from "eris";
-import API, { Details } from "../../Extensions/API";
+import { API } from "nhentai-api";
 import RichEmbed from "../../Extensions/embed";
+import moment from "moment";
 
 export const command: Command = {
     name: "read",
@@ -13,6 +14,7 @@ export const command: Command = {
     usage: "read <doujin_code>",
     nsfwOnly: true,
     run: async (client, message, args) => {
+        const api = new API();
         const code: string = client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
 
         // Check if code is provided
@@ -33,15 +35,20 @@ export const command: Command = {
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
         }
 
-        API.getCode(args[0]).then((res) => {
+        api.getBook(parseInt(args[0])).then((res) => {
+            const contentTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+            const languageTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name);
+            const uploadedAt: string = `\`${moment(res.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``;
+            
             const embed = new RichEmbed()
-                .setAuthor(args[0], res.url)
+                .setAuthor(`${args[0]} | ⭐ ${res.favorites.toLocaleString()}`, `https://nhentai.net/g/${args[0]}`, "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png")
                 .setColor(client.config.COLOUR)
-                .addField("Title", `\`${res.title}\``)
-                .addField("Pages", `\`${(res.details as Details).pages}\``)
-                .addField("Uploaded Since", `\`${(res.details as Details).uploaded}\``)
-                .addField("Tags", `\`${(res.details as Details).tags.join("`, `")}\``)
-                .setThumbnail(res.thumbnails[0]);
+                .addField("Title", `\`${res.title.pretty}\``)
+                .addField("Pages", `\`${res.pages.length}\``)
+                .addField("Date Released", uploadedAt)
+                .addField("Languages", `\`${languageTags.join("`, `")}\``)
+                .addField("Tags", `\`${contentTags.join("`, `")}\``)
+                .setThumbnail(api.getImageURL(res.cover));
 
             const component: ActionRow = {
                     type: 1,
