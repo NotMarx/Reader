@@ -99,6 +99,19 @@ export const event: Event = {
                         });
                     }
 
+                    if (codeBank.length === 25) {
+                        return interaction.createMessage({
+                            embeds: [
+                                {
+                                    title: "Max Bookmarks Exceeded!",
+                                    description: "I'm sorry but you've reached the maximum amount of bookmarked doujins. If you wish to bookmark more doujins, you may unbookmarked your bookmarked doujins.",
+                                    color: client.config.COLOUR
+                                }
+                            ],
+                            flags: 64
+                        })
+                    }
+
                     if (codeBank.includes(savedCode)) {
                         await client.database.extract(`Database.${interaction.member.id}.Bookmark`, savedCode);
                         return interaction.createMessage({
