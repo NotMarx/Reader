@@ -18,7 +18,7 @@ export const command: Command = {
                 .setTitle(`${message.author.username}'s Bookmarks`)
                 .setColor(client.config.COLOUR)
                 .setDescription(`Welcome! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Simply visit the page (\`${prefix}read <doujin_code>\`) and click the **Bookmark** button again to remove.`)
-                .addField("Bookmarked Doujin", "`None`");
+                .addField("⭐ Bookmarked Doujin [0]", "`None`");
 
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
         }
@@ -27,7 +27,7 @@ export const command: Command = {
             .setTitle(`${message.author.username}'s Bookmarks`)
             .setColor(client.config.COLOUR)
             .setDescription(`Welcome! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Simply visit the page (\`${prefix}read <doujin_code>\`) and click the **Bookmark** button again to remove.`)
-            .addField("Bookmarked Doujin", `\`${bookmarked.join("`, `")}\``);
+            .addField(`⭐ Bookmarked Doujin [${bookmarked.length}]`, `\`${bookmarked.join("`, `")}\``);
 
         return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
     }
