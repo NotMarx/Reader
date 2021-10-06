@@ -1,10 +1,11 @@
 "use strict";
 
-import { Client } from "eris";
+import { Client, TextableChannel } from "eris";
 import Collection from "./collection";
 import { Command, Config, Event } from "../Interfaces";
 import ConfigJSON from "../Interfaces/config.json";
 import { Database } from "xen.db";
+import { MessageCollector, MessageCollectorOptions } from "../Extensions/collector";
 import path from "path";
 import { readdirSync } from "fs";
 
@@ -47,5 +48,9 @@ export default class Reader extends Client {
             this.events.set(event.name, event);
             this.on(event.name, event.run.bind(null, this));
         });
+    }
+
+    public awaitChannelMessages(channel: TextableChannel, options: MessageCollectorOptions) {
+        return new MessageCollector(channel, options).run();
     }
 }
