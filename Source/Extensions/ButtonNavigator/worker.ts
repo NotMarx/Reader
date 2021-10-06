@@ -21,9 +21,11 @@ class ButtonNavigator {
                 {
                     type: 1,
                     components: [
+                        { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Page" },
                         { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
                         { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
                         { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Page" }
                     ]
                 },
                 {
@@ -50,9 +52,11 @@ class ButtonNavigator {
                 {
                     type: 1,
                     components: [
+                        { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Page" },
                         { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
                         { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
                         { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Page" }
                     ]
                 },
                 {
@@ -84,12 +88,23 @@ class ButtonNavigator {
                             this.update();
                         }
                         break;
+                    case `first_page_${this.invoker.id}`:
+                        interaction.acknowledge();
+
+                        this.embed = 1;
+                        this.update();
+                        break;
+                    case `last_page_${this.invoker.id}`:
+                        interaction.acknowledge();
+
+                        this.embed = this.embeds.length;
+                        this.update();
                 }
         });
     }
 }
 
-export default async function createPaginationEmbed(message: Message<TextableChannel>, embeds: EmbedOptions[]) {
+export async function createPaginationEmbed(message: Message<TextableChannel>, embeds: EmbedOptions[]) {
     const paginationEmbed = new ButtonNavigator(message, embeds);
     await paginationEmbed.init();
     paginationEmbed.run();
