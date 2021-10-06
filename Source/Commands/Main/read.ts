@@ -29,7 +29,7 @@ export const command: Command = {
 
         if (code) {
             const embed = new RichEmbed()
-                .setDescription("You can only read one at a time!")
+                .setDescription("You may read multiple doujins at the same time but you can only view one at a time! Click the **Read** or the **Stop** button to view/read another doujin.")
                 .setColor(client.config.COLOUR);
 
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
@@ -41,13 +41,14 @@ export const command: Command = {
             const uploadedAt: string = `\`${moment(res.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``;
             
             const embed = new RichEmbed()
-                .setAuthor(`${args[0]} | ⭐ ${res.favorites.toLocaleString()}`, `https://nhentai.net/g/${args[0]}`, "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png")
+                .setAuthor(args[0], `https://nhentai.net/g/${args[0]}`, "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png")
                 .setColor(client.config.COLOUR)
                 .addField("Title", `\`${res.title.pretty}\``)
                 .addField("Pages", `\`${res.pages.length}\``)
                 .addField("Date Released", uploadedAt)
                 .addField("Languages", `\`${languageTags.join("`, `")}\``)
                 .addField("Tags", `\`${contentTags.join("`, `")}\``)
+                .setFooter(`⭐ ${res.favorites.toLocaleString()}`)
                 .setThumbnail(api.getImageURL(res.cover));
 
             const component: ActionRow = {
