@@ -1,8 +1,7 @@
 "use strict";
 
-import Collection from "../../Extensions/collection";
 import { Command } from "../../Interfaces";
-import { EmbedOptions } from "eris";
+import { EmbedOptions, TextChannel } from "eris";
 import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
@@ -26,6 +25,10 @@ export const command: Command = {
             const name: string = command.name;
             const nsfwOnly: "`True`" | "`False`" = command.nsfwOnly ? "`True`" : "`False`";
             const usage: string = command.usage ? `\`${prefix}${command.usage}\`` : "No Usage"
+
+            if (command.nsfwOnly && !(message.channel as TextChannel).nsfw) {
+                return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOUR }], messageReference: { messageID: message.id } });
+            } 
 
             const helpEmbed: EmbedOptions = {
                 title: `${prefix}${name}`,
