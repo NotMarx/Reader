@@ -2,6 +2,7 @@
 
 import { Command } from "../../Interfaces";
 import { inspect } from "util";
+import { API } from "nhentai-api";
 import Logger from "../../Extensions/logger";
 
 export const command: Command = {
@@ -11,6 +12,8 @@ export const command: Command = {
     category: "Admin",
     adminOnly: true,
     run: async (client, message, args) => {
+        const api = new API();
+
         try {
             const evaluated = inspect(eval(args.join(" ")), { depth: 0 });
 
