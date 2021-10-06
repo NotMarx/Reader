@@ -73,17 +73,15 @@ export const event: Event = {
                     const api = new API();
                     
                     api.getBook(parseInt(code)).then(async (res) => {
-                        let embeds: EmbedOptions[] = await res.pages.map((page) => ({ title: res.title.pretty, image: { url: api.getImageURL(page) }, thumbnail: { url: api.getImageURL(res.cover) }, color: client.config.COLOUR, footer: { text: `Requested By: ${interaction.member.username}#${interaction.member.discriminator}` } } as EmbedOptions));
-
-                        await client.database.set(`Database.${interaction.guildID}.${interaction.member.id}.BookEmbed`, embeds);
+                        let embeds: EmbedOptions[] = await res.pages.map((page) => ({ author: { name: code, url: `https://nhentai.net/g/${code}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: res.title.pretty, image: { url: api.getImageURL(page) }, thumbnail: { url: api.getImageURL(res.cover) }, color: client.config.COLOUR, footer: { text: `Requested By: ${interaction.member.username}#${interaction.member.discriminator}` } } as EmbedOptions));
 
                         await createPaginationEmbed(interaction.message, embeds);
-
+                        client.database.delete(`Database.${interaction.guildID}.${interaction.member.id}.Book`)
                     });
                     interaction.acknowledge();
                     break;
                 case "bookmark_prop":
-                    const savedCode: string = await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
+                    const savedCode: string = interaction.message.embeds[0].author.name // await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
                     const codeBank: string[] = await client.database.fetch(`Database.${interaction.member.id}.Bookmark`);
                     const prefix: string = await client.database.fetch(`Database.${interaction.guildID}.Prefix`) || client.config.PREFIX;
 
