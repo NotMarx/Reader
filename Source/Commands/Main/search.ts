@@ -38,6 +38,18 @@ export const command: Command = {
                 .setColor(client.config.COLOUR);
 
             message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+        }).catch(() => {
+                return message.channel.createMessage({
+                    embeds: [
+                        {
+                            description: "Something went wrong! This is an known-issue and the dev is currently working on it.",
+                            color: client.config.COLOUR
+                        }
+                    ],
+                    messageReference: {
+                        messageID: message.id
+                    }
+                });
         });
 
     }
