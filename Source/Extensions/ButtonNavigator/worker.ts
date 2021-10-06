@@ -1,13 +1,16 @@
 "use strict";
 
 import { AdvancedMessageContent, ComponentInteraction, EmbedOptions, Message, TextableChannel } from "eris";
+import Reader from "../client";
 
 class ButtonNavigator {
+    client: Reader;
     embeds: EmbedOptions[];
     embed: number;
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
-    constructor(message: Message<TextableChannel>, embeds: EmbedOptions[]) {
+    constructor(client: Reader, message: Message<TextableChannel>, embeds: EmbedOptions[]) {
+        this.client = client;
         this.embeds = embeds;
         this.embed = 1;
         this.invoker = message;
@@ -31,6 +34,7 @@ class ButtonNavigator {
                 {
                     type: 1,
                     components: [
+                        { style: 1, type: 2, custom_id: `jumpto_page_${this.invoker.id}`, label: "Enter Page" },
                         { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
                     ]
                 }
@@ -62,6 +66,7 @@ class ButtonNavigator {
                 {
                     type: 1,
                     components: [
+                        { style: 1, type: 2, custom_id: `jumpto_page_${this.invoker.id}`, label: "Enter Page" },
                         { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
                     ]
                 }
@@ -99,13 +104,88 @@ class ButtonNavigator {
 
                         this.embed = this.embeds.length;
                         this.update();
+                        break;
+                    case `jumpto_page_${this.invoker.id}`:
+                        interaction.createMessage({
+                            embeds: [
+                                {
+                                    description: `This doujin has a total pages **${this.embeds.length}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
+                                    color: this.client.config.COLOUR
+                                }
+                            ],
+                            flags: 64
+                        });
+
+                        const filter = (m: Message<TextableChannel>) => {
+                            if (m.author.bot) return;
+                            if (m.author.id !== interaction.member.id) return;
+                            if (isNaN(parseInt(m.content))) {
+                                m.delete();
+                                interaction.createMessage({
+                                    embeds: [
+                                        {
+                                            description: "Please enter a valid number page!",
+                                            color: this.client.config.COLOUR
+                                        }
+                                    ],
+                                    flags: 64
+                                });
+                                return false;
+                            }
+                            if (parseInt(m.content) > this.embeds.length) {
+                                m.delete();
+                                interaction.createMessage({
+                                    embeds: [
+                                        {
+                                            description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
+                                            color: this.client.config.COLOUR
+                                        }
+                                    ],
+                                    flags: 64
+                                });
+                                return false;
+                            }
+                            if (parseInt(m.content) <= 0) {
+                                m.delete();
+                                interaction.createMessage({
+                                    embeds: [
+                                        {
+                                            description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
+                                            color: this.client.config.COLOUR
+                                        }
+                                    ],
+                                    flags: 64
+                                });
+                                return false;
+                            }
+                            else return true;
+                        }
+
+                        const response = await this.client.awaitChannelMessages(interaction.channel, { timeout: 30000, count: 1, filter: filter });
+            
+                        if (response.message) {
+                            response.message.delete();
+                            this.embed = parseInt(response.message.content);
+                            this.update();
+                        } else {
+                            response.message.delete();
+                            return interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                        }
                 }
         });
     }
 }
 
-export async function createPaginationEmbed(message: Message<TextableChannel>, embeds: EmbedOptions[]) {
-    const paginationEmbed = new ButtonNavigator(message, embeds);
+export async function createPaginationEmbed(client: Reader, message: Message<TextableChannel>, embeds: EmbedOptions[]) {
+    const paginationEmbed = new ButtonNavigator(client, message, embeds);
     await paginationEmbed.init();
     paginationEmbed.run();
 
