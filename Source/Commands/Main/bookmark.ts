@@ -25,6 +25,15 @@ export const command: Command = {
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
         }
 
+        const msg = await message.channel.createMessage({
+            embeds: [
+                { description: "Fetching your data, please wait...", color: client.config.COLOUR }
+            ],
+            messageReference: {
+                messageID: message.id
+            }
+        });
+
         const bookmarkedTitle: string[] = [];
 
         for (let i = 0; i < bookmarked.length; i++) {
@@ -38,7 +47,7 @@ export const command: Command = {
             .setDescription(`Welcome! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Simply visit the page (\`${prefix}read <doujin_code>\`) and click the **Bookmark** button again to remove.`)
             .addField(`⭐ Bookmarked Doujin [${bookmarked.length}]`, bookmarkedTitle.join("\n"));
 
-        return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+        return msg.edit({ embeds: [embed], messageReference: { messageID: message.id } });
     }
 
 }
