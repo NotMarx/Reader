@@ -2,8 +2,8 @@
 
 import { Event } from "../Interfaces";
 import { ActionRowComponents, ComponentInteraction, EmbedOptions, TextableChannel } from "eris";
-import API from "../Extensions/API";
-import ButtonNavigator from "../Extensions/ButtonNavigator/worker";
+import { API } from "nhentai-api";
+import { createPaginationEmbed } from "../Extensions/ButtonNavigator/worker";
 
 export const event: Event = {
     name: "interactionCreate",
@@ -70,13 +70,14 @@ export const event: Event = {
                     break;
                 case "read_prop":
                     const code: string = await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
-
-                    API.getCode(code).then(async (res) => {
-                        let embeds: EmbedOptions[] = await res.pages.map((url: string) => ({ title: res.title, image: { url: url }, thumbnail: { url: res.thumbnails[0] }, color: client.config.COLOUR, footer: { text: `Requested By: ${interaction.member.username}#${interaction.member.discriminator}` } } as EmbedOptions));
+                    const api = new API();
+                    
+                    api.getBook(parseInt(code)).then(async (res) => {
+                        let embeds: EmbedOptions[] = await res.pages.map((page) => ({ title: res.title.pretty, image: { url: api.getImageURL(page) }, thumbnail: { url: api.getImageURL(res.cover) }, color: client.config.COLOUR, footer: { text: `Requested By: ${interaction.member.username}#${interaction.member.discriminator}` } } as EmbedOptions));
 
                         await client.database.set(`Database.${interaction.guildID}.${interaction.member.id}.BookEmbed`, embeds);
 
-                        await ButtonNavigator(interaction.message, embeds);
+                        await createPaginationEmbed(interaction.message, embeds);
 
                     });
                     interaction.acknowledge();
@@ -95,7 +96,8 @@ export const event: Event = {
                                     description: "It seems that this is your first time bookmarking therefore, I've created a Bookmark Database for you! \n\n Click the **Bookmark** button again to proceed",
                                     color: client.config.COLOUR
                                 }
-                            ]
+                            ],
+                            flags: 64
                         });
                     }
 
@@ -104,7 +106,7 @@ export const event: Event = {
                         return interaction.createMessage({
                             embeds: [
                                 {
-                                    description: "You've removed this Doujin!",
+                                    description: `Successfully removed [${savedCode}](https://nhentai.net/g/${savedCode}/) from your bookmarks!`,
                                     color: client.config.COLOUR
                                 }
                             ],
@@ -114,8 +116,7 @@ export const event: Event = {
 
                     client.database.push(`Database.${interaction.member.id}.Bookmark`, savedCode);
 
-                    return interaction.createMessage({ embeds: [{
-                        title: `You've bookmarked ${savedCode}`,
+                    interaction.createMessage({ embeds: [{
                         description: `Successfully added [${savedCode}](https://nhentai.net/g/${savedCode}/) to your bookmarks! Use \`${prefix}bookmark\` to view them.`,
                         color: client.config.COLOUR
                     }], flags: 64 });
