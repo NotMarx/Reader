@@ -68,18 +68,6 @@ export const event: Event = {
                     })
                     client.database.set(`${interaction.member ? interaction.member.id : interaction.user.id}`, false);
                     break;
-                case "read_prop":
-                    const code: string = await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
-                    const api = new API();
-                    
-                    api.getBook(parseInt(code)).then(async (res) => {
-                        let embeds: EmbedOptions[] = await res.pages.map((page) => ({ author: { name: code, url: `https://nhentai.net/g/${code}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: res.title.pretty, image: { url: api.getImageURL(page) }, thumbnail: { url: api.getImageURL(res.cover) }, color: client.config.COLOUR, footer: { text: `Requested By: ${interaction.member.username}#${interaction.member.discriminator}` } } as EmbedOptions));
-
-                        await createPaginationEmbed(client, interaction.message, embeds);
-                        client.database.delete(`Database.${interaction.guildID}.${interaction.member.id}.Book`)
-                    });
-                    interaction.acknowledge();
-                    break;
                 case "bookmark_prop":
                     const savedCode: string = interaction.message.embeds[0].author.name // await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
                     const codeBank: string[] = await client.database.fetch(`Database.${interaction.member.id}.Bookmark`);

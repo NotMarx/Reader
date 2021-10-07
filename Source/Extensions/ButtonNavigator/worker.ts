@@ -1,17 +1,24 @@
 "use strict";
 
 import { AdvancedMessageContent, ComponentInteraction, EmbedOptions, Message, TextableChannel } from "eris";
+import { API, Book } from "nhentai-api";
 import Reader from "../client";
 
 class ButtonNavigator {
-    client: Reader;
-    embeds: EmbedOptions[];
+    api: API;
+    embeds: EmbedOptions[]
     embed: number;
+    client: Reader
+    book: Book;
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
-    constructor(client: Reader, message: Message<TextableChannel>, embeds: EmbedOptions[]) {
+    authorMessage: Message<TextableChannel>;
+    constructor(client: Reader, book: Book, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
+        this.api = new API();
+        this.authorMessage = authorMessage;
+        this.book = book;
         this.client = client;
-        this.embeds = embeds;
+        this.embeds = book.pages.map((page) => ({ author: { name: `${book.id}`, url: `https://nhentai.net/g/${book.id}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: book.title.pretty, image: { url: this.api.getImageURL(page) }, thumbnail: { url: this.api.getImageURL(book.cover) }, color: this.client.config.COLOUR, footer: { text: `Requested By: ${message.member.username}#${message.member.discriminator}` } } as EmbedOptions));;
         this.embed = 1;
         this.invoker = message;
     }
@@ -75,8 +82,12 @@ class ButtonNavigator {
     }
 
     run() {
-        this.message.channel.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
+        this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
                 switch (interaction.data.custom_id) {
+                    case `read_prop_${this.authorMessage.id}`:
+                        interaction.acknowledge();
+                        this.init();
+                        break;
                     case `next_page_${this.invoker.id}`:
                         interaction.acknowledge();
 
@@ -168,7 +179,6 @@ class ButtonNavigator {
                             this.embed = parseInt(response.message.content);
                             this.update();
                         } else {
-                            response.message.delete();
                             return interaction.createMessage({
                                 embeds: [
                                     {
@@ -179,14 +189,14 @@ class ButtonNavigator {
                                 flags: 64
                             });
                         }
+                        break;
                 }
         });
     }
 }
 
-export async function createPaginationEmbed(client: Reader, message: Message<TextableChannel>, embeds: EmbedOptions[]) {
-    const paginationEmbed = new ButtonNavigator(client, message, embeds);
-    await paginationEmbed.init();
+export async function createPaginationEmbed(client: Reader, book: Book, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
+    const paginationEmbed = new ButtonNavigator(client, book, message, authorMessage);
     paginationEmbed.run();
 
     return Promise.resolve(paginationEmbed.message);
