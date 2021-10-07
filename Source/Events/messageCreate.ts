@@ -21,7 +21,7 @@ export const event: Event = {
             fields: [
                 {
                     name: "Privacy Policy",
-                    value: `By using **${client.user.username} Bot**, you understand that we can collect data about you or your servers on Discord: \n **-** User and Server information (name, ID, server members) \n\n Please keep in mind that we only store these data in order for our service to work. \n\n Click **Agree** below to continue! \n\n\n Contact \`reinhardt#8345\` for data removal request.`,
+                    value: `By using **${client.user.username} Bot**, you understand that we can collect data about you or your servers on Discord: \n **-** User and Server information (name, ID, server members) \n\n And you'll also agreed that you're: \n - Minimum **18+** \n\n Please keep in mind that we only store these data in order for our service to work. \n\n Click **Agree** below to continue! \n\n\n Contact \`reinhardt#8345\` for data removal request.`,
                     inline: false
                 }
             ],
