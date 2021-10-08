@@ -1,6 +1,7 @@
 "use strict";
 
 import { Command } from "../../Interfaces";
+import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
     name: "sweep",
@@ -13,7 +14,11 @@ export const command: Command = {
 
         // Clean up the entire messages
         client.deleteMessages(message.channel.id, messageArray).then(() => {
-            return message.channel.createMessage({ content: "Content Cleaned!" }).then((m) => {
+            const embed = new RichEmbed()
+                .setDescription(`Swept **${messageArray.length}** messages!`)
+                .setColor(client.config.COLOUR);
+
+            return message.channel.createMessage({ embeds: [embed] }).then((m) => {
                 setTimeout(() => {
                     m.delete();
                 }, 2500);
