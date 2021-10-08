@@ -1,8 +1,9 @@
 "use strict";
 
 import { AdvancedMessageContent, ComponentInteraction, EmbedOptions, Message, TextableChannel } from "eris";
-import { API, Book } from "nhentai-api";
+import { API, Book, Search } from "nhentai-api";
 import Reader from "../client";
+import moment from "moment";
 
 class ButtonNavigator {
     api: API;
@@ -83,6 +84,8 @@ class ButtonNavigator {
 
     run() {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
+            if (interaction.member.bot) return;
+
                 switch (interaction.data.custom_id) {
                     case `read_prop_${this.authorMessage.id}`:
                         interaction.acknowledge();
@@ -120,7 +123,7 @@ class ButtonNavigator {
                         interaction.createMessage({
                             embeds: [
                                 {
-                                    description: `This doujin has a total pages **${this.embeds.length}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
+                                    description: `This doujin has a total pages of **${this.embeds.length}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
                                     color: this.client.config.COLOUR
                                 }
                             ],
@@ -195,8 +198,243 @@ class ButtonNavigator {
     }
 }
 
+class SearchDetailButtonNavigator {
+    api: API;
+    authorMessage?: Message<TextableChannel>;
+    client: Reader;
+    embed: number;
+    embeds: EmbedOptions[];
+    invoker: Message<TextableChannel>;
+    message: Message<TextableChannel>;
+    search: Search;
+    constructor(client: Reader, search: Search, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
+        this.api = new API();
+        this.authorMessage = authorMessage;
+        this.client = client;
+        this.embed = 1;
+        this.embeds = [];
+        this.invoker = message;
+        this.search = search;
+    }
+
+    async init() {
+        const title: string = this.search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
+        const embeds: EmbedOptions[] = this.search.books.map((book, index) =>
+        ({
+            title: "Search Results",
+            description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
+            color: this.client.config.COLOUR,
+            thumbnail: {
+                url: this.api.getImageURL(book.cover)
+            },
+            fields: [
+                {
+                    name: "Title",
+                    value: `\`${book.title.pretty}\``
+                },
+                {
+                    name: "Pages",
+                    value: `\`${book.pages.length}\``
+                },
+                {
+                    name: "Date Released",
+                    value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
+                },
+                {
+                    name: "Languages",
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                },
+                {
+                    name: "Tags",
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                }
+
+            ],
+            footer: {
+                text: `⭐ ${book.favorites}`
+            }
+        } as EmbedOptions));
+
+        this.embeds = embeds;
+
+        const messageContent: AdvancedMessageContent = {
+            embeds: [this.embeds[this.embed -1]],
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Result" },
+                        { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
+                        { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
+                        { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Result" }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `jumpto_page_${this.invoker.id}`, label: "Enter Result" },
+                    ]
+                }
+            ]
+        };
+
+        if (this.invoker.author.id === this.client.user.id) {
+            this.message = await this.invoker.edit(messageContent);
+        } else {
+            this.message = await this.invoker.channel.createMessage(messageContent);
+        }
+    }
+
+    update() {
+        this.message.edit({
+            embeds: [this.embeds[this.embed -1]],
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Result" },
+                        { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
+                        { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
+                        { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Result" }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `jumpto_page_${this.invoker.id}`, label: "Enter Result" },
+                    ]
+                }
+            ]
+        })
+    }
+
+    run() {
+        this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
+            if (interaction.member.bot) return;
+
+            switch (interaction.data.custom_id) {
+                case `see_detail_${this.authorMessage.id}`:
+                    interaction.acknowledge();
+                    this.init();
+                    break;
+                case `next_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    if (this.embed < this.embeds.length) {
+                        this.embed++
+                        this.update();
+                    }
+                    break;
+                case `previous_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    if (this.embed > 1) {
+                        this.embed--;
+                        this.update();
+                    }
+                    break;
+                case `first_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    this.embed = 1;
+                    this.update();
+                    break;
+                case `last_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    this.embed = this.embeds.length;
+                    this.update();
+                    break;
+                case `jumpto_page_${this.invoker.id}`:
+                    interaction.createMessage({
+                        embeds: [
+                            {
+                                description: `This page has a total results of **${this.embeds.length}**, please enter the number result you want to jump. You only got **30 Seconds** before I ignore you.`,
+                                color: this.client.config.COLOUR
+                            }
+                        ],
+                        flags: 64
+                    });
+
+                    const filter = (m: Message<TextableChannel>) => {
+                        if (m.author.bot) return;
+                        if (m.author.id !== interaction.member.id) return;
+                        if (isNaN(parseInt(m.content))) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: "Please enter a valid number page!",
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        if (parseInt(m.content) > this.embeds.length) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: `This page only has **1-${this.embeds.length}** results, what'd you think?`,
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        if (parseInt(m.content) <= 0) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: `This page only has **1-${this.embeds.length}** results, what'd you think?`,
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        else return true;
+                    }
+                    
+                    const response = await this.client.awaitChannelMessages(interaction.channel, { timeout: 30000, count: 1, filter: filter });
+        
+                    if (response.message) {
+                        response.message.delete();
+                        this.embed = parseInt(response.message.content);
+                        this.update();
+                    } else {
+                        return interaction.createMessage({
+                            embeds: [
+                                {
+                                    description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
+                                    color: this.client.config.COLOUR
+                                }
+                            ],
+                            flags: 64
+                        });
+                    }
+                    break;
+            }
+        });
+    }
+}
+
 export async function createPaginationEmbed(client: Reader, book: Book, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
     const paginationEmbed = new ButtonNavigator(client, book, message, authorMessage);
+    paginationEmbed.run();
+
+    return Promise.resolve(paginationEmbed.message);
+}
+
+export async function createSearchResultPaginationEmbed(client: Reader, search: Search, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
+    const paginationEmbed = new SearchDetailButtonNavigator(client, search, message, authorMessage);
     paginationEmbed.run();
 
     return Promise.resolve(paginationEmbed.message);
