@@ -2,6 +2,8 @@
 
 import { API } from "nhentai-api";
 import { Command } from "../../Interfaces";
+import { ActionRow } from "eris";
+import { createSearchResultPaginationEmbed } from "../../Extensions/ButtonNavigator/worker";
 import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
@@ -13,18 +15,10 @@ export const command: Command = {
     run: async (client, message, args) => {
         const api = new API();
 
-        api.search(encodeURIComponent(args.slice(1).join(" ")), parseInt(args[0])).then((res) => {
+        api.search(encodeURIComponent(args.slice(0).join(" ")), 1).then(async (res) => {
             if (res.books.length === 0) {
                 const embed = new RichEmbed()
                     .setDescription("No Results Found!")
-                    .setColor(client.config.COLOUR);
-
-                return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
-            }
-
-            if (parseInt(args[0]) > res.pages) {
-                const embed = new RichEmbed()
-                    .setDescription(`Only **${res.pages}** result ${res.pages >= 2 ? "pages" : "page"} ${res.pages >= 2 ? "are" : "is"} found!`)
                     .setColor(client.config.COLOUR);
 
                 return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
@@ -37,20 +31,21 @@ export const command: Command = {
                 .setDescription(`**Titles** \n\u2063 ${title.join("\n")}`)
                 .setColor(client.config.COLOUR);
 
-            message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
-        }).catch(() => {
-                return message.channel.createMessage({
-                    embeds: [
-                        {
-                            description: "Something went wrong! This is an known-issue and the dev is currently working on it.",
-                            color: client.config.COLOUR
-                        }
-                    ],
-                    messageReference: {
-                        messageID: message.id
-                    }
-                });
-        });
+            const component: ActionRow = {
+                type: 1,
+                components: [
+                    { style: 1, label: "See More Detail", custom_id: `see_detail_${message.id}`, type: 2 }
+                ]
+            }
 
+            const msg = await message.channel.createMessage({ embeds: [embed], components: [component], messageReference: { messageID: message.id } });
+            createSearchResultPaginationEmbed(client, res, msg, message);
+        }).catch(() => {
+            const embed = new RichEmbed()
+                .setDescription("No Results Found!")
+                .setColor(client.config.COLOUR);
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+        });
     }
 }
