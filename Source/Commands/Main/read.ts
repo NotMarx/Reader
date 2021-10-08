@@ -16,7 +16,6 @@ export const command: Command = {
     nsfwOnly: true,
     run: async (client, message, args) => {
         const api = new API();
-        const code: string = client.database.fetch(`Database.${message.guildID}.${message.author.id}.Book`);
 
         // Check if code is provided
         if (!args[0]) {
@@ -25,14 +24,6 @@ export const command: Command = {
                 color: client.config.COLOUR
             };
             
-            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-        }
-
-        if (code) {
-            const embed = new RichEmbed()
-                .setDescription("You may read multiple doujins at the same time but you can only view one at a time! Click the **Read** or the **Stop** button to view/read another doujin.")
-                .setColor(client.config.COLOUR);
-
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
         }
 
