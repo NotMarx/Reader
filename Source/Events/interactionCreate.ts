@@ -121,7 +121,6 @@ export const event: Event = {
                     }], flags: 64 });
                     break;
                 case "kill_prop":
-                    client.database.delete(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
                     interaction.acknowledge();
                     interaction.message.delete();
                     break;
