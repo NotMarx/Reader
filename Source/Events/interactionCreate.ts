@@ -124,6 +124,8 @@ export const event: Event = {
                     interaction.acknowledge();
                     interaction.message.delete();
                     break;
+                case "easter_kill_prop":
+                    interaction.createMessage({ content: "https://media.discordapp.net/attachments/847182285144588308/885694559659622420/party-kirby.gif", flags: 64 });
             }
         }
     }
