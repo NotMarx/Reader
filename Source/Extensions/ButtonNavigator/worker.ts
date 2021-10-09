@@ -226,7 +226,7 @@ class SearchDetailButtonNavigator {
                 url: `https://nhentai.net/g/${book.id}/`,
                 icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
             },
-            title: "Search Results",
+            title: `Page ${this.search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
             description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
             color: this.client.config.COLOUR,
             thumbnail: {
@@ -280,9 +280,9 @@ class SearchDetailButtonNavigator {
                     components: [
                         { style: 1, type: 2, custom_id: `first_result_page_${this.invoker.id}`, label: "First Page" },
                         { style: 2, type: 2, custom_id: `previous_result_page_${this.invoker.id}`, label: "Back" },
-                        { style: 4, type: 2, custom_id: `easter_stop_${this.invoker.id}`, label: "Stop" },
+                        { style: 4, type: 2, custom_id: `easter_kill_prop`, label: "Stop" },
                         { style: 2, type: 2, custom_id: `next_result_page_${this.invoker.id}`, label: "Next" },
-                        { style: 1, type: 2, custom_id: `lastresult_page_${this.invoker.id}`, label: "Last Page" }
+                        { style: 1, type: 2, custom_id: `last_result_page_${this.invoker.id}`, label: "Last Page" }
                     ]
                 },
                 {
@@ -330,9 +330,9 @@ class SearchDetailButtonNavigator {
                     components: [
                         { style: 1, type: 2, custom_id: `first_result_page_${this.invoker.id}`, label: "First Page" },
                         { style: 2, type: 2, custom_id: `previous_result_page_${this.invoker.id}`, label: "Back" },
-                        { style: 4, type: 2, custom_id: `easter_stop_${this.invoker.id}`, label: "Stop" },
+                        { style: 4, type: 2, custom_id: `easter_kill_prop`, label: "Stop" },
                         { style: 2, type: 2, custom_id: `next_result_page_${this.invoker.id}`, label: "Next" },
-                        { style: 1, type: 2, custom_id: `lastresult_page_${this.invoker.id}`, label: "Last Page" }
+                        { style: 1, type: 2, custom_id: `last_result_page_${this.invoker.id}`, label: "Last Page" }
                     ]
                 },
                 {
@@ -390,6 +390,333 @@ class SearchDetailButtonNavigator {
                     this.embed = this.embeds.length;
                     this.update();
                     break;
+                case `next_result_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    if (parseInt(interaction.message.embeds[0].title.split("Page")[1].split("/")[0]) < this.search.pages) {
+                        this.api.search(this.search.query, parseInt(interaction.message.embeds[0].title.split("Page")[1].split("/")[0]) + 1).then((search) => {
+                            const title: string = search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
+                            const embeds: EmbedOptions[] = search.books.map((book, index) =>
+                            ({
+                                author: {
+                                    name: `${book.id}`,
+                                    url: `https://nhentai.net/g/${book.id}/`,
+                                    icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
+                                },
+                                title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
+                                description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
+                                color: this.client.config.COLOUR,
+                                thumbnail: {
+                                    url: this.api.getImageURL(book.cover)
+                                },
+                                fields: [
+                                    {
+                                        name: "Title",
+                                        value: `\`${book.title.pretty}\``
+                                    },
+                                    {
+                                        name: "Pages",
+                                        value: `\`${book.pages.length}\``
+                                    },
+                                    {
+                                        name: "Date Released",
+                                        value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
+                                    },
+                                    {
+                                        name: "Languages",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                    },
+                                    {
+                                        name: "Tags",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                    }
+
+                                ],
+                                footer: {
+                                    text: `⭐ ${book.favorites}`
+                                }
+                            } as EmbedOptions));
+
+                            this.embeds = embeds;
+                            this.embed = 1;
+                            this.update();
+                        });
+                    }
+                    break;
+                case `previous_result_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    if (parseInt(interaction.message.embeds[0].title.split("Page")[1].split("/")[0]) > 1) {
+                        this.api.search(this.search.query, parseInt(interaction.message.embeds[0].title.split("Page")[1].split("/")[0]) - 1).then((search) => {
+                            const title: string = search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
+                            const embeds: EmbedOptions[] = search.books.map((book, index) =>
+                            ({
+                                author: {
+                                    name: `${book.id}`,
+                                    url: `https://nhentai.net/g/${book.id}/`,
+                                    icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
+                                },
+                                title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
+                                description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
+                                color: this.client.config.COLOUR,
+                                thumbnail: {
+                                    url: this.api.getImageURL(book.cover)
+                                },
+                                fields: [
+                                    {
+                                        name: "Title",
+                                        value: `\`${book.title.pretty}\``
+                                    },
+                                    {
+                                        name: "Pages",
+                                        value: `\`${book.pages.length}\``
+                                    },
+                                    {
+                                        name: "Date Released",
+                                        value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
+                                    },
+                                    {
+                                        name: "Languages",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                    },
+                                    {
+                                        name: "Tags",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                    }
+
+                                ],
+                                footer: {
+                                    text: `⭐ ${book.favorites}`
+                                }
+                            } as EmbedOptions));
+
+                            this.embeds = embeds;
+                            this.embed = 1;
+                            this.update();
+                        });
+                    }
+                    break;
+                case `first_result_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    this.api.search(this.search.query, 1).then((search) => {
+                        const title: string = search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
+                        const embeds: EmbedOptions[] = search.books.map((book, index) =>
+                        ({
+                            author: {
+                                name: `${book.id}`,
+                                url: `https://nhentai.net/g/${book.id}/`,
+                                icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
+                            },
+                            title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
+                            description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
+                            color: this.client.config.COLOUR,
+                            thumbnail: {
+                                url: this.api.getImageURL(book.cover)
+                            },
+                            fields: [
+                                {
+                                    name: "Title",
+                                    value: `\`${book.title.pretty}\``
+                                },
+                                {
+                                    name: "Pages",
+                                    value: `\`${book.pages.length}\``
+                                },
+                                {
+                                    name: "Date Released",
+                                    value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
+                                },
+                                {
+                                    name: "Languages",
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                },
+                                {
+                                    name: "Tags",
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                }
+
+                            ],
+                            footer: {
+                                text: `⭐ ${book.favorites}`
+                            }
+                        } as EmbedOptions));
+
+                        this.embeds = embeds;
+                        this.embed = 1;
+                        this.update();
+                    });
+                    break;
+                case `last_result_page_${this.invoker.id}`:
+                    interaction.acknowledge();
+
+                    this.api.search(this.search.query, this.search.pages).then((search) => {
+                        const title: string = search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
+                        const embeds: EmbedOptions[] = search.books.map((book, index) =>
+                        ({
+                            author: {
+                                name: `${book.id}`,
+                                url: `https://nhentai.net/g/${book.id}/`,
+                                icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
+                            },
+                            title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
+                            description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
+                            color: this.client.config.COLOUR,
+                            thumbnail: {
+                                url: this.api.getImageURL(book.cover)
+                            },
+                            fields: [
+                                {
+                                    name: "Title",
+                                    value: `\`${book.title.pretty}\``
+                                },
+                                {
+                                    name: "Pages",
+                                    value: `\`${book.pages.length}\``
+                                },
+                                {
+                                    name: "Date Released",
+                                    value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
+                                },
+                                {
+                                    name: "Languages",
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                },
+                                {
+                                    name: "Tags",
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                }
+
+                            ],
+                            footer: {
+                                text: `⭐ ${book.favorites}`
+                            }
+                        } as EmbedOptions));
+
+                        this.embeds = embeds;
+                        this.embed = 1;
+                        this.update();
+                    });
+                    break;
+                case `jumpto_result_page_${this.invoker.id}`:
+                    interaction.createMessage({
+                        embeds: [
+                            {
+                                description: `This search result has a total pages of **${this.search.pages.toLocaleString()}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
+                                color: this.client.config.COLOUR
+                            }
+                        ],
+                        flags: 64
+                    });
+
+                    const collectorFilter = (m: Message<TextableChannel>) => {
+                        if (m.author.bot) return;
+                        if (m.author.id !== interaction.member.id) return;
+                        if (isNaN(parseInt(m.content))) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: "Please enter a valid number page!",
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        if (parseInt(m.content) > this.search.pages) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: `This search result only has **1-${this.search.pages.toLocaleString()}** pages, what'd you think?`,
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        if (parseInt(m.content) <= 0) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: `This search result only has **1-${this.search.pages.toLocaleString()}** pages, what'd you think?`,
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        else return true;
+                    }
+
+                    const collectorResponse = await this.client.awaitChannelMessages(interaction.channel, { timeout: 30000, count: 1, filter: collectorFilter });
+
+                    if (collectorResponse.message) {
+                        collectorResponse.message.delete();
+                        this.api.search(this.search.query, parseInt(collectorResponse.message.content)).then((search) => {
+                            const title: string = search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
+                            const embeds: EmbedOptions[] = search.books.map((book, index) =>
+                            ({
+                                author: {
+                                    name: `${book.id}`,
+                                    url: `https://nhentai.net/g/${book.id}/`,
+                                    icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
+                                },
+                                title: `Page ${search.page} / ${this.search.pages.toLocaleString()}`,
+                                description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
+                                color: this.client.config.COLOUR,
+                                thumbnail: {
+                                    url: this.api.getImageURL(book.cover)
+                                },
+                                fields: [
+                                    {
+                                        name: "Title",
+                                        value: `\`${book.title.pretty}\``
+                                    },
+                                    {
+                                        name: "Pages",
+                                        value: `\`${book.pages.length}\``
+                                    },
+                                    {
+                                        name: "Date Released",
+                                        value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
+                                    },
+                                    {
+                                        name: "Languages",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                    },
+                                    {
+                                        name: "Tags",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                    }
+
+                                ],
+                                footer: {
+                                    text: `⭐ ${book.favorites}`
+                                }
+                            } as EmbedOptions));
+
+                            this.embeds = embeds;
+                            this.embed = 1;
+                            this.update();
+                        });
+                    } else {
+                        return interaction.createMessage({
+                            embeds: [
+                                {
+                                    description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
+                                    color: this.client.config.COLOUR
+                                }
+                            ],
+                            flags: 64
+                        });
+                    }
+                    break;
                 case `jumpto_result_${this.invoker.id}`:
                     interaction.createMessage({
                         embeds: [
@@ -409,7 +736,7 @@ class SearchDetailButtonNavigator {
                             interaction.createMessage({
                                 embeds: [
                                     {
-                                        description: "Please enter a valid number page!",
+                                        description: "Please enter a valid number results!",
                                         color: this.client.config.COLOUR
                                     }
                                 ],
