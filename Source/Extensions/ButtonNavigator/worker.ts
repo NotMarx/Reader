@@ -19,7 +19,7 @@ class ButtonNavigator {
         this.authorMessage = authorMessage;
         this.book = book;
         this.client = client;
-        this.embeds = book.pages.map((page) => ({ author: { name: `${book.id}`, url: `https://nhentai.net/g/${book.id}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: book.title.pretty, image: { url: this.api.getImageURL(page) }, thumbnail: { url: this.api.getImageURL(book.cover) }, color: this.client.config.COLOUR, footer: { text: `Requested By: ${message.member.username}#${message.member.discriminator}` } } as EmbedOptions));;
+        this.embeds = book.pages.map((page) => ({ author: { name: `${book.id}`, url: `https://nhentai.net/g/${book.id}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: book.title.pretty, image: { url: this.api.getImageURL(page) }, thumbnail: { url: this.api.getImageURL(book.cover) }, color: this.client.config.COLOUR, footer: { text: `Requested By: ${authorMessage.member.username}#${authorMessage.member.discriminator}` } } as EmbedOptions));;
         this.embed = 1;
         this.invoker = message;
     }
@@ -33,9 +33,9 @@ class ButtonNavigator {
                     type: 1,
                     components: [
                         { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Page" },
-                        { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
+                        { style: 2, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
                         { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
-                        { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                        { style: 2, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
                         { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Page" }
                     ]
                 },
@@ -65,9 +65,9 @@ class ButtonNavigator {
                     type: 1,
                     components: [
                         { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Page" },
-                        { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
+                        { style: 2, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
                         { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
-                        { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
+                        { style: 2, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
                         { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Page" }
                     ]
                 },
@@ -86,114 +86,114 @@ class ButtonNavigator {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
             if (interaction.member.bot) return;
 
-                switch (interaction.data.custom_id) {
-                    case `read_prop_${this.authorMessage.id}`:
-                        interaction.acknowledge();
-                        this.init();
-                        break;
-                    case `next_page_${this.invoker.id}`:
-                        interaction.acknowledge();
+            switch (interaction.data.custom_id) {
+                case `read_prop_${this.authorMessage.id}`:
+                    interaction.acknowledge();
+                    this.init();
+                    break;
+                case `next_page_${this.invoker.id}`:
+                    interaction.acknowledge();
 
-                        if (this.embed < this.embeds.length) {
-                            this.embed++
-                            this.update();
-                        }
-                        break;
-                    case `previous_page_${this.invoker.id}`:
-                        interaction.acknowledge();
-    
-                        if (this.embed > 1) {
-                            this.embed--;
-                            this.update();
-                        }
-                        break;
-                    case `first_page_${this.invoker.id}`:
-                        interaction.acknowledge();
-
-                        this.embed = 1;
+                    if (this.embed < this.embeds.length) {
+                        this.embed++
                         this.update();
-                        break;
-                    case `last_page_${this.invoker.id}`:
-                        interaction.acknowledge();
+                    }
+                    break;
+                case `previous_page_${this.invoker.id}`:
+                    interaction.acknowledge();
 
-                        this.embed = this.embeds.length;
+                    if (this.embed > 1) {
+                        this.embed--;
                         this.update();
-                        break;
-                    case `jumpto_page_${this.invoker.id}`:
-                        interaction.createMessage({
-                            embeds: [
-                                {
-                                    description: `This doujin has a total pages of **${this.embeds.length}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
-                                    color: this.client.config.COLOUR
-                                }
-                            ],
-                            flags: 64
-                        });
+                    }
+                    break;
+                case `first_page_${this.invoker.id}`:
+                    interaction.acknowledge();
 
-                        const filter = (m: Message<TextableChannel>) => {
-                            if (m.author.bot) return;
-                            if (m.author.id !== interaction.member.id) return;
-                            if (isNaN(parseInt(m.content))) {
-                                m.delete();
-                                interaction.createMessage({
-                                    embeds: [
-                                        {
-                                            description: "Please enter a valid number page!",
-                                            color: this.client.config.COLOUR
-                                        }
-                                    ],
-                                    flags: 64
-                                });
-                                return false;
-                            }
-                            if (parseInt(m.content) > this.embeds.length) {
-                                m.delete();
-                                interaction.createMessage({
-                                    embeds: [
-                                        {
-                                            description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
-                                            color: this.client.config.COLOUR
-                                        }
-                                    ],
-                                    flags: 64
-                                });
-                                return false;
-                            }
-                            if (parseInt(m.content) <= 0) {
-                                m.delete();
-                                interaction.createMessage({
-                                    embeds: [
-                                        {
-                                            description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
-                                            color: this.client.config.COLOUR
-                                        }
-                                    ],
-                                    flags: 64
-                                });
-                                return false;
-                            }
-                            else return true;
-                        }
+                    this.embed = 1;
+                    this.update();
+                    break;
+                case `last_page_${this.invoker.id}`:
+                    interaction.acknowledge();
 
-                        const response = await this.client.awaitChannelMessages(interaction.channel, { timeout: 30000, count: 1, filter: filter });
-            
-                        if (response.message) {
-                            response.message.delete();
-                            this.embed = parseInt(response.message.content);
-                            this.update();
-                        } else {
-                            return interaction.createMessage({
+                    this.embed = this.embeds.length;
+                    this.update();
+                    break;
+                case `jumpto_page_${this.invoker.id}`:
+                    interaction.createMessage({
+                        embeds: [
+                            {
+                                description: `This doujin has a total pages of **${this.embeds.length}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
+                                color: this.client.config.COLOUR
+                            }
+                        ],
+                        flags: 64
+                    });
+
+                    const filter = (m: Message<TextableChannel>) => {
+                        if (m.author.bot) return;
+                        if (m.author.id !== interaction.member.id) return;
+                        if (isNaN(parseInt(m.content))) {
+                            m.delete();
+                            interaction.createMessage({
                                 embeds: [
                                     {
-                                        description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
+                                        description: "Please enter a valid number page!",
                                         color: this.client.config.COLOUR
                                     }
                                 ],
                                 flags: 64
                             });
+                            return false;
                         }
-                        break;
-                }
+                        if (parseInt(m.content) > this.embeds.length) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        if (parseInt(m.content) <= 0) {
+                            m.delete();
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
+                                        color: this.client.config.COLOUR
+                                    }
+                                ],
+                                flags: 64
+                            });
+                            return false;
+                        }
+                        else return true;
+                    }
+
+                    const response = await this.client.awaitChannelMessages(interaction.channel, { timeout: 30000, count: 1, filter: filter });
+
+                    if (response.message) {
+                        response.message.delete();
+                        this.embed = parseInt(response.message.content);
+                        this.update();
+                    } else {
+                        return interaction.createMessage({
+                            embeds: [
+                                {
+                                    description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
+                                    color: this.client.config.COLOUR
+                                }
+                            ],
+                            flags: 64
+                        });
+                    }
+                    break;
+            }
         });
     }
 }
@@ -221,6 +221,11 @@ class SearchDetailButtonNavigator {
         const title: string = this.search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
         const embeds: EmbedOptions[] = this.search.books.map((book, index) =>
         ({
+            author: {
+                name: `${book.id}`,
+                url: `https://nhentai.net/g/${book.id}/`,
+                icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png"
+            },
             title: "Search Results",
             description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
             color: this.client.config.COLOUR,
@@ -258,22 +263,40 @@ class SearchDetailButtonNavigator {
         this.embeds = embeds;
 
         const messageContent: AdvancedMessageContent = {
-            embeds: [this.embeds[this.embed -1]],
+            embeds: [this.embeds[this.embed - 1]],
             components: [
                 {
                     type: 1,
                     components: [
-                        { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Result" },
-                        { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
+                        { style: 1, type: 2, custom_id: `first_result_${this.invoker.id}`, label: "First Result" },
+                        { style: 2, type: 2, custom_id: `previous_result_${this.invoker.id}`, label: "Back" },
                         { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
-                        { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
-                        { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Result" }
+                        { style: 2, type: 2, custom_id: `next_result_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `last_result_${this.invoker.id}`, label: "Last Result" }
                     ]
                 },
                 {
                     type: 1,
                     components: [
-                        { style: 1, type: 2, custom_id: `jumpto_page_${this.invoker.id}`, label: "Enter Result" },
+                        { style: 1, type: 2, custom_id: `first_result_page_${this.invoker.id}`, label: "First Page" },
+                        { style: 2, type: 2, custom_id: `previous_result_page_${this.invoker.id}`, label: "Back" },
+                        { style: 4, type: 2, custom_id: `easter_stop_${this.invoker.id}`, label: "Stop" },
+                        { style: 2, type: 2, custom_id: `next_result_page_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `lastresult_page_${this.invoker.id}`, label: "Last Page" }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
+                        { style: 1, type: 2, custom_id: `jumpto_result_page_${this.invoker.id}`, label: "Enter Page" }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
                     ]
                 }
             ]
@@ -284,30 +307,50 @@ class SearchDetailButtonNavigator {
         } else {
             this.message = await this.invoker.channel.createMessage(messageContent);
         }
+
+        this.update();
     }
 
     update() {
         this.message.edit({
-            embeds: [this.embeds[this.embed -1]],
+            embeds: [this.embeds[this.embed - 1]],
             components: [
                 {
                     type: 1,
                     components: [
-                        { style: 1, type: 2, custom_id: `first_page_${this.invoker.id}`, label: "First Result" },
-                        { style: 1, type: 2, custom_id: `previous_page_${this.invoker.id}`, label: "Back" },
+                        { style: 1, type: 2, custom_id: `first_result_${this.invoker.id}`, label: "First Result" },
+                        { style: 2, type: 2, custom_id: `previous_result_${this.invoker.id}`, label: "Back" },
                         { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
-                        { style: 1, type: 2, custom_id: `next_page_${this.invoker.id}`, label: "Next" },
-                        { style: 1, type: 2, custom_id: `last_page_${this.invoker.id}`, label: "Last Result" }
+                        { style: 2, type: 2, custom_id: `next_result_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `last_result_${this.invoker.id}`, label: "Last Result" }
                     ]
                 },
                 {
                     type: 1,
                     components: [
-                        { style: 1, type: 2, custom_id: `jumpto_page_${this.invoker.id}`, label: "Enter Result" },
+                        { style: 1, type: 2, custom_id: `first_result_page_${this.invoker.id}`, label: "First Page" },
+                        { style: 2, type: 2, custom_id: `previous_result_page_${this.invoker.id}`, label: "Back" },
+                        { style: 4, type: 2, custom_id: `easter_stop_${this.invoker.id}`, label: "Stop" },
+                        { style: 2, type: 2, custom_id: `next_result_page_${this.invoker.id}`, label: "Next" },
+                        { style: 1, type: 2, custom_id: `lastresult_page_${this.invoker.id}`, label: "Last Page" }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
+                        { style: 1, type: 2, custom_id: `jumpto_result_page_${this.invoker.id}`, label: "Enter Page" }
+                    ]
+                },
+                {
+                    type: 1,
+                    components: [
+                        { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
                     ]
                 }
             ]
-        })
+        });
     }
 
     run() {
@@ -319,7 +362,7 @@ class SearchDetailButtonNavigator {
                     interaction.acknowledge();
                     this.init();
                     break;
-                case `next_page_${this.invoker.id}`:
+                case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();
 
                     if (this.embed < this.embeds.length) {
@@ -327,7 +370,7 @@ class SearchDetailButtonNavigator {
                         this.update();
                     }
                     break;
-                case `previous_page_${this.invoker.id}`:
+                case `previous_result_${this.invoker.id}`:
                     interaction.acknowledge();
 
                     if (this.embed > 1) {
@@ -335,19 +378,19 @@ class SearchDetailButtonNavigator {
                         this.update();
                     }
                     break;
-                case `first_page_${this.invoker.id}`:
+                case `first_result_${this.invoker.id}`:
                     interaction.acknowledge();
 
                     this.embed = 1;
                     this.update();
                     break;
-                case `last_page_${this.invoker.id}`:
+                case `last_result_${this.invoker.id}`:
                     interaction.acknowledge();
 
                     this.embed = this.embeds.length;
                     this.update();
                     break;
-                case `jumpto_page_${this.invoker.id}`:
+                case `jumpto_result_${this.invoker.id}`:
                     interaction.createMessage({
                         embeds: [
                             {
@@ -402,9 +445,9 @@ class SearchDetailButtonNavigator {
                         }
                         else return true;
                     }
-                    
+
                     const response = await this.client.awaitChannelMessages(interaction.channel, { timeout: 30000, count: 1, filter: filter });
-        
+
                     if (response.message) {
                         response.message.delete();
                         this.embed = parseInt(response.message.content);
@@ -421,6 +464,12 @@ class SearchDetailButtonNavigator {
                         });
                     }
                     break;
+                case `read_prop_${this.invoker.id}`:
+                    this.api.getBook(parseInt(this.embeds[this.embed - 1].author.name)).then(async (book) => {
+                        const paginationEmbed = new ButtonNavigator(this.client, book, this.message, this.authorMessage);
+                        await paginationEmbed.init();
+                        paginationEmbed.run();
+                    });
             }
         });
     }
