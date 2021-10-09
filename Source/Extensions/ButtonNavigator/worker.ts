@@ -783,7 +783,7 @@ class SearchDetailButtonNavigator {
                         return interaction.createMessage({
                             embeds: [
                                 {
-                                    description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
+                                    description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Result** again to enter a valid result.",
                                     color: this.client.config.COLOUR
                                 }
                             ],
