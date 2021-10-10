@@ -2,8 +2,6 @@
 
 import { Event } from "../Interfaces";
 import { ActionRowComponents, ComponentInteraction, EmbedOptions, TextableChannel } from "eris";
-import { API } from "nhentai-api";
-import { createPaginationEmbed } from "../Extensions/ButtonNavigator/worker";
 
 export const event: Event = {
     name: "interactionCreate",
