@@ -44,7 +44,7 @@ export const command: Command = {
                 .addField(`${languageTags.length > 1 ? "Languages" : "Language"}`, `\`${languageTags.length !== 0 ? languageTags.join("`, `") : "None"}\``)
                 .addField(`${artistTags.length > 1 ? "Artists" : "Artist"}`, `\`${artistTags.length !== 0 ? artistTags.join("`, `") : "Not Provided"}\``)
                 .addField(`${characterTags.length > 1 ? "Characters" : "Character"}`, `\`${characterTags.length !== 0 ? characterTags.join("`, `") : "Original"}\``)
-                .addField(`Parody`, `\`${parodyTags.join("`, `")}\``)
+                .addField(`Parody`, `\`${parodyTags.length !== 0 ? parodyTags.join("`, `") : "Not Provided"}\``)
                 .addField(`${contentTags.length > 1 ? "Tags" : "Tag"}`, `\`${contentTags.length !== 0 ? contentTags.join("`, `") : "Not Provided"}\``)
                 .setFooter(`⭐ ${res.favorites.toLocaleString()}`)
                 .setThumbnail(api.getImageURL(res.cover));

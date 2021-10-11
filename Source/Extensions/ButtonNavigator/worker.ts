@@ -259,7 +259,7 @@ class SearchDetailButtonNavigator {
                 },
                 {
                     name: "Parody",
-                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
                 },
                 {
                     name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
@@ -448,7 +448,7 @@ class SearchDetailButtonNavigator {
                                     },
                                     {
                                         name: "Parody",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
                                     },
                                     {
                                         name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
@@ -513,7 +513,7 @@ class SearchDetailButtonNavigator {
                                     },
                                     {
                                         name: "Parody",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
                                     },
                                     {
                                         name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
@@ -577,7 +577,7 @@ class SearchDetailButtonNavigator {
                                 },
                                 {
                                     name: "Parody",
-                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
                                 },
                                 {
                                     name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
@@ -640,7 +640,7 @@ class SearchDetailButtonNavigator {
                                 },
                                 {
                                     name: "Parody",
-                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
                                 },
                                 {
                                     name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
@@ -760,7 +760,7 @@ class SearchDetailButtonNavigator {
                                     },
                                     {
                                         name: "Parody",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
                                     },
                                     {
                                         name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
