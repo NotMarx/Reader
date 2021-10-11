@@ -246,12 +246,24 @@ class SearchDetailButtonNavigator {
                     value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
                 },
                 {
-                    name: "Languages",
-                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                    name: `${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length > 1 ? "Languages" : "Language"}`,
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `") : "None"}\``
                 },
                 {
-                    name: "Tags",
-                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                    name: `${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length > 1 ? "Artists" : "Artist"}`,
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
+                },
+                {
+                    name: `${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length > 1 ? "Characters" : "Character"}`,
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).join("`, `") : "Original"}\``
+                },
+                {
+                    name: "Parody",
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                },
+                {
+                    name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
+                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `") : "Not Provided"}\``
                 }
 
             ],
@@ -423,12 +435,24 @@ class SearchDetailButtonNavigator {
                                         value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
                                     },
                                     {
-                                        name: "Languages",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length > 1 ? "Languages" : "Language"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `") : "None"}\``
                                     },
                                     {
-                                        name: "Tags",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length > 1 ? "Artists" : "Artist"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
+                                    },
+                                    {
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length > 1 ? "Characters" : "Character"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).join("`, `") : "Original"}\``
+                                    },
+                                    {
+                                        name: "Parody",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                    },
+                                    {
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `") : "Not Provided"}\``
                                     }
 
                                 ],
@@ -476,12 +500,24 @@ class SearchDetailButtonNavigator {
                                         value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
                                     },
                                     {
-                                        name: "Languages",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length > 1 ? "Languages" : "Language"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `") : "None"}\``
                                     },
                                     {
-                                        name: "Tags",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length > 1 ? "Artists" : "Artist"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
+                                    },
+                                    {
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length > 1 ? "Characters" : "Character"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).join("`, `") : "Original"}\``
+                                    },
+                                    {
+                                        name: "Parody",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                    },
+                                    {
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `") : "Not Provided"}\``
                                     }
 
                                 ],
@@ -528,12 +564,24 @@ class SearchDetailButtonNavigator {
                                     value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
                                 },
                                 {
-                                    name: "Languages",
-                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length > 1 ? "Languages" : "Language"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `") : "None"}\``
                                 },
                                 {
-                                    name: "Tags",
-                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length > 1 ? "Artists" : "Artist"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
+                                },
+                                {
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length > 1 ? "Characters" : "Character"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).join("`, `") : "Original"}\``
+                                },
+                                {
+                                    name: "Parody",
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                },
+                                {
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `") : "Not Provided"}\``
                                 }
 
                             ],
@@ -579,12 +627,24 @@ class SearchDetailButtonNavigator {
                                     value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
                                 },
                                 {
-                                    name: "Languages",
-                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length > 1 ? "Languages" : "Language"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `") : "None"}\``
                                 },
                                 {
-                                    name: "Tags",
-                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length > 1 ? "Artists" : "Artist"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
+                                },
+                                {
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length > 1 ? "Characters" : "Character"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).join("`, `") : "Original"}\``
+                                },
+                                {
+                                    name: "Parody",
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                },
+                                {
+                                    name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
+                                    value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `") : "Not Provided"}\``
                                 }
 
                             ],
@@ -687,12 +747,24 @@ class SearchDetailButtonNavigator {
                                         value: `\`${moment(book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``
                                     },
                                     {
-                                        name: "Languages",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `")}\``
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length > 1 ? "Languages" : "Language"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name).join("`, `") : "None"}\``
                                     },
                                     {
-                                        name: "Tags",
-                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `")}\``
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length > 1 ? "Artists" : "Artist"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name).join("`, `") : "Not Provided"}\``
+                                    },
+                                    {
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length > 1 ? "Characters" : "Character"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name).join("`, `") : "Original"}\``
+                                    },
+                                    {
+                                        name: "Parody",
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name).join("`, `")}\``
+                                    },
+                                    {
+                                        name: `${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name).length > 1 ? "Tags" : "Tag"}`,
+                                        value: `\`${book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).length !== 0 ? book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`).join("`, `") : "Not Provided"}\``
                                     }
 
                                 ],

@@ -28,8 +28,11 @@ export const command: Command = {
         }
 
         api.getBook(parseInt(args[0])).then(async (res) => {
+            const artistTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+            const characterTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
             const contentTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
             const languageTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name);
+            const parodyTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
             const uploadedAt: string = `\`${moment(res.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``;
 
             const embed = new RichEmbed()
@@ -38,8 +41,11 @@ export const command: Command = {
                 .addField("Title", `\`${res.title.pretty}\``)
                 .addField("Pages", `\`${res.pages.length}\``)
                 .addField("Date Released", uploadedAt)
-                .addField("Languages", `\`${languageTags.join("`, `")}\``)
-                .addField("Tags", `\`${contentTags.join("`, `")}\``)
+                .addField(`${languageTags.length > 1 ? "Languages" : "Language"}`, `\`${languageTags.length !== 0 ? languageTags.join("`, `") : "None"}\``)
+                .addField(`${artistTags.length > 1 ? "Artists" : "Artist"}`, `\`${artistTags.length !== 0 ? artistTags.join("`, `") : "Not Provided"}\``)
+                .addField(`${characterTags.length > 1 ? "Characters" : "Character"}`, `\`${characterTags.length !== 0 ? characterTags.join("`, `") : "Original"}\``)
+                .addField(`Parody`, `\`${parodyTags.join("`, `")}\``)
+                .addField(`${contentTags.length > 1 ? "Tags" : "Tag"}`, `\`${contentTags.length !== 0 ? contentTags.join("`, `") : "Not Provided"}\``)
                 .setFooter(`⭐ ${res.favorites.toLocaleString()}`)
                 .setThumbnail(api.getImageURL(res.cover));
 
