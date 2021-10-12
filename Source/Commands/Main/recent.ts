@@ -1,7 +1,9 @@
 "use strict";
 
+import { ActionRow } from "eris";
 import { Command } from "../../Interfaces";
 import { API, Book } from "nhentai-api";
+import { createSearchResultPaginationEmbed } from "../../Extensions/ButtonNavigator/worker";
 import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
@@ -13,9 +15,9 @@ export const command: Command = {
     run: async (client, message, args) => {
         let api = new API();
 
-        api.search("*", 1).then((res) => {
+        api.search("*", 1).then(async (res) => {
             const title: Book[] = [];
-            
+
             for (let i = 0; i < 10; i++) {
                 const recentUpload = res.books[i];
                 title.push(recentUpload);
@@ -26,7 +28,15 @@ export const command: Command = {
                 .addField("Title", title.map((book) => `\`[${book.id}]\` - \`${book.title.pretty}\``).join("\n"))
                 .setColor(client.config.COLOUR);
 
-            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+            const component: ActionRow = {
+                type: 1,
+                components: [
+                    { style: 1, label: "See More Detail", custom_id: `see_detail_${message.id}`, type: 2 }
+                ]
+            }
+
+            const msg = await message.channel.createMessage({ embeds: [embed], components: [component], messageReference: { messageID: message.id } });
+            createSearchResultPaginationEmbed(client, res, msg, message);
         });
     }
 
