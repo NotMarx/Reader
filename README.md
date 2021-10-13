@@ -17,6 +17,7 @@
 - Configuration
 - Customize prefix, embed's hex colour, etc...
 - More commands
+- Multilingual 
 - ~~Slash Commands~~ Won't be implement at any time. 
 
 ## Support Guide
