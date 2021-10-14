@@ -72,6 +72,12 @@
                 "READ": "Read",
                 "DISMISS": "Dismiss",
                 "BOOKMARK": "Bookmark"
+            },
+            "SEARCH": {
+                "NOT_FOUND": "No Results Found!",
+                "PAGE": "Page {page}",
+                "TITLES": "**Titles** \n {titles}",
+                "DETAIL": "See More Detail"
             }
         }
     }

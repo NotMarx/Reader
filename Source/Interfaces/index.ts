@@ -74,6 +74,12 @@ export interface LanguageOptions {
             DISMISS: string;
             BOOKMARK: string;
         }
+        SEARCH: {
+            NOT_FOUND: string;
+            PAGE: string;
+            TITLES: string;
+            DETAIL: string;
+        }
     }
 }
 
