@@ -55,6 +55,25 @@ export interface LanguageOptions {
             NONE: string;
             LOADING_STATE: string;
         }
+        READ: {
+            TITLE: string;
+            PAGES: string;
+            DATE: string;
+            LANGUAGE: string;
+            LANGUAGES: string;
+            ARTIST: string;
+            ARTISTS: string;
+            CHARACTER: string;
+            CHARACTERS: string;
+            PARODY: string;
+            TAG: string;
+            TAGS: string;
+            NONE: string;
+            NOT_PROVIDED: string;
+            READ: string;
+            DISMISS: string;
+            BOOKMARK: string;
+        }
     }
 }
 
