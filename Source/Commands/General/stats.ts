@@ -10,45 +10,45 @@ export const command: Command = {
     description: "The bot's stats",
     aliases: ["status"],
     category: "General",
-    run: async (client, message, args) => {
+    run: async (client, message, args, guildLanguage) => {
         const memory: number = process.memoryUsage().rss
         const totalMemory: string = `${Util.bytes(memory).value}${Util.bytes(memory).unit} / ${Util.bytes(require("os").totalmem()).value}${Util.bytes(require("os").totalmem()).unit}`;
         const used: number = process.memoryUsage().rss / 12800 / 12800;
 
         os.cpuUsage(async (cpu) => {
             const embed: EmbedOptions = {
-                title: `${client.user.username}'s Stats`,
-                description: `This is the current stats for **${client.user.username}**. \n She's currently in shard ID: **${message.member.guild.shard.id}** \n\n **Fun Fact**: **${client.user.username}** is now Open-Source! You can find her [Here](https://github.com/NotMarx/Reader).`,
+                title: guildLanguage.GENERAL.STATS.TITLE.replace("{bot}", client.user.username),
+                description: guildLanguage.GENERAL.STATS.DESC.replace(/{bot}/g, client.user.username).replace("{shard}", `${message.member.guild.shard.id}`).replace("{gh_url}", "https://github.com/NotMarx/Reader"),
                 color: client.config.COLOUR,
                 fields: [
                     {
-                        name: "Memory Usage",
-                        value: `${totalMemory} \n (${Math.round(used * 100) / 100}%)`,
+                        name: guildLanguage.GENERAL.STATS.FIELDS.MEMORY_USAGE.NAME,
+                        value: guildLanguage.GENERAL.STATS.FIELDS.MEMORY_USAGE.VALUE.replace("{total_mem}", totalMemory).replace("{percentage}", `${Math.round(used * 100) / 100}`),
                         inline: true
                     },
                     {
-                        name: "CPU Usage",
-                        value: `${Util.round(cpu, 2)}%`,
+                        name: guildLanguage.GENERAL.STATS.FIELDS.CPU_USAGE.NAME,
+                        value: guildLanguage.GENERAL.STATS.FIELDS.CPU_USAGE.VALUE.replace("{percentage}", `${Util.round(cpu, 2)}`),
                         inline: true
                     },
                     {
-                        name: "Database Size",
-                        value: `${Util.bytes(client.database.size()).value}${Util.bytes(client.database.size()).unit}`,
+                        name: guildLanguage.GENERAL.STATS.FIELDS.DATABASE_SIZE.NAME,
+                        value: guildLanguage.GENERAL.STATS.FIELDS.DATABASE_SIZE.VALUE.replace("{size}", `${Util.bytes(client.database.size()).value}${Util.bytes(client.database.size()).unit}`),
                         inline: true
                     },
                     {
-                        name: "NodeJS",
-                        value: process.versions.node,
+                        name: guildLanguage.GENERAL.STATS.FIELDS.NODEJS.NAME,
+                        value: guildLanguage.GENERAL.STATS.FIELDS.NODEJS.VALUE.replace("{version}", process.versions.node),
                         inline: true
                     },
                     {
-                        name: "Eris",
-                        value: VERSION,
+                        name: guildLanguage.GENERAL.STATS.FIELDS.ERIS.NAME,
+                        value: guildLanguage.GENERAL.STATS.FIELDS.ERIS.VALUE.replace("{version}", VERSION),
                         inline: true
                     },
                     {
-                        name: "Platform",
-                        value: `${process.platform.charAt(0).toUpperCase() + process.platform.slice(1)}`,
+                        name: guildLanguage.GENERAL.STATS.FIELDS.PLATFORM.NAME,
+                        value: guildLanguage.GENERAL.STATS.FIELDS.PLATFORM.VALUE.replace("{platform}", process.platform.charAt(0).toUpperCase() + process.platform.slice(1)),
                         inline: true
                     }
                 ],
