@@ -3,11 +3,14 @@
 import { Event, Command } from "../Interfaces";
 import { ActionRowComponents, EmbedOptions, Message, TextableChannel, TextChannel } from "eris";
 import Logger from "../Extensions/logger";
+import LanguageConstants from "../../Languages/LANG.json";
+import { LanguageOptions } from "../Interfaces";
 
 export const event: Event = {
     name: "messageCreate",
     run: async (client, message: Message<TextableChannel>) => {
-        let prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
+        const prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
+        const guildLanguage: LanguageOptions = (LanguageConstants[client.database.fetch(`Database.${message.guildID}.Language`) || "ENGLISH"] as LanguageOptions);
 
         // Ignore bots and incorrect prefix
         if (message.author.bot || !message.member.guild) return;
@@ -50,10 +53,10 @@ export const event: Event = {
                 return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
             });
         } else if (experience === true) {
-            const messageArray: string[] = message.content.split(" ");
-            const args: string[] = messageArray.slice(1);
-            const commandName: string = messageArray[0].slice(prefix.length);
-            const command: Command = client.commands.get(commandName) || client.aliases.get(commandName);
+            let messageArray: string[] = message.content.split(" ");
+            let args: string[] = messageArray.slice(1);
+            let commandName: string = messageArray[0].slice(prefix.length);
+            let command: Command = client.commands.get(commandName) || client.aliases.get(commandName);
 
             if (!command) return;
 
@@ -64,7 +67,7 @@ export const event: Event = {
             if (command.adminOnly && !client.config.ADMIN_ID.includes(message.author.id)) return;
 
             if (command) {
-                command.run(client, message, args);
+                command.run(client, message, args, guildLanguage);
                 Logger.command("COMMAND", `${message.author.username}#${message.author.discriminator} (${message.author.id}) Runs "${command.name}" At Guild: ${message.member.guild.name} (${message.guildID})`);
             }
         }
