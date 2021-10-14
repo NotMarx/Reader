@@ -53,6 +53,25 @@
                 "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",
                 "NONE": "None",
                 "LOADING_STATE": "Fetching your data, please wait..."
+            },
+            "READ": {
+                "TITLE": "Title",
+                "PAGES": "Pages",
+                "DATE": "Date Released",
+                "LANGUAGE": "Language",
+                "LANGUAGES": "Languages",
+                "ARTIST": "Artist",
+                "ARTISTS": "Artists",
+                "CHARACTER": "Character",
+                "CHARACTERS": "Characters",
+                "PARODY": "Parody",
+                "TAG": "Tag",
+                "TAGS": "Tags",
+                "NONE": "None",
+                "NOT_PROVIDED": "Not Provided",
+                "READ": "Read",
+                "DISMISS": "Dismiss",
+                "BOOKMARK": "Bookmark"
             }
         }
     }
