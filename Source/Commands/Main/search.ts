@@ -12,13 +12,13 @@ export const command: Command = {
     aliases: [],
     category: "Main",
     nsfwOnly: true,
-    run: async (client, message, args) => {
+    run: async (client, message, args, guildLanguage) => {
         const api = new API();
 
         api.search(encodeURIComponent(args.slice(0).join(" ")), 1).then(async (res) => {
             if (res.books.length === 0) {
                 const embed = new RichEmbed()
-                    .setDescription("No Results Found!")
+                    .setDescription(guildLanguage.MAIN.SEARCH.NOT_FOUND)
                     .setColor(client.config.COLOUR);
 
                 return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
@@ -27,14 +27,14 @@ export const command: Command = {
             const title = res.books.map((book) => `\`[${book.id}]\` - \`${book.title.pretty}\``);
 
             const embed = new RichEmbed()
-                .setTitle(`Page ${res.page} / ${res.pages}`)
-                .setDescription(`**Titles** \n\u2063 ${title.join("\n")}`)
+                .setTitle(guildLanguage.MAIN.SEARCH.PAGE.replace("{page}", `${res.page} / ${res.pages}`))
+                .setDescription(guildLanguage.MAIN.SEARCH.TITLES.replace("{titles}", `\u2063 ${title.join("\n")}`))
                 .setColor(client.config.COLOUR);
 
             const component: ActionRow = {
                 type: 1,
                 components: [
-                    { style: 1, label: "See More Detail", custom_id: `see_detail_${message.id}`, type: 2 }
+                    { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
                 ]
             }
 
@@ -42,7 +42,7 @@ export const command: Command = {
             createSearchResultPaginationEmbed(client, res, msg, message);
         }).catch(() => {
             const embed = new RichEmbed()
-                .setDescription("No Results Found!")
+                .setDescription(guildLanguage.MAIN.SEARCH.NOT_FOUND)
                 .setColor(client.config.COLOUR);
 
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
