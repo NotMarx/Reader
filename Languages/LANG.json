@@ -1,5 +1,16 @@
 {
     "ENGLISH": {
+        "ADMIN": {
+            "CONFIG": {
+                "NO_PERMS": "You don't have the required permissions to run this command!",
+                "NO_OPT": "Please specify one of these following valid options: `{options}`",
+                "NO_PREFIX": "Please specify a new prefix!",
+                "PREFIX_SUCCESS": "Successfully changed the prefix to `{prefix}`",
+                "NO_LANG": "Please specify a language to be used! \n\n The only supported languages are: **{language}**",
+                "INVALID_LANG": "The only supported languages are: **{language}**",
+                "LANG_SUCCESS": "Successfully changed the language to **{language}**"
+            }
+        },
         "GENERAL": {
             "PING": {
                 "TEXT": "Pong! | {latency}ms"
