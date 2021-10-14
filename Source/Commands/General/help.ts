@@ -10,7 +10,7 @@ export const command: Command = {
     aliases: ["helpme"],
     category: "General",
     usage: "help <command_name>",
-    run: async (client, message, args) => {
+    run: async (client, message, args, guildLanguage) => {
         const prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
         const command: Command = client.commands.get(args[0]) || client.aliases.get(args[0]);
 

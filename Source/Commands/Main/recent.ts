@@ -12,7 +12,7 @@ export const command: Command = {
     aliases: ["recent_doujin", "recent-upload"],
     category: "Main",
     nsfwOnly: true,
-    run: async (client, message, args) => {
+    run: async (client, message, args, guildLanguage) => {
         let api = new API();
 
         api.search("*", 1).then(async (res) => {
