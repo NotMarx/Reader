@@ -1,0 +1,48 @@
+{
+    "ENGLISH": {
+        "GENERAL": {
+            "PING": {
+                "TEXT": "Pong! | {latency}ms"
+            },
+            "STATS": {
+                "TITLE": "{bot}'s Stats",
+                "DESC": "This is the current stats for **{bot}**. \n She's currently in shard ID: **{shard}** \n\n **Fun Fact**: **{bot}** is now Open-Source! You can find her [Here]({gh_url}).",
+                "FIELDS": {
+                    "MEMORY_USAGE": {
+                        "NAME": "Memory Usage",
+                        "VALUE": "{total_mem} \n ({percentage}%)"
+                    },
+                    "CPU_USAGE": {
+                        "NAME": "CPU Usage",
+                        "VALUE": "{percentage}%"
+                    },
+                    "DATABASE_SIZE": {
+                        "NAME": "Database Size",
+                        "VALUE": "{size}"
+                    },
+                    "NODEJS": {
+                        "NAME": "NodeJS",
+                        "VALUE": "{version}"
+                    },
+                    "ERIS": {
+                        "NAME": "Eris",
+                        "VALUE": "{version}"
+                    },
+                    "PLATFORM": {
+                        "NAME": "Platform",
+                        "VALUE": "{platform}"
+                    }
+                }
+            }
+        },
+        "MAIN": {
+            "BOOKMARK": {
+                "TITLE": "{user}'s Bookmarks",
+                "DESC": "Welcome, **{user}** to your library! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Visit the page (`{prefix}read <doujin>`) and click the **Bookmark** button to remove.",
+                "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",
+                "NONE": "None",
+                "LOADING_STATE": "Fetching your data, please wait..."
+            }
+        }
+    }
+}

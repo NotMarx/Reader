@@ -10,25 +10,25 @@ export const command: Command = {
     aliases: [],
     category: "Main",
     nsfwOnly: true,
-    run: async (client, message, args) => {
+    run: async (client, message, args, guildLanguage) => {
         const api = new API();
         const prefix: string = await client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
         const bookmarked: string[] = await client.database.fetch(`Database.${message.author.id}.Bookmark`);
 
         if (!bookmarked || bookmarked.length === 0) {
             const embed: RichEmbed = new RichEmbed()
-                .setTitle(`${message.author.username}'s Bookmarks`)
+                .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", message.author.username))
                 .setThumbnail(message.author.avatarURL)
                 .setColor(client.config.COLOUR)
-                .setDescription(`Welcome! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Simply visit the page (\`${prefix}read <doujin_code>\`) and click the **Bookmark** button again to remove.`)
-                .addField("⭐ Bookmarked Doujin [0]", "`None`");
+                .setDescription(guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix))
+                .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", "0"), guildLanguage.MAIN.BOOKMARK.NONE);
 
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
         }
 
         const msg = await message.channel.createMessage({
             embeds: [
-                { description: "Fetching your data, please wait...", color: client.config.COLOUR }
+                { description: guildLanguage.MAIN.BOOKMARK.LOADING_STATE, color: client.config.COLOUR }
             ],
             messageReference: {
                 messageID: message.id
@@ -43,11 +43,11 @@ export const command: Command = {
         }
 
         const embed: RichEmbed = new RichEmbed()
-            .setTitle(`${message.author.username}'s Bookmarks`)
+            .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", message.author.username))
             .setThumbnail(message.author.avatarURL)
             .setColor(client.config.COLOUR)
-            .setDescription(`Welcome! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Simply visit the page (\`${prefix}read <doujin_code>\`) and click the **Bookmark** button again to remove.`)
-            .addField(`⭐ Bookmarked Doujin [${bookmarked.length}]`, bookmarkedTitle.join("\n"));
+            .setDescription(guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix))
+            .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`), bookmarkedTitle.join("\n"));
 
         return msg.edit({ embeds: [embed], messageReference: { messageID: message.id } });
     }
