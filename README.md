@@ -12,13 +12,20 @@
 - Fill in everything you need in `config.json`
 - I don't know the rest
 
-## Todo List
+## Task List
 
-- Configuration
-- Customize prefix, embed's hex colour, etc...
-- More commands
-- Multilingual 
-- ~~Slash Commands~~ Won't be implement at any time. 
+- [x] Configuration
+- [x] Customize prefix, embed's hex colour, etc...
+- [x] More commands
+- [ ] Multilingual
+- [ ] Dashboard 
+- [ ] ~~Slash Commands~~ Won't be implement at any time.
+
+## Translate Reader
+
+**Reader** supports languages other than English but we need help from someone who are able to dedicate their time on translating **Reader**'s strings.
+
+- Click [Here](https://crowdin.com/project/readerchan) to translate!
 
 ## Support Guide
 
