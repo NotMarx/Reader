@@ -869,6 +869,7 @@ class SearchDetailButtonNavigator {
                         await paginationEmbed.init();
                         paginationEmbed.run();
                     });
+                    break;
             }
         });
     }
