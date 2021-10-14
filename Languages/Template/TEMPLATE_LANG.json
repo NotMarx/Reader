@@ -1,0 +1,82 @@
+{
+    "ADMIN": {
+        "CONFIG": {
+            "NO_PERMS": "You don't have the required permissions to run this command!",
+            "NO_OPT": "Please specify one of these following valid options: `{options}`",
+            "NO_PREFIX": "Please specify a new prefix!",
+            "PREFIX_SUCCESS": "Successfully changed the prefix to `{prefix}`",
+            "NO_LANG": "Please specify a language to be used! \n\n The only supported languages are: **{language}**",
+            "INVALID_LANG": "The only supported languages are: **{language}**",
+            "LANG_SUCCESS": "Successfully changed the language to **{language}**"
+        }
+    },
+    "GENERAL": {
+        "PING": {
+            "TEXT": "Pong! | {latency}ms"
+        },
+        "STATS": {
+            "TITLE": "{bot}'s Stats",
+            "DESC": "This is the current stats for **{bot}**. \n She's currently in shard ID: **{shard}** \n\n **Fun Fact**: **{bot}** is now Open-Source! You can find her [Here]({gh_url}).",
+            "FIELDS": {
+                "MEMORY_USAGE": {
+                    "NAME": "Memory Usage",
+                    "VALUE": "{total_mem} \n ({percentage}%)"
+                },
+                "CPU_USAGE": {
+                    "NAME": "CPU Usage",
+                    "VALUE": "{percentage}%"
+                },
+                "DATABASE_SIZE": {
+                    "NAME": "Database Size",
+                    "VALUE": "{size}"
+                },
+                "NODEJS": {
+                    "NAME": "NodeJS",
+                    "VALUE": "{version}"
+                },
+                "ERIS": {
+                    "NAME": "Eris",
+                    "VALUE": "{version}"
+                },
+                "PLATFORM": {
+                    "NAME": "Platform",
+                    "VALUE": "{platform}"
+                }
+            }
+        }
+    },
+    "MAIN": {
+        "BOOKMARK": {
+            "TITLE": "{user}'s Bookmarks",
+            "DESC": "Welcome, **{user}** to your library! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Visit the page (`{prefix}read <doujin>`) and click the **Bookmark** button to remove.",
+            "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",
+            "NONE": "None",
+            "LOADING_STATE": "Fetching your data, please wait..."
+        },
+        "READ": {
+            "TITLE": "Title",
+            "PAGES": "Pages",
+            "DATE": "Date Released",
+            "LANGUAGE": "Language",
+            "LANGUAGES": "Languages",
+            "ARTIST": "Artist",
+            "ARTISTS": "Artists",
+            "CHARACTER": "Character",
+            "CHARACTERS": "Characters",
+            "PARODY": "Parody",
+            "TAG": "Tag",
+            "TAGS": "Tags",
+            "NONE": "None",
+            "NOT_PROVIDED": "Not Provided",
+            "READ": "Read",
+            "DISMISS": "Dismiss",
+            "BOOKMARK": "Bookmark"
+        },
+        "SEARCH": {
+            "NOT_FOUND": "No Results Found!",
+            "PAGE": "Page {page}",
+            "TITLES": "**Titles** \n {titles}",
+            "DETAIL": "See More Detail"
+        }
+    }
+}
