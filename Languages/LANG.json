@@ -16,6 +16,19 @@
             }
         },
         "GENERAL": {
+            "HELP": {
+                "META": {
+                    "DESC": "Display all commands",
+                    "CATEGORY": "General"
+                },
+                "TRUE": "True",
+                "FALSE": "False",
+                "ALIASES": "Aliases",
+                "CATEGORY": "Category",
+                "USAGE": "Usage",
+                "ADMIN_ONLY": "Admin Only",
+                "NSFW_ONLY": "NSFW Only"
+            },
             "PING": {
                 "META": {
                     "DESC": "Ping the Bot",
