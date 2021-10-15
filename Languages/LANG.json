@@ -2,6 +2,10 @@
     "ENGLISH": {
         "ADMIN": {
             "CONFIG": {
+                "META": {
+                    "DESC": "Configure the Bot with your own customization settings",
+                    "CATEGORY": "Admin"
+                },
                 "NO_PERMS": "You don't have the required permissions to run this command!",
                 "NO_OPT": "Please specify one of these following valid options: `{options}`",
                 "NO_PREFIX": "Please specify a new prefix!",
@@ -13,9 +17,17 @@
         },
         "GENERAL": {
             "PING": {
+                "META": {
+                    "DESC": "Ping the Bot",
+                    "CATEGORY": "General"
+                },
                 "TEXT": "Pong! | {latency}ms"
             },
             "STATS": {
+                "META": {
+                    "DESC": "Shows the bot's stats",
+                    "CATEGORY": "General"
+                },
                 "TITLE": "{bot}'s Stats",
                 "DESC": "This is the current stats for **{bot}**. \n She's currently in shard ID: **{shard}** \n\n **Fun Fact**: **{bot}** is now Open-Source! You can find her [Here]({gh_url}).",
                 "FIELDS": {
@@ -48,6 +60,10 @@
         },
         "MAIN": {
             "BOOKMARK": {
+                "META": {
+                    "DESC": "A library of your bookmarked Doujins",
+                    "CATEGORY": "Main"
+                },
                 "TITLE": "{user}'s Bookmarks",
                 "DESC": "Welcome, **{user}** to your library! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Visit the page (`{prefix}read <doujin>`) and click the **Bookmark** button to remove.",
                 "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",
@@ -55,6 +71,10 @@
                 "LOADING_STATE": "Fetching your data, please wait..."
             },
             "READ": {
+                "META": {
+                    "DESC": "Read a Doujin",
+                    "CATEGORY": "Main"
+                },
                 "TITLE": "Title",
                 "PAGES": "Pages",
                 "DATE": "Date Released",
@@ -74,10 +94,20 @@
                 "BOOKMARK": "Bookmark"
             },
             "SEARCH": {
+                "META": {
+                    "DESC": "Search for Doujins",
+                    "CATEGORY": "Main"
+                },
                 "NOT_FOUND": "No Results Found!",
                 "PAGE": "Page {page}",
                 "TITLES": "**Titles** \n {titles}",
                 "DETAIL": "See More Detail"
+            },
+            "SEARCHLIKE": {
+                "META": {
+                    "DESC": "Search for similar Doujins",
+                    "CATEGORY": "Main"
+                }
             }
         }
     }
