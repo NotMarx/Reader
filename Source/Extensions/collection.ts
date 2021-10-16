@@ -15,4 +15,31 @@ export default class Collection<T> extends Map<string, T> {
         }
         return arr;
     }
+
+    public find(func: (i: T) => boolean): T | undefined {
+        for (const item of this.values()) {
+            if (func(item)) {
+                return item;
+            }
+        }
+        return undefined;
+    }
+
+    public map<R>(func: (i: T) => R): R[] {
+        const arr: any[] = [];
+
+        for (const item of this.values()) {
+            arr.push(func(item));
+        }
+        return arr;
+    }
+
+    public some(func: (i: T) => boolean): boolean {
+        for (const item of this.values()) {
+            if (func(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
