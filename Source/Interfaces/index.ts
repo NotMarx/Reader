@@ -3,6 +3,10 @@
 export interface LanguageOptions {
     ADMIN: {
         CONFIG: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
             NO_PERMS: string;
             NO_OPT: string;
             NO_PREFIX: string;
@@ -14,9 +18,37 @@ export interface LanguageOptions {
     }
     GENERAL: {
         PING: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
             TEXT: string;
         }
+        HELP: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
+            CATEGORIES: {
+                ADMIN: string;
+                GENERAL: string;
+                MAIN: string;
+            }
+            TITLE: string;
+            DESC: string;
+            TRUE: string;
+            FALSE: string;
+            ALIASES: string;
+            CATEGORY: string;
+            USAGE: string;
+            ADMIN_ONLY: string;
+            NSFW_ONLY: string
+        }
         STATS: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
             TITLE: string;
             DESC: string;
             FIELDS: {
@@ -49,6 +81,10 @@ export interface LanguageOptions {
     }
     MAIN: {
         BOOKMARK: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
             TITLE: string;
             DESC: string;
             BOOKMARKED: string;
@@ -56,6 +92,10 @@ export interface LanguageOptions {
             LOADING_STATE: string;
         }
         READ: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
             TITLE: string;
             PAGES: string;
             DATE: string;
@@ -75,6 +115,10 @@ export interface LanguageOptions {
             BOOKMARK: string;
         }
         SEARCH: {
+            META: {
+                DESC: string;
+                CATEGORY: string;
+            }
             NOT_FOUND: string;
             PAGE: string;
             TITLES: string;
