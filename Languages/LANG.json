@@ -21,6 +21,13 @@
                     "DESC": "Display all commands",
                     "CATEGORY": "General"
                 },
+                "CATEGORIES": {
+                    "ADMIN": "Admin",
+                    "GENERAL": "General",
+                    "MAIN": "Main"
+                },
+                "TITLE": "{bot}'s Commands",
+                "DESC": "Use {command} for a command detail",
                 "TRUE": "True",
                 "FALSE": "False",
                 "ALIASES": "Aliases",
