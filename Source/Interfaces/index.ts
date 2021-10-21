@@ -77,6 +77,7 @@ export interface LanguageOptions {
                     VALUE: string;
                 }
             }
+            FOOTER: string;
         }
     }
     MAIN: {
