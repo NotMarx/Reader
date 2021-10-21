@@ -74,7 +74,8 @@
                     "NAME": "Platform",
                     "VALUE": "{platform}"
                 }
-            }
+            },
+            "FOOTER": "Made by {dev}"
         }
     },
     "MAIN": {
