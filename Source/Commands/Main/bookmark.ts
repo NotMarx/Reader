@@ -7,7 +7,7 @@ import RichEmbed from "../../Extensions/embed";
 export const command: Command = {
     name: "bookmark",
     description: "Check your bookmarked Doujin",
-    aliases: [],
+    aliases: ["library"],
     category: "Main",
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
