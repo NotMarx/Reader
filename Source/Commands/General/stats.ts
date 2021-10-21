@@ -56,7 +56,7 @@ export const command: Command = {
                     url: client.user.avatarURL
                 },
                 footer: {
-                    text: `Made by reinhardt`,
+                    text: guildLanguage.GENERAL.STATS.FOOTER.replace("{dev}", "reinhardt"),
                     icon_url: "https://cdn.discordapp.com/avatars/516186529547288576/0bf219f20a58380d381649dcde4d38e5.png?size=512"
                 }
             }
