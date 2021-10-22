@@ -7,7 +7,7 @@ import { Message, TextableChannel } from "eris";
 type CategoryOptions = "General" | "Admin" | "Main";
 
 interface Run {
-    (client: Reader, message: Message<TextableChannel>, args: string[], guildLanguage?: LanguageOptions);
+    (client: Reader, message: Message<TextableChannel>, args?: string[], guildLanguage?: LanguageOptions);
 }
 
 export interface Command {
