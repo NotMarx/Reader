@@ -8,6 +8,7 @@ export const command: Command = {
     description: "Configure the Bot",
     aliases: ["configure", "cfg"],
     category: "Admin",
+    usage: "config <option> <value>",
     run: async (client, message, args, guildLanguage) => {
         let embed: RichEmbed = new RichEmbed()
             .setColor(client.config.COLOUR);

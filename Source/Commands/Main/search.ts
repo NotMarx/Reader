@@ -11,6 +11,7 @@ export const command: Command = {
     description: "Search a Doujin",
     aliases: [],
     category: "Main",
+    usage: "search <query>",
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
         const api = new API();
