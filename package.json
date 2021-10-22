@@ -26,13 +26,20 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "byte-size": "^8.1.0",
     "chalk": "^4.1.2",
+    "ejs": "^3.1.6",
     "eris": "github:DonovanDMC/eris#everything",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "memorystore": "^1.6.6",
     "minimist": "^1.2.5",
     "moment": "^2.29.1",
     "nhentai-api": "^3.1.0",
     "os-utils": "0.0.14",
+    "passport": "^0.5.0",
+    "passport-discord": "^0.1.4",
     "path": "^0.12.7",
     "xen.db": "^3.0.1"
   }
