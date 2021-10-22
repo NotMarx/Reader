@@ -9,6 +9,7 @@ const client = new Reader(`Bot ${TOKEN}`, {
     defaultImageSize: 512,
     intents: [
         "guilds",
+        "guildMembers",
         "guildMessages"
     ],
     maxShards: "auto",
