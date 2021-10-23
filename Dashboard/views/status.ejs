@@ -17,7 +17,7 @@
                             <br>
                             Users: <%= bot.guilds.map((g) => g.memberCount).reduce((prev, val) => prev + val).toLocaleString() %>
                             <br>
-                            Shards: <%= bot.shards.filter((shard) => shard.ready === true).length %>/<%= bot.options.maxShards %> Online
+                            <%= bot.shards.size === 1 ? "Shard" : "Shards" %>: <%= bot.shards.filter((shard) => shard.ready === true).length %>/<%= bot.options.maxShards %> Online
                         </h5>
                     </div>
                 </div>
