@@ -5,8 +5,8 @@
 - **Open-Source Libraries Used:**
     - Discord Library: [Eris](https://github.com/abalabahaha/eris) 
         - provided by [abal](https://github.com/abalabahaha)
-    - Database: ~~[XenDB](https://github.com/NotMarx/xen.db)~~ Moving to [QuickMongo](https://github.com/DevSnowflake/QuickMongo)
-        - provided by [the SnowflakeDev Community](https://github.com/DevSnowflake)
+    - Database: ~~[XenDB](https://github.com/NotMarx/xen.db)~~ Moving to [MongoDB](https://github.com/Automattic/mongoose)
+        - provided by [MongoDB](https://github.com/mongodb)
 
     
 
