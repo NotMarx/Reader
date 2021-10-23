@@ -2,9 +2,13 @@
 
 **[W.I.P]** Uhh...
 
-- **Libraries Used:**
-    - Discord Library: [Eris](https://github.com/abalabahaha/eris)
-    - Database: [XenDB](https://github.com/NotMarx/xen.db)
+- **Open-Source Libraries Used:**
+    - Discord Library: [Eris](https://github.com/abalabahaha/eris) 
+        - provided by [abal](https://github.com/abalabahaha)
+    - Database: ~~[XenDB](https://github.com/NotMarx/xen.db)~~ Moving to [QuickMongo](https://github.com/DevSnowflake/QuickMongo)
+        - provided by [the SnowflakeDev Community](https://github.com/DevSnowflake)
+
+    
 
 ## How to Setup:
 
