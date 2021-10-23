@@ -8,7 +8,6 @@ export const command: Command = {
     aliases: ["pong"],
     category: "General",
     run: async (client, message, args, guildLanguage) => {
-        
         return message.channel.createMessage({ content: guildLanguage.GENERAL.PING.TEXT.replace("{latency}", `${message.member.guild.shard.latency}`), messageReference: { messageID: message.id }});
     }
 }
