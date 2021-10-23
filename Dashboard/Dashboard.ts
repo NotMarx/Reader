@@ -22,6 +22,11 @@ interface DomainOptions {
     protocol: string;
 }
 
+interface GuildDatabaseOptions {
+    Prefix: string;
+    Language: string;
+}
+
 export const Dashboard = async (client: Reader) => {
     const dataDir = path.resolve(`${process.cwd()}${path.sep}dashboard`);
     const templateDir = path.resolve(`${dataDir}${path.sep}views`);
@@ -168,11 +173,30 @@ export const Dashboard = async (client: Reader) => {
         const database = await client.database.fetch(`Database.${guild.id}`);
 
         if (!database) {
-            client.database.set(`Database.${guild.id}.Prefix`, config.PREFIX);
-            client.database.set(`Database.${guild.id}.Language`, "ENGLISH");
+            await client.database.set(`Database.${guild.id}.Prefix`, config.PREFIX);
+            await client.database.set(`Database.${guild.id}.Language`, "ENGLISH");
         }
 
         renderTemplate(res, req, "settings.ejs", { guild, database, alert: null });
+    });
+
+    app.post("/dashboard/:guildID", checkAuth, async (req, res) => {
+        const guild = client.guilds.get(req.params.guildID);
+        const member = guild.members.get(req.user.id);
+        const database: GuildDatabaseOptions = await client.database.fetch(`Database.${guild.id}`);
+
+        if (!guild) return res.redirect("/dashboard");
+        if (!member) return res.redirect("/dashboard");
+        if (!member.permissions.has("manageGuild")) return res.redirect("/dashboard");
+
+        await client.database.set(`Database.${guild.id}.Prefix`, req.body.prefix || database.Prefix);
+        await client.database.set(`Database.${guild.id}.Language`, req.body.language || database.Language);
+
+        if (req.body.prefix.length > 20) {
+            return renderTemplate(res, req, "settings.ejs", { guild, database, alert: "You cannot set more than 20 characters of prefix!", success: false });
+        }
+
+        renderTemplate(res, req, "settings.ejs", { guild, database, alert: "Your settings have been saved!", success: true });
     });
 
     app.listen(config.PORT, null, null, () => Logger.system("DASHBOARD", `Dashboard Is Up And Running On Port ${config.PORT}.`));
