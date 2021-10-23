@@ -9,6 +9,7 @@ import path from "path";
 import passport from "passport";
 import { Strategy } from "passport-discord";
 import Logger from "../Source/Extensions/logger";
+import Eris from "eris";
 import bodyParser from "body-parser";
 import ejs from "ejs";
 import config from "../Source/Interfaces/config.json";
@@ -144,6 +145,34 @@ export const Dashboard = async (client: Reader) => {
 
         renderTemplate(res, req, "commands.ejs");
 
+    });
+
+    app.get("/dashboard", checkAuth, (req, res) => {
+        renderTemplate(res, req, "dashboard.ejs", { perms: Eris.Permission });
+    });
+
+    app.get("/dashboard/:guildID", checkAuth, async (req, res) => {
+        const guild = client.guilds.get(req.params.guildID);
+        let member = guild.members.get(req.user.id);
+
+        if (!guild) return res.redirect("/dashboard");
+        if (!member) {
+            try {
+                await (guild.fetchMembers());
+                member = guild.members.get(req.user.id);
+            } catch (err) { Logger.error("ERROR", `Couldn't Fetch The Members Of ${guild.id}: ${err}`); }
+        }
+        if (!member) return res.redirect("/dashboard");
+        if (!member.permissions.has("manageGuild")) return res.redirect("/dashboard");
+
+        const database = await client.database.fetch(`Database.${guild.id}`);
+
+        if (!database) {
+            client.database.set(`Database.${guild.id}.Prefix`, config.PREFIX);
+            client.database.set(`Database.${guild.id}.Language`, "ENGLISH");
+        }
+
+        renderTemplate(res, req, "settings.ejs", { guild, database, alert: null });
     });
 
     app.listen(config.PORT, null, null, () => Logger.system("DASHBOARD", `Dashboard Is Up And Running On Port ${config.PORT}.`));
