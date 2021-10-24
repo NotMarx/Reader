@@ -5,4 +5,9 @@ export interface Config {
     COLOUR: number;
     PREFIX: string;
     TOKEN: string;
+    MONGODB_URI: string;
+    CLIENT_ID: string;
+    CLIENT_SECRET: string;
+    DOMAIN: string;
+    PORT: number;
 }
