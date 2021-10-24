@@ -10,7 +10,7 @@ export const command: Command = {
     category: "Admin",
     adminOnly: true,
     run: async (client, message, args) => {
-        const messageArray: string[] = (await client.getMessages(message.channel.id, { limit: 75 })).map((m) => m.id);
+        const messageArray: string[] = (await client.getMessages(message.channel.id, { limit: 75 })).filter((m) => !m.pinned).map((m) => m.id);
 
         // Clean up the entire messages
         client.deleteMessages(message.channel.id, messageArray).then(() => {
