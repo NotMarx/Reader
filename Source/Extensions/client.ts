@@ -7,6 +7,7 @@ import ConfigJSON from "../Interfaces/config.json";
 import { Database } from "xen.db";
 import { MessageCollector, MessageCollectorOptions } from "../Extensions/collector";
 import path from "path";
+import { MongoDatabase } from "./database";
 import { readdirSync } from "fs";
 
 export default class Reader extends Client {
@@ -15,6 +16,7 @@ export default class Reader extends Client {
     public config: Config = ConfigJSON;
     public events: Map<string, Event> = new Map();
     public database: Database = new Database("Database/ReaderBase.sql", { path: "Database", table: "READER", useWalMode: false });
+    public db = new MongoDatabase(ConfigJSON.MONGODB_URI).init();
 
     /**
      * Initalize the bot
