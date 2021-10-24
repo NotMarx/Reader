@@ -85,6 +85,10 @@
                     "DESC": "A library of your bookmarked Doujins",
                     "CATEGORY": "Main"
                 },
+                "MEMBER": {
+                    "DESC": "This is {user}'s bookmarks, don't expect too much.",
+                    "LOADING_STATE": "Fetching their data, please wait..."
+                },
                 "TITLE": "{user}'s Bookmarks",
                 "DESC": "Welcome, **{user}** to your library! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Visit the page (`{prefix}read <doujin>`) and click the **Bookmark** button to remove.",
                 "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",

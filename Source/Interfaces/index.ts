@@ -86,6 +86,10 @@ export interface LanguageOptions {
                 DESC: string;
                 CATEGORY: string;
             }
+            MEMBER: {
+                DESC: string;
+                LOADING_STATE: string;
+            }
             TITLE: string;
             DESC: string;
             BOOKMARKED: string;
