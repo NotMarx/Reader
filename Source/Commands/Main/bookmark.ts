@@ -12,7 +12,7 @@ export const command: Command = {
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
         const api = new API();
-        const otherMember = message.member.guild.members.find((member) => member.username === args[0]) || message.member.guild.members.find((member) => member.id === args[0]) || message.mentions[0];
+        const otherMember = client.users.find((user) => user.username === args[0]) || client.users.find((user) => user.id === args[0]) || message.mentions[0];
         const prefix: string = await client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
         const bookmarked: string[] = await client.database.fetch(`Database.${otherMember ? otherMember.id : message.author.id}.Bookmark`);
 
