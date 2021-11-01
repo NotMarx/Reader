@@ -5,6 +5,7 @@ import { Command } from "../../Interfaces";
 import { ActionRow } from "eris";
 import { createSearchResultPaginationEmbed } from "../../Extensions/ButtonNavigator/worker";
 import RichEmbed from "../../Extensions/embed";
+import yargs from "yargs/yargs";
 
 export const command: Command = {
     name: "search",
@@ -15,8 +16,9 @@ export const command: Command = {
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
         const api = new API();
+        const flag = await yargs(args.slice(0)).array(["query", "page"]).argv;
 
-        api.search(encodeURIComponent(args.slice(0).join(" ")), 1).then(async (res) => {
+        api.search(encodeURIComponent((flag.query as string[]).join(" ")), flag.page[0] as number || 1).then(async (res) => {
             if (res.books.length === 0) {
                 const embed = new RichEmbed()
                     .setDescription(guildLanguage.MAIN.SEARCH.NOT_FOUND)
