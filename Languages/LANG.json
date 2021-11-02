@@ -124,6 +124,8 @@
                     "CATEGORY": "Main"
                 },
                 "NOT_FOUND": "No Results Found!",
+                "NO_QUERY": "Please specify a search query otherwise, what'd you want to search? \n\n `{command_example}`",
+                "INVALID_PAGE": "Page should be in number!",
                 "PAGE": "Page {page}",
                 "TITLES": "**Titles** \n {titles}",
                 "DETAIL": "See More Detail"

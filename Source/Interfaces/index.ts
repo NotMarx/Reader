@@ -125,6 +125,8 @@ export interface LanguageOptions {
                 CATEGORY: string;
             }
             NOT_FOUND: string;
+            NO_QUERY: string;
+            INVALID_PAGE: string;
             PAGE: string;
             TITLES: string;
             DETAIL: string;
