@@ -1,6 +1,6 @@
 "use strict";
 
-export interface LanguageOptions {
+export interface GuildLanguage {
     ADMIN: {
         CONFIG: {
             META: {
