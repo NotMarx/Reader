@@ -4,13 +4,13 @@ import { Event, Command } from "../Interfaces";
 import { ActionRowComponents, EmbedOptions, Message, TextableChannel, TextChannel } from "eris";
 import Logger from "../Extensions/logger";
 import LanguageConstants from "../../Languages/LANG.json";
-import { LanguageOptions } from "../Interfaces";
+import { GuildLanguage } from "../Interfaces";
 
 export const event: Event = {
     name: "messageCreate",
     run: async (client, message: Message<TextableChannel>) => {
         const prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
-        const guildLanguage: LanguageOptions = (LanguageConstants[client.database.fetch(`Database.${message.guildID}.Language`) || "ENGLISH"] as LanguageOptions);
+        const guildLanguage: GuildLanguage = (LanguageConstants[client.database.fetch(`Database.${message.guildID}.Language`) || "ENGLISH"] as GuildLanguage);
 
         // Ignore bots and incorrect prefix
         if (message.author.bot || !message.member.guild) return;

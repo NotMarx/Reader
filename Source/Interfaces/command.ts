@@ -1,13 +1,13 @@
 "use strict";
 
 import Reader from "../Extensions/client";
-import { LanguageOptions } from "./index";
+import { GuildLanguage } from "./index";
 import { Message, TextableChannel } from "eris";
 
 type CategoryOptions = "General" | "Admin" | "Main";
 
 interface Run {
-    (client: Reader, message: Message<TextableChannel>, args?: string[], guildLanguage?: LanguageOptions);
+    (client: Reader, message: Message<TextableChannel>, args?: string[], guildLanguage?: GuildLanguage);
 }
 
 export interface Command {
