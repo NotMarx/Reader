@@ -12,13 +12,38 @@ export const command: Command = {
     description: "Search a Doujin",
     aliases: [],
     category: "Main",
-    usage: "search <query>",
+    usage: "search --query <query> --page <page>",
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
+        const prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
         const api = new API();
         const flag = await yargs(args.slice(0)).array(["query", "page"]).argv;
 
-        api.search(encodeURIComponent((flag.query as string[]).join(" ")), flag.page[0] as number || 1).then(async (res) => {
+        if (!flag.query) {
+            const embed = new RichEmbed()
+                .setDescription(guildLanguage.MAIN.SEARCH.NO_QUERY.replace("{command_example}", `${prefix}search --query Search Something Here --page 3`))
+                .setColor(client.config.COLOUR)
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+        }
+
+        if (flag.query.length === 0) {
+            const embed = new RichEmbed()
+                .setDescription(guildLanguage.MAIN.SEARCH.NO_QUERY.replace("{command_example}", `${prefix}search --query Search Something Here --page 3`))
+                .setColor(client.config.COLOUR)
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+        }
+
+        if (typeof flag.page[0] !== "number") {
+            const embed = new RichEmbed()
+                .setDescription(guildLanguage.MAIN.SEARCH.INVALID_PAGE)
+                .setColor(client.config.COLOUR)
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+        }
+
+        api.search(encodeURIComponent((flag.query as string[]).join(" ")), flag.page ? flag.page[0] as number : 1).then(async (res) => {
             if (res.books.length === 0) {
                 const embed = new RichEmbed()
                     .setDescription(guildLanguage.MAIN.SEARCH.NOT_FOUND)
