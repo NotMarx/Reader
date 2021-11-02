@@ -2,6 +2,7 @@
 
 import { Command } from "../../Interfaces";
 import RichEmbed from "../../Extensions/embed";
+import yargs from "yargs/yargs";
 
 export const command: Command = {
     name: "config",
@@ -10,6 +11,7 @@ export const command: Command = {
     category: "Admin",
     usage: "config <option> <value>",
     run: async (client, message, args, guildLanguage) => {
+        const flag = await yargs(args.slice(0)).array(["settings", "value"]).argv;
         let embed: RichEmbed = new RichEmbed()
             .setColor(client.config.COLOUR);
         
@@ -22,9 +24,13 @@ export const command: Command = {
 
         const langOpt: string[] = ["english"];
         const configOpt: string[] = ["hexColour", "prefix", "language"];
-        const argsValue: string = args[1];
+        // const argsValue: string = args[1];
 
-        if (!args[0]) {
+        if (!flag.settings) {
+            
+        }
+
+        /* if (!args[0]) {
             embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
 
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
@@ -68,6 +74,6 @@ export const command: Command = {
 
             message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
             break;
-        }
+        } */
     }
 }
