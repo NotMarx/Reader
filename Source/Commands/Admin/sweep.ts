@@ -2,6 +2,7 @@
 
 import { Command } from "../../Interfaces";
 import RichEmbed from "../../Extensions/embed";
+import yargs from "yargs/yargs";
 
 export const command: Command = {
     name: "sweep",
@@ -10,7 +11,8 @@ export const command: Command = {
     category: "Admin",
     adminOnly: true,
     run: async (client, message, args) => {
-        const messageArray: string[] = (await client.getMessages(message.channel.id, { limit: 75 })).filter((m) => !m.pinned).map((m) => m.id);
+        const flag = await yargs(args.slice(0)).array(["limit"]).argv;
+        const messageArray: string[] = (await client.getMessages(message.channel.id, { limit: flag.limit ? flag.limit[0] as number : 75 })).filter((m) => !m.pinned).map((m) => m.id);
 
         // Clean up the entire messages
         client.deleteMessages(message.channel.id, messageArray).then(() => {
