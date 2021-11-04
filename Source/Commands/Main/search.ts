@@ -35,7 +35,7 @@ export const command: Command = {
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
         }
 
-        if (typeof flag.page[0] !== "number") {
+        if (flag.page && typeof flag.page[0] !== "number") {
             const embed = new RichEmbed()
                 .setDescription(guildLanguage.MAIN.SEARCH.INVALID_PAGE)
                 .setColor(client.config.COLOUR)
