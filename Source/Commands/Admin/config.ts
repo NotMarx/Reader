@@ -32,6 +32,27 @@ export const command: Command = {
             return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
         }
 
+        if (!configOpt.includes(flag.settings[0] as string)) {
+            embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
+        }
+
+        switch (flag.settings[0]) {
+            case "prefix":
+                if (!flag.value[0]) {
+                    embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_PREFIX);
+
+                    return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
+                }
+
+                embed.setDescription(guildLanguage.ADMIN.CONFIG.PREFIX_SUCCESS.replace("{prefix}", flag.value[0] as string));
+
+                await client.database.set(`Database.${message.guildID}.Prefix`, flag.value[0]);
+                message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
+                break;
+        }
+
         /* if (!args[0]) {
             embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
 
