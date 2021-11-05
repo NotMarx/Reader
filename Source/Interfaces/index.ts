@@ -7,6 +7,7 @@ export interface GuildLanguage {
                 DESC: string;
                 CATEGORY: string;
             }
+            PREFIX_TOO_LONG: string;
             NO_PERMS: string;
             NO_OPT: string;
             NO_PREFIX: string;
