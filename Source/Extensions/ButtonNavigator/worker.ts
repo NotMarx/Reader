@@ -59,7 +59,7 @@ class ButtonNavigator {
     update() {
         this.message.edit({
             content: `Page **${this.embed}** / **${this.embeds.length}**`,
-            embed: this.embeds[this.embed - 1],
+            embeds: [this.embeds[this.embed - 1]],
             components: [
                 {
                     type: 1,
