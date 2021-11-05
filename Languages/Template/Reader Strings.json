@@ -5,6 +5,7 @@
                 "DESC": "Configure the Bot with your own customization settings",
                 "CATEGORY": "Admin"
             },
+            "PREFIX_TOO_LONG": "Prefix must be 64 characters or below!",
             "NO_PERMS": "You don't have the required permissions to run this command!",
             "NO_OPT": "Please specify one of these following valid options: `{options}`",
             "NO_PREFIX": "Please specify a new prefix!",
