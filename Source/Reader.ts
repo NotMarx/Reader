@@ -19,4 +19,4 @@ const client = new Reader(`Bot ${TOKEN}`, {
 // Initialize the bot
 client.init();
 client.setMaxListeners(Infinity);
-Dashboard(client);
+// Dashboard(client);

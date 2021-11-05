@@ -19,7 +19,7 @@ class ButtonNavigator {
         this.authorMessage = authorMessage;
         this.book = book;
         this.client = client;
-        this.embeds = book.pages.map((page) => ({ author: { name: `${book.id}`, url: `https://nhentai.net/g/${book.id}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: book.title.pretty, image: { url: this.api.getImageURL(page) }, thumbnail: { url: this.api.getImageURL(book.cover) }, color: this.client.config.COLOUR, footer: { text: `Requested By: ${authorMessage.member.username}#${authorMessage.member.discriminator}` } } as EmbedOptions));;
+        this.embeds = book.pages.map((page) => ({ author: { name: `${book.id}`, url: `https://nhentai.net/g/${book.id}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: book.title.pretty, image: { url: this.api.getImageURL(page) }, thumbnail: { url: this.api.getImageURL(book.cover) }, color: this.client.config.COLOR, footer: { text: `Requested By: ${authorMessage.member.username}#${authorMessage.member.discriminator}` } } as EmbedOptions));;
         this.embed = 1;
         this.invoker = message;
     }
@@ -124,7 +124,7 @@ class ButtonNavigator {
                         embeds: [
                             {
                                 description: `This doujin has a total pages of **${this.embeds.length}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
-                                color: this.client.config.COLOUR
+                                color: this.client.config.COLOR
                             }
                         ],
                         flags: 64
@@ -139,7 +139,7 @@ class ButtonNavigator {
                                 embeds: [
                                     {
                                         description: "Please enter a valid number page!",
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -152,7 +152,7 @@ class ButtonNavigator {
                                 embeds: [
                                     {
                                         description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -165,7 +165,7 @@ class ButtonNavigator {
                                 embeds: [
                                     {
                                         description: `This doujin only has **1-${this.embeds.length}** pages, what'd you think?`,
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -186,7 +186,7 @@ class ButtonNavigator {
                             embeds: [
                                 {
                                     description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
-                                    color: this.client.config.COLOUR
+                                    color: this.client.config.COLOR
                                 }
                             ],
                             flags: 64
@@ -228,7 +228,7 @@ class SearchDetailButtonNavigator {
             },
             title: `Page ${this.search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
             description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
-            color: this.client.config.COLOUR,
+            color: this.client.config.COLOR,
             thumbnail: {
                 url: this.api.getImageURL(book.cover)
             },
@@ -417,7 +417,7 @@ class SearchDetailButtonNavigator {
                                 },
                                 title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
                                 description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
-                                color: this.client.config.COLOUR,
+                                color: this.client.config.COLOR,
                                 thumbnail: {
                                     url: this.api.getImageURL(book.cover)
                                 },
@@ -482,7 +482,7 @@ class SearchDetailButtonNavigator {
                                 },
                                 title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
                                 description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
-                                color: this.client.config.COLOUR,
+                                color: this.client.config.COLOR,
                                 thumbnail: {
                                     url: this.api.getImageURL(book.cover)
                                 },
@@ -546,7 +546,7 @@ class SearchDetailButtonNavigator {
                             },
                             title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
                             description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
-                            color: this.client.config.COLOUR,
+                            color: this.client.config.COLOR,
                             thumbnail: {
                                 url: this.api.getImageURL(book.cover)
                             },
@@ -609,7 +609,7 @@ class SearchDetailButtonNavigator {
                             },
                             title: `Page ${search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`,
                             description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
-                            color: this.client.config.COLOUR,
+                            color: this.client.config.COLOR,
                             thumbnail: {
                                 url: this.api.getImageURL(book.cover)
                             },
@@ -663,7 +663,7 @@ class SearchDetailButtonNavigator {
                         embeds: [
                             {
                                 description: `This search result has a total pages of **${this.search.pages.toLocaleString()}**, please enter the number page you want to jump. You only got **30 Seconds** before I ignore you.`,
-                                color: this.client.config.COLOUR
+                                color: this.client.config.COLOR
                             }
                         ],
                         flags: 64
@@ -678,7 +678,7 @@ class SearchDetailButtonNavigator {
                                 embeds: [
                                     {
                                         description: "Please enter a valid number page!",
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -691,7 +691,7 @@ class SearchDetailButtonNavigator {
                                 embeds: [
                                     {
                                         description: `This search result only has **1-${this.search.pages.toLocaleString()}** pages, what'd you think?`,
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -704,7 +704,7 @@ class SearchDetailButtonNavigator {
                                 embeds: [
                                     {
                                         description: `This search result only has **1-${this.search.pages.toLocaleString()}** pages, what'd you think?`,
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -729,7 +729,7 @@ class SearchDetailButtonNavigator {
                                 },
                                 title: `Page ${search.page} / ${this.search.pages.toLocaleString()}`,
                                 description: `${title} \n\n\n Currently Viewing Result: **__${index + 1}__** | \`[${book.id}]\``,
-                                color: this.client.config.COLOUR,
+                                color: this.client.config.COLOR,
                                 thumbnail: {
                                     url: this.api.getImageURL(book.cover)
                                 },
@@ -782,7 +782,7 @@ class SearchDetailButtonNavigator {
                             embeds: [
                                 {
                                     description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Page** again to enter a valid page.",
-                                    color: this.client.config.COLOUR
+                                    color: this.client.config.COLOR
                                 }
                             ],
                             flags: 64
@@ -794,7 +794,7 @@ class SearchDetailButtonNavigator {
                         embeds: [
                             {
                                 description: `This page has a total results of **${this.embeds.length}**, please enter the number result you want to jump. You only got **30 Seconds** before I ignore you.`,
-                                color: this.client.config.COLOUR
+                                color: this.client.config.COLOR
                             }
                         ],
                         flags: 64
@@ -809,7 +809,7 @@ class SearchDetailButtonNavigator {
                                 embeds: [
                                     {
                                         description: "Please enter a valid number results!",
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -822,7 +822,7 @@ class SearchDetailButtonNavigator {
                                 embeds: [
                                     {
                                         description: `This page only has **1-${this.embeds.length}** results, what'd you think?`,
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -835,7 +835,7 @@ class SearchDetailButtonNavigator {
                                 embeds: [
                                     {
                                         description: `This page only has **1-${this.embeds.length}** results, what'd you think?`,
-                                        color: this.client.config.COLOUR
+                                        color: this.client.config.COLOR
                                     }
                                 ],
                                 flags: 64
@@ -856,7 +856,7 @@ class SearchDetailButtonNavigator {
                             embeds: [
                                 {
                                     description: "**30 Seconds** passed and I've not received any response from you... \n\n Click the **Enter Result** again to enter a valid result.",
-                                    color: this.client.config.COLOUR
+                                    color: this.client.config.COLOR
                                 }
                             ],
                             flags: 64

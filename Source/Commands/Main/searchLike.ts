@@ -19,7 +19,7 @@ export const command: Command = {
             if (res.books.length === 0) {
                 const embed = new RichEmbed()
                     .setDescription(guildLanguage.MAIN.SEARCH.NOT_FOUND)
-                    .setColor(client.config.COLOUR);
+                    .setColor(client.config.COLOR);
 
                 return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
             }
@@ -29,7 +29,7 @@ export const command: Command = {
             const embed = new RichEmbed()
                 .setTitle(guildLanguage.MAIN.SEARCH.PAGE.replace("{page}", `${res.page} / ${res.pages}`))
                 .setDescription(guildLanguage.MAIN.SEARCH.TITLES.replace("{titles}", `\u2063 ${title.join("\n")}`))
-                .setColor(client.config.COLOUR);
+                .setColor(client.config.COLOR);
 
             const component: ActionRow = {
                 type: 1,

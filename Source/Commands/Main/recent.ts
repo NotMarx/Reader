@@ -26,7 +26,7 @@ export const command: Command = {
             const embed = new RichEmbed()
                 .setTitle(`Top 10 Recent Uploaded Doujins`)
                 .addField("Title", title.map((book) => `\`[${book.id}]\` - \`${book.title.pretty}\``).join("\n"))
-                .setColor(client.config.COLOUR);
+                .setColor(client.config.COLOR);
 
             const component: ActionRow = {
                 type: 1,

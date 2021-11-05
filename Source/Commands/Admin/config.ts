@@ -13,7 +13,7 @@ export const command: Command = {
     run: async (client, message, args, guildLanguage) => {
         const flag = await yargs(args.slice(0)).array(["settings", "value"]).argv;
         let embed: RichEmbed = new RichEmbed()
-            .setColor(client.config.COLOUR);
+            .setColor(client.config.COLOR);
         
         // Ignore for non-admin users
         if (message.author.id !== message.member.guild.ownerID && !message.member.permissions.has("manageGuild")) {
@@ -23,11 +23,13 @@ export const command: Command = {
         }
 
         const langOpt: string[] = ["english"];
-        const configOpt: string[] = ["hexColour", "prefix", "language"];
+        const configOpt: string[] = ["hexColor", "prefix", "language"];
         // const argsValue: string = args[1];
 
         if (!flag.settings) {
-            
+            embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
+
+            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
         }
 
         /* if (!args[0]) {
