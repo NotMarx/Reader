@@ -46,6 +46,12 @@ export const command: Command = {
                     return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
                 }
 
+                if ((flag.value[0] as string).length > 64) {
+                    embed.setDescription(guildLanguage.ADMIN.CONFIG.PREFIX_TOO_LONG);
+
+                    return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+                }
+
                 embed.setDescription(guildLanguage.ADMIN.CONFIG.PREFIX_SUCCESS.replace("{prefix}", flag.value[0] as string));
 
                 await client.database.set(`Database.${message.guildID}.Prefix`, flag.value[0]);
