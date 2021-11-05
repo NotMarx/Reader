@@ -67,7 +67,7 @@ export const event: Event = {
                     client.database.set(`${interaction.member ? interaction.member.id : interaction.user.id}`, false);
                     break;
                 case "bookmark_prop":
-                    const savedCode: string = interaction.message.embeds[0].author.name // await client.database.fetch(`Database.${interaction.guildID}.${interaction.member.id}.Book`);
+                    const savedCode: string = interaction.message.embeds[0].author.name;
                     const codeBank: string[] = await client.database.fetch(`Database.${interaction.member.id}.Bookmark`);
                     const prefix: string = await client.database.fetch(`Database.${interaction.guildID}.Prefix`) || client.config.PREFIX;
 
