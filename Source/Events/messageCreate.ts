@@ -28,7 +28,7 @@ export const event: Event = {
                     inline: false
                 }
             ],
-            color: client.config.COLOUR,
+            color: client.config.COLOR,
         };
 
         const experienceComponent: ActionRowComponents[] = [
@@ -62,7 +62,7 @@ export const event: Event = {
 
             // Checking Circumstances
             if (command.nsfwOnly && !(message.channel as TextChannel).nsfw) {
-                return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOUR }], messageReference: { messageID: message.id } });
+                return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOR }], messageReference: { messageID: message.id } });
             }
             if (command.adminOnly && !client.config.ADMIN_ID.includes(message.author.id)) return;
 

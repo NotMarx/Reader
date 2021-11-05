@@ -2,7 +2,7 @@
 
 export interface Config {
     ADMIN_ID: string[];
-    COLOUR: number;
+    COLOR: number;
     PREFIX: string;
     TOKEN: string;
     MONGODB_URI: string;

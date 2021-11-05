@@ -18,7 +18,7 @@ export const command: Command = {
         client.deleteMessages(message.channel.id, messageArray).then(() => {
             const embed = new RichEmbed()
                 .setDescription(`Swept **${messageArray.length}** messages!`)
-                .setColor(client.config.COLOUR);
+                .setColor(client.config.COLOR);
 
             return message.channel.createMessage({ embeds: [embed] }).then((m) => {
                 setTimeout(() => {

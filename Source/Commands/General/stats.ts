@@ -19,7 +19,7 @@ export const command: Command = {
             const embed: EmbedOptions = {
                 title: guildLanguage.GENERAL.STATS.TITLE.replace("{bot}", client.user.username),
                 description: guildLanguage.GENERAL.STATS.DESC.replace(/{bot}/g, client.user.username).replace("{shard}", `${message.member.guild.shard.id}`).replace("{gh_url}", "https://github.com/NotMarx/Reader"),
-                color: client.config.COLOUR,
+                color: client.config.COLOR,
                 fields: [
                     {
                         name: guildLanguage.GENERAL.STATS.FIELDS.MEMORY_USAGE.NAME,

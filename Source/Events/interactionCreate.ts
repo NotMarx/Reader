@@ -29,7 +29,7 @@ export const event: Event = {
                     const agreeEmbed: EmbedOptions = {
                         title: "First Experience [APPROVED]",
                         description: `You've agreed to the **Privacy Policy**! You may start using the commands. If you're completely new, type \`${client.database.fetch(`Database.${interaction.guildID}.Prefix`) || client.config.PREFIX}help\``,
-                        color: client.config.COLOUR
+                        color: client.config.COLOR
                     }
 
                     interaction.acknowledge().then(() => {
@@ -58,7 +58,7 @@ export const event: Event = {
                     const disagreeEmbed: EmbedOptions = {
                         title: "First Experience [DISAPPROVED]",
                         description: `You've **NOT** agree to the **Privacy Policy**! You're not permitted to use any commands unless you click **Agree**.`,
-                        color: client.config.COLOUR
+                        color: client.config.COLOR
                     }
 
                     interaction.acknowledge().then(() => {
@@ -78,7 +78,7 @@ export const event: Event = {
                                 {
                                     title: "First Experience",
                                     description: "It seems that this is your first time bookmarking therefore, I've created a Bookmark Database for you! \n\n Click the **Bookmark** button again to proceed",
-                                    color: client.config.COLOUR
+                                    color: client.config.COLOR
                                 }
                             ],
                             flags: 64
@@ -91,7 +91,7 @@ export const event: Event = {
                                 {
                                     title: "Max Bookmarks Exceeded!",
                                     description: "I'm sorry but you've reached the maximum amount of bookmarked doujins. If you wish to bookmark more doujins, you may unbookmarked your bookmarked doujins.",
-                                    color: client.config.COLOUR
+                                    color: client.config.COLOR
                                 }
                             ],
                             flags: 64
@@ -104,7 +104,7 @@ export const event: Event = {
                             embeds: [
                                 {
                                     description: `Successfully removed [${savedCode}](https://nhentai.net/g/${savedCode}/) from your bookmarks!`,
-                                    color: client.config.COLOUR
+                                    color: client.config.COLOR
                                 }
                             ],
                             flags: 64
@@ -115,7 +115,7 @@ export const event: Event = {
 
                     interaction.createMessage({ embeds: [{
                         description: `Successfully added [${savedCode}](https://nhentai.net/g/${savedCode}/) to your bookmarks! Use \`${prefix}bookmark\` to view them.`,
-                        color: client.config.COLOUR
+                        color: client.config.COLOR
                     }], flags: 64 });
                     break;
                 case "kill_prop":

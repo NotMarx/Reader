@@ -20,7 +20,7 @@ export const command: Command = {
             if (!otherMember) {
                 const embed = new RichEmbed()
                     .setDescription("Cannot find that user!")
-                    .setColor(client.config.COLOUR);
+                    .setColor(client.config.COLOR);
     
                 return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
             }
@@ -29,7 +29,7 @@ export const command: Command = {
                 const embed: RichEmbed = new RichEmbed()
                     .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", otherMember.username))
                     .setThumbnail(otherMember.avatarURL)
-                    .setColor(client.config.COLOUR)
+                    .setColor(client.config.COLOR)
                     .setDescription(guildLanguage.MAIN.BOOKMARK.MEMBER.DESC.replace("{user}", otherMember.username))
                     .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", "0"), guildLanguage.MAIN.BOOKMARK.NONE);
     
@@ -38,7 +38,7 @@ export const command: Command = {
     
             const msg = await message.channel.createMessage({
                 embeds: [
-                    { description: guildLanguage.MAIN.BOOKMARK.MEMBER.LOADING_STATE, color: client.config.COLOUR }
+                    { description: guildLanguage.MAIN.BOOKMARK.MEMBER.LOADING_STATE, color: client.config.COLOR }
                 ],
                 messageReference: {
                     messageID: message.id
@@ -55,7 +55,7 @@ export const command: Command = {
             const embed: RichEmbed = new RichEmbed()
                 .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", otherMember.username))
                 .setThumbnail(otherMember.avatarURL)
-                .setColor(client.config.COLOUR)
+                .setColor(client.config.COLOR)
                 .setDescription(guildLanguage.MAIN.BOOKMARK.MEMBER.DESC.replace("{user}", otherMember.username))
                 .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`), bookmarkedTitle.join("\n"));
     
@@ -65,7 +65,7 @@ export const command: Command = {
                 const embed: RichEmbed = new RichEmbed()
                     .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", message.author.username))
                     .setThumbnail(message.author.avatarURL)
-                    .setColor(client.config.COLOUR)
+                    .setColor(client.config.COLOR)
                     .setDescription(guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix))
                     .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", "0"), guildLanguage.MAIN.BOOKMARK.NONE);
     
@@ -74,7 +74,7 @@ export const command: Command = {
     
             const msg = await message.channel.createMessage({
                 embeds: [
-                    { description: guildLanguage.MAIN.BOOKMARK.LOADING_STATE, color: client.config.COLOUR }
+                    { description: guildLanguage.MAIN.BOOKMARK.LOADING_STATE, color: client.config.COLOR }
                 ],
                 messageReference: {
                     messageID: message.id
@@ -91,7 +91,7 @@ export const command: Command = {
             const embed: RichEmbed = new RichEmbed()
                 .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", message.author.username))
                 .setThumbnail(message.author.avatarURL)
-                .setColor(client.config.COLOUR)
+                .setColor(client.config.COLOR)
                 .setDescription(guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix))
                 .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`), bookmarkedTitle.join("\n"));
     

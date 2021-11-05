@@ -27,7 +27,7 @@ export const command: Command = {
             const usage: string = command.usage ? `\`${prefix}${command.usage}\`` : "No Usage"
 
             if (command.nsfwOnly && !(message.channel as TextChannel).nsfw) {
-                return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOUR }], messageReference: { messageID: message.id } });
+                return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOR }], messageReference: { messageID: message.id } });
             } 
 
             const helpEmbed: EmbedOptions = {
@@ -70,7 +70,7 @@ export const command: Command = {
                         inline: true
                     }
                 ],
-                color: client.config.COLOUR,
+                color: client.config.COLOR,
                 thumbnail: {
                     url: client.user.avatarURL
                 },
@@ -89,7 +89,7 @@ export const command: Command = {
             let embed: RichEmbed = new RichEmbed()
                 .setTitle(`${client.user.username}'s Commands`)
                 .setDescription(`Use \`${prefix}help <command_name>\` for a command detail`)
-                .setColor(client.config.COLOUR)
+                .setColor(client.config.COLOR)
                 .setThumbnail(client.user.avatarURL)
                 .setTimestamp()
                 .setFooter("Made by reinhardt");
