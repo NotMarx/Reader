@@ -9,7 +9,7 @@ export const command: Command = {
     description: "Configure the Bot",
     aliases: ["configure", "cfg"],
     category: "Admin",
-    usage: "config <option> <value>",
+    usage: "config --settings <options> --value <value>",
     run: async (client, message, args, guildLanguage) => {
         const flag = await yargs(args.slice(0)).array(["settings", "value"]).argv;
         let embed: RichEmbed = new RichEmbed()
