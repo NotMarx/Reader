@@ -21,8 +21,8 @@
 - [x] Configuration
 - [x] Customize prefix, embed's hex color, etc...
 - [x] More commands
-- [ ] Multilingual
-- [ ] Dashboard 
+- [x] Multilingual
+- [x] Dashboard 
 - [ ] ~~Slash Commands~~ Won't be implement at any time.
 
 ## Translate Reader
