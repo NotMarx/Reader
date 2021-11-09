@@ -92,8 +92,7 @@ export const command: Command = {
                 .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", message.author.username))
                 .setThumbnail(message.author.avatarURL)
                 .setColor(client.config.COLOR)
-                .setDescription(guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix))
-                .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`), bookmarkedTitle.join("\n"));
+                .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`)
     
             return msg.edit({ embeds: [embed], messageReference: { messageID: message.id } });
         }
