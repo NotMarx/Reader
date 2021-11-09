@@ -67,6 +67,7 @@ export const event: Event = {
                     client.database.set(`${interaction.member ? interaction.member.id : interaction.user.id}`, false);
                     break;
                 case "bookmark_prop":
+                    const userIsPremium: boolean = await client.database.fetch(`Database.${interaction.member.id}.Premium`);
                     const savedCode: string = interaction.message.embeds[0].author.name;
                     const codeBank: string[] = await client.database.fetch(`Database.${interaction.member.id}.Bookmark`);
                     const prefix: string = await client.database.fetch(`Database.${interaction.guildID}.Prefix`) || client.config.PREFIX;
@@ -98,7 +99,7 @@ export const event: Event = {
                         });
                     }
 
-                    if (codeBank.length === 25) {
+                    if (!userIsPremium && codeBank.length === 25) {
                         return interaction.createMessage({
                             embeds: [
                                 {
