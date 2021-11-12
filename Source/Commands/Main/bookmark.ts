@@ -1,7 +1,10 @@
 "use strict";
 
+import { ActionRow } from "eris";
 import { API } from "nhentai-api";
+import { Book } from "nhentai-api";
 import { Command } from "../../Interfaces";
+import { createBookmarkButtonNavigator } from "../../Extensions/ButtonNavigator/worker";
 import RichEmbed from "../../Extensions/embed";
 
 export const command: Command = {
@@ -81,11 +84,21 @@ export const command: Command = {
                 }
             });
     
-            const bookmarkedTitle: string[] = [];
-    
+            let bookmarkedTitle: string[] = [];
+            let books: Book[] = [];
+
             for (let i = 0; i < bookmarked.length; i++) {
-                const theAPI = await api.getBook(parseInt(bookmarked[i])).then((res) => `\`[${res.id}]\` - \`${res.title.pretty}\``);
-                bookmarkedTitle.push(theAPI);
+                const title = await api.getBook(parseInt(bookmarked[i])).then((res) => `\`[${res.id}]\` - \`${res.title.pretty}\``);
+                const book = await api.getBook(parseInt(bookmarked[i]));
+                books.push(book);
+                bookmarkedTitle.push(title);
+            }
+
+            const component: ActionRow = {
+                type: 1,
+                components: [
+                    { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
+                ]
             }
     
             const embed: RichEmbed = new RichEmbed()
@@ -94,7 +107,8 @@ export const command: Command = {
                 .setColor(client.config.COLOR)
                 .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`)
     
-            return msg.edit({ embeds: [embed], messageReference: { messageID: message.id } });
+            msg.edit({ components: [component], embeds: [embed], messageReference: { messageID: message.id } });
+            createBookmarkButtonNavigator(client, books, msg, message);
         }
     }
 }
