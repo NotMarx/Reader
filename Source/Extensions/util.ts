@@ -1,9 +1,8 @@
 "use strict";
 
 import byteSize from "byte-size";
-
 export default class Util {
-    static bytes(size: number): any {
+    static bytes(size: number): number {
         return byteSize(size);
     }
 
