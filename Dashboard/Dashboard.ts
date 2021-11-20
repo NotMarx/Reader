@@ -193,7 +193,7 @@ export const Dashboard = async (client: Reader) => {
         await client.database.set(`Database.${guild.id}.Language`, req.body.language || database.Language);
 
         if (req.body.prefix.length > 20) {
-            return renderTemplate(res, req, "settings.ejs", { guild, database, alert: "You cannot set more than 20 characters of prefix!", success: false });
+            return renderTemplate(res, req, "settings.ejs", { guild, database, alert: "You cannot set more prefix than 20 characters!", success: false });
         }
 
         renderTemplate(res, req, "settings.ejs", { guild, database, alert: "Your settings have been saved!", success: true });
