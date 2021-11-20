@@ -6,7 +6,7 @@ import Logger from "../Extensions/logger";
 export const event: Event = {
     name: "error",
     run: async (client, err: string, id?: number) => {
-        Logger.error("ERROR", `ShardID: ${id || "N/A"} | ${err}`);
+        Logger.error("ERROR", `Shard ID: ${id || "N/A"} | ${err}`);
     }
 }
 
