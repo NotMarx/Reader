@@ -11,10 +11,10 @@ import { MongoDatabase } from "./database";
 import { readdirSync } from "fs";
 
 export default class Reader extends Client {
-    public aliases: Collection<Command> = new Collection();
-    public commands: Collection<Command> = new Collection();
+    public aliases = new Collection<Command>();
+    public commands = new Collection<Command>();
     public config: Config = ConfigJSON;
-    public events: Map<string, Event> = new Map();
+    public events = new Map<string, Event>();
     public database: Database = new Database("Database/ReaderBase.sql", { path: "Database", table: "READER", useWalMode: false });
     public db = new MongoDatabase(ConfigJSON.MONGODB_URI).init();
 
