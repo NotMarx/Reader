@@ -2,7 +2,7 @@
 
 import byteSize from "byte-size";
 export default class Util {
-    static bytes(size: number): number {
+    static bytes(size: number):  { value: number; unit: string; } {
         return byteSize(size);
     }
 
