@@ -83,51 +83,5 @@ export const command: Command = {
                 message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
                 break;
         }
-
-        /* if (!args[0]) {
-            embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
-
-            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-        }
-
-        switch (args[0]) {
-            case "prefix":
-                if (!argsValue) {
-                    embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_PREFIX);
-
-                    return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-                }
-
-                embed.setDescription(guildLanguage.ADMIN.CONFIG.PREFIX_SUCCESS.replace("{prefix}", argsValue));
-
-                await client.database.set(`Database.${message.guildID}.Prefix`, argsValue);
-                message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-                break;
-            case "language":
-                if (!argsValue) {
-                    embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_LANG.replace("{language}", "English"));
-
-                    return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-                }
-
-                if (!langOpt.includes(args[1].toLowerCase())) {
-                    embed.setDescription(guildLanguage.ADMIN.CONFIG.INVALID_LANG.replace("{language}", "English"));
-
-                    return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-                }
-
-                const cfgLanguage: string = args[1].toLowerCase();
-
-                embed.setDescription(guildLanguage.ADMIN.CONFIG.LANG_SUCCESS.replace("{language}", cfgLanguage.charAt(0).toUpperCase() + cfgLanguage.slice(1)))
-
-                message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-                client.database.set(`Database.${message.guildID}.Language`, args[1].toUpperCase());
-                break;
-            default: 
-            embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
-
-            message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }});
-            break;
-        } */
     }
 }
