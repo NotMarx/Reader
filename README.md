@@ -22,7 +22,7 @@
 - [x] Customize prefix, embed's hex color, etc...
 - [x] More commands
 - [x] Multilingual
-- [x] Dashboard 
+- [ ] ~~Dashboard~~ Going to rewrite using [Vue.js](https://vuejs.org) instead.
 - [ ] ~~Slash Commands~~ Won't be implement at any time.
 
 ## Translate Reader
