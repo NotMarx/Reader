@@ -13,7 +13,7 @@ const client = new Reader(`Bot ${TOKEN}`, {
         "guildMessages"
     ],
     maxShards: "auto",
-    messageLimit: 75
+    messageLimit: 100
 });
 
 // Initialize the bot
