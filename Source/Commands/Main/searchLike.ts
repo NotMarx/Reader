@@ -9,7 +9,7 @@ import RichEmbed from "../../Extensions/embed";
 export const command: Command = {
     name: "search-like",
     description: "Search a similar Doujin",
-    aliases: ["search-similar"],
+    aliases: ["search-similar", "more-like"],
     category: "Main",
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
