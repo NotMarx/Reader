@@ -10,7 +10,8 @@ const client = new Reader(`Bot ${TOKEN}`, {
     intents: [
         "guilds",
         "guildMembers",
-        "guildMessages"
+        "guildMessages",
+        "directMessages"
     ],
     maxShards: "auto",
     messageLimit: 100
