@@ -6,9 +6,9 @@
                     "DESC": "Configure the Bot with your own customization settings",
                     "CATEGORY": "Admin"
                 },
-                "PREFIX_TOO_LONG": "Prefix must be 64 characters or below!",
+                "PREFIX_TOO_LONG": "Prefix must be at least 64 characters or below!",
                 "NO_PERMS": "You don't have the required permissions to run this command!",
-                "NO_OPT": "Please specify one of these following valid options: `{options}`",
+                "NO_OPT": "Please choose one of these following valid options: `{options}`",
                 "NO_PREFIX": "Please specify a new prefix!",
                 "PREFIX_SUCCESS": "Successfully changed the prefix to `{prefix}`",
                 "NO_LANG": "Please specify a language to be used! \n\n The only supported languages are: **{language}**",
@@ -19,7 +19,7 @@
         "GENERAL": {
             "HELP": {
                 "META": {
-                    "DESC": "Display all commands",
+                    "DESC": "Display all available commands",
                     "CATEGORY": "General"
                 },
                 "CATEGORIES": {
