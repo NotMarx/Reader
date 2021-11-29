@@ -14,7 +14,7 @@ export const command: Command = {
         const flag = await yargs(args.slice(0)).array(["limit"]).argv;
         const messageArray: string[] = (await client.getMessages(message.channel.id, { limit: flag.limit ? flag.limit[0] as number : 75 })).filter((m) => !m.pinned).map((m) => m.id);
 
-        // Clean up the entire messages
+        // Clean up the selected 100 messages
         client.deleteMessages(message.channel.id, messageArray).then(() => {
             const embed = new RichEmbed()
                 .setDescription(`Swept **${messageArray.length}** messages!`)
