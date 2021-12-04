@@ -61,9 +61,13 @@ export const event: Event = {
             if (!command) return;
 
             // Checking Circumstances
-            if (command.nsfwOnly && !(message.channel as TextChannel).nsfw) {
+            if (command.nsfwOnly && client.config.ADMIN_ID.includes(message.author.id)) {
+                command.run(client, message, args, guildLanguage);
+                Logger.command("COMMAND", `${message.author.username}#${message.author.discriminator} (${message.author.id}) Runs "${command.name}" At Guild: ${message.member.guild.name} (${message.guildID})`);
+            } else if (command.nsfwOnly && !(message.channel as TextChannel).nsfw) {
                 return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOR }], messageReference: { messageID: message.id } });
             }
+            
             if (command.adminOnly && !client.config.ADMIN_ID.includes(message.author.id)) return;
 
             if (command) {
