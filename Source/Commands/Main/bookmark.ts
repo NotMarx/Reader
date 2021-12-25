@@ -49,20 +49,30 @@ export const command: Command = {
             });
     
             const bookmarkedTitle: string[] = [];
+            let books: Book[] = [];
     
             for (let i = 0; i < bookmarked.length; i++) {
                 const theAPI = await api.getBook(parseInt(bookmarked[i])).then((res) => `\`[${res.id}]\` - \`${res.title.pretty}\``);
+                const book = await api.getBook(parseInt(bookmarked[i]));
+                books.push(book);
                 bookmarkedTitle.push(theAPI);
+            }
+
+            const component: ActionRow = {
+                type: 1,
+                components: [
+                    { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
+                ]
             }
     
             const embed: RichEmbed = new RichEmbed()
                 .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", otherMember.username))
                 .setThumbnail(otherMember.avatarURL)
                 .setColor(client.config.COLOR)
-                .setDescription(guildLanguage.MAIN.BOOKMARK.MEMBER.DESC.replace("{user}", otherMember.username))
-                .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`), bookmarkedTitle.join("\n"));
+                .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", otherMember.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`)
     
-            return msg.edit({ embeds: [embed], messageReference: { messageID: message.id } });
+            msg.edit({ components: [component], embeds: [embed], messageReference: { messageID: message.id } });
+            createBookmarkButtonNavigator(client, books, msg, message);
         } else {
             if (!bookmarked || bookmarked.length === 0) {
                 const embed: RichEmbed = new RichEmbed()
