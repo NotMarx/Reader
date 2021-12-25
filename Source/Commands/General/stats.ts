@@ -13,7 +13,8 @@ export const command: Command = {
     run: async (client, message, args, guildLanguage) => {
         const memory: number = process.memoryUsage().rss
         const totalMemory: string = `${Util.bytes(memory).value}${Util.bytes(memory).unit} / ${Util.bytes(require("os").totalmem()).value}${Util.bytes(require("os").totalmem()).unit}`;
-        const used: number = process.memoryUsage().rss / os.totalmem() / os.totalmem();
+        const totalMem = Util.bytes(require("os").totalmem()).value * 1000;
+        const used: number = process.memoryUsage().rss / totalMem / totalMem;
 
         os.cpuUsage(async (cpu) => {
             const embed: EmbedOptions = {
