@@ -6,7 +6,7 @@
     - Discord Library: [Eris](https://github.com/abalabahaha/eris) 
         - provided by [abal](https://github.com/abalabahaha)
     - Database: [XenDB](https://github.com/NotMarx/xen.db)
-        - provided by [me, Reinhardt](https://github.com/NotMarx)
+        - provided by [me, Reinhardt](https://github.com/reinhello)
 
     
 
