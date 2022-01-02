@@ -1,15 +1,7 @@
-# 0.1.2
-
-## Additions
-
-- Add detail button on search
-- Localization
-- Dashboard feature (partially W.I.P)
-- Premium feature (partially W.I.P)
-
+# 0.1.3
 ## Fixes
 
-- Fix some HTTP errors on API fetching
-- Fix most code typo
+- Update license year
+- Change `createMessage({ embeds: [embed] })` -> `createMessage({ embed: embed })`
 
 ---
