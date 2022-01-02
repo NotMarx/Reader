@@ -113,7 +113,7 @@ export const command: Command = {
                 embed.addField(`${category} [${(value as string[]).length}]`, desc);
             }
 
-            return message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id } });
+            return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
     }
 }

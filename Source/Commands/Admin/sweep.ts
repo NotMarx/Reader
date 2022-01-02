@@ -20,7 +20,7 @@ export const command: Command = {
                 .setDescription(`Swept **${messageArray.length}** messages!`)
                 .setColor(client.config.COLOR);
 
-            return message.channel.createMessage({ embeds: [embed] }).then((m) => {
+            return message.channel.createMessage({ embed: embed }).then((m) => {
                 setTimeout(() => {
                     m.delete();
                 }, 2500);

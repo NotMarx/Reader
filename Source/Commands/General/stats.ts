@@ -62,7 +62,7 @@ export const command: Command = {
                 }
             }
     
-            message.channel.createMessage({ embeds: [embed], messageReference: { messageID: message.id }}); 
+            message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id }}); 
         });
     }
 }

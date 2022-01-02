@@ -35,7 +35,7 @@ export const command: Command = {
                 ]
             }
 
-            const msg = await message.channel.createMessage({ embeds: [embed], components: [component], messageReference: { messageID: message.id } });
+            const msg = await message.channel.createMessage({ embed: embed, components: [component], messageReference: { messageID: message.id } });
             createSearchResultPaginationEmbed(client, res, msg, message);
         });
     }
