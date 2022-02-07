@@ -7,6 +7,8 @@ import LanguageConstants from "../../../Languages/LANG.json";
 import Reader from "../client";
 import moment from "moment";
 
+/* I can't believe I wrote this all :O */
+
 class ButtonNavigator {
     api: API;
     embeds: EmbedOptions[]
@@ -270,7 +272,7 @@ class SearchDetailButtonNavigator {
 
             ],
             footer: {
-                text: `⭐ ${book.favorites}`
+                text: `⭐ ${book.favorites.toLocaleString()}`
             }
         } as EmbedOptions));
 
@@ -459,7 +461,7 @@ class SearchDetailButtonNavigator {
 
                                 ],
                                 footer: {
-                                    text: `⭐ ${book.favorites}`
+                                    text: `⭐ ${book.favorites.toLocaleString()}`
                                 }
                             } as EmbedOptions));
 
@@ -524,7 +526,7 @@ class SearchDetailButtonNavigator {
 
                                 ],
                                 footer: {
-                                    text: `⭐ ${book.favorites}`
+                                    text: `⭐ ${book.favorites.toLocaleString()}`
                                 }
                             } as EmbedOptions));
 
@@ -588,7 +590,7 @@ class SearchDetailButtonNavigator {
 
                             ],
                             footer: {
-                                text: `⭐ ${book.favorites}`
+                                text: `⭐ ${book.favorites.toLocaleString()}`
                             }
                         } as EmbedOptions));
 
@@ -651,7 +653,7 @@ class SearchDetailButtonNavigator {
 
                             ],
                             footer: {
-                                text: `⭐ ${book.favorites}`
+                                text: `⭐ ${book.favorites.toLocaleString()}`
                             }
                         } as EmbedOptions));
 
@@ -771,7 +773,7 @@ class SearchDetailButtonNavigator {
 
                                 ],
                                 footer: {
-                                    text: `⭐ ${book.favorites}`
+                                    text: `⭐ ${book.favorites.toLocaleString()}`
                                 }
                             } as EmbedOptions));
 
@@ -950,7 +952,7 @@ class BookmarkButtonNavigator {
 
             ],
             footer: {
-                text: `⭐ ${book.favorites}`
+                text: `⭐ ${book.favorites.toLocaleString()}`
             }
         } as EmbedOptions));
 
