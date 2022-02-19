@@ -123,6 +123,8 @@ export interface GuildLanguage {
             READ: string;
             DISMISS: string;
             BOOKMARK: string;
+            SHOW_COVER: string;
+            HIDE_COVER: string;
         }
         SEARCH: {
             META: {
