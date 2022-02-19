@@ -24,7 +24,7 @@ export const command: Command = {
 
         const langOpt: string[] = ["english"];
         const readStateOpt: string[] = ["new", "current"];
-        const configOpt: string[] = ["hexColor", "prefix", "language"];
+        const configOpt: string[] = ["hexColor", "prefix", "language", "reading-state"];
 
         if (!flag.option) {
             embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
