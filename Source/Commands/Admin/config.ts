@@ -9,9 +9,9 @@ export const command: Command = {
     description: "Configure the Bot",
     aliases: ["configure", "cfg"],
     category: "Admin",
-    usage: "config --settings <option> --value <value>",
+    usage: "config --option <option> --value <value>",
     run: async (client, message, args, guildLanguage) => {
-        const flag = await yargs(args.slice(0)).array(["settings", "value"]).argv;
+        const flag = await yargs(args.slice(0)).array(["option", "value"]).argv;
         let embed: RichEmbed = new RichEmbed()
             .setColor(client.config.COLOR);
 
@@ -25,21 +25,21 @@ export const command: Command = {
         const langOpt: string[] = ["english"];
         const configOpt: string[] = ["hexColor", "prefix", "language"];
 
-        if (!flag.settings) {
+        if (!flag.option) {
             embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
 
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
 
-        if (!configOpt.includes(flag.settings[0] as string)) {
+        if (!configOpt.includes((flag.option[0] as string).toLowerCase())) {
             embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_OPT.replace("{options}", configOpt.join("`, `")));
 
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
 
-        switch (flag.settings[0]) {
+        switch ((flag.option[0] as string).toLowerCase()) {
             case "prefix":
-                if (!flag.value[0]) {
+                if (!flag.value || !flag.value[0]) {
                     embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_PREFIX);
 
                     return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
@@ -57,7 +57,7 @@ export const command: Command = {
                 message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
                 break;
             case "language":
-                if (!flag.value[0]) {
+                if (!flag.value || !flag.value[0]) {
                     embed.setDescription(guildLanguage.ADMIN.CONFIG.NO_LANG.replace("{language}", "English"));
 
                     return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
