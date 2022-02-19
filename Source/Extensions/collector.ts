@@ -15,6 +15,9 @@ const MessageCollectorDefaults = {
   filter: (_msg) => true, // eslint-disable-line
 };
 
+/**
+ * Creates a special built-in Message collector
+ */
 export class MessageCollector extends EventEmitter {
   channel: Eris.TextableChannel;
   timeout: number;
@@ -23,6 +26,11 @@ export class MessageCollector extends EventEmitter {
   filter: ((_msg: any) => boolean) & ((msg: Eris.Message<Eris.TextableChannel>) => boolean);
   collected: Eris.Collection<Eris.Message<Eris.TextableChannel>>;
   running: boolean;
+  /**
+   * Construct a new MessageCollector
+   * @param channel The channel to collect messages
+   * @param options Options to enhance the collecting system
+   */
   constructor(channel: Eris.TextableChannel, options: MessageCollectorOptions) {
     super();
     const opt = Object.assign(MessageCollectorDefaults, options);
@@ -63,6 +71,9 @@ export class MessageCollector extends EventEmitter {
     this.emit('delete', msg);
   }
 
+  /**
+   * Initialize and run the Message collector
+   */
   run(): Promise<MessageCollector> {
     this.running = true;
     return new Promise((res) => {
@@ -81,6 +92,9 @@ export class MessageCollector extends EventEmitter {
     });
   }
 
+  /**
+   * Destroy and stop the Message collector
+   */
   stop(): MessageCollector {
     this.running = false;
     this.channel.client.setMaxListeners(this.getMaxListeners() - 1);
@@ -96,16 +110,28 @@ export class MessageCollector extends EventEmitter {
     return this;
   }
 
+  /**
+   * Create a collecting message event
+   * @param msg The collected message
+   */
   onCollect(msg: Eris.Message<Eris.TextableChannel>): void {
     this.collected.add(msg);
     this.message = msg;
     if (this.count && this.collected.size === this.count) this.stop();
   }
 
+  /**
+   * Create an update collected message event
+   * @param msg The updated message
+   */
   onUpdate(msg: Eris.Message<Eris.TextableChannel>): void {
     this.collected.update(msg);
   }
 
+  /**
+   * Create a deleted message event
+   * @param msg The deleted message
+   */
   onDelete(msg: Eris.Message<Eris.TextableChannel>): void {
     this.collected.remove(msg);
   }
