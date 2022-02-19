@@ -1,5 +1,7 @@
 # Reader (Discord Bot)
 
+[![GitHub Release](https://img.shields.io/github/v/release/reinhello/Reader?color=%237289DA&include_prereleases)](https://github.com/reinhello/Reader/releases)
+
 A Discord bot.
 
 - **Open-Source Libraries Used:**
