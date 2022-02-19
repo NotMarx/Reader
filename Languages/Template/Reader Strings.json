@@ -12,7 +12,11 @@
             "PREFIX_SUCCESS": "Successfully changed the prefix to `{prefix}`",
             "NO_LANG": "Please specify a language to be used! \n\n The only supported languages are: **{language}**",
             "INVALID_LANG": "The only supported languages are: **{language}**",
-            "LANG_SUCCESS": "Successfully changed the language to **{language}**"
+            "LANG_SUCCESS": "Successfully changed the language to **{language}**",
+            "NO_READSTATE": "Please choose one of these following valid options: `{options}`",
+            "INVALID_READSTATE": "Invalid option! The valid options are: {options}",
+            "READSTATE_SUCCESS_NEW": "Successfully changed the reading state to `new`. I'll now send you a new page instead of overriding your current search query/bookmark.",
+            "READSTATE_SUCCESS_CURRENT": "Successfully changed the reading state to `current`. I'll now override your search query/bookmark with the requested page"
         }
     },
     "GENERAL": {
