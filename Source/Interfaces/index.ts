@@ -14,7 +14,11 @@ export interface GuildLanguage {
             PREFIX_SUCCESS: string;
             NO_LANG: string;
             INVALID_LANG: string;
-            LANG_SUCCESS: string
+            LANG_SUCCESS: string;
+            NO_READSTATE: string;
+            INVALID_READSTATE: string;
+            READSTATE_SUCCESS_NEW: string;
+            READSTATE_SUCCESS_CURRENT: string;
         }
     }
     GENERAL: {
