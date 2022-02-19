@@ -1,11 +1,23 @@
 "use strict";
 
-import { AdvancedMessageContent, ComponentInteraction, EmbedOptions, Message, TextableChannel } from "eris";
+import { ActionRow, AdvancedMessageContent, ComponentInteraction, EmbedOptions, Message, TextableChannel } from "eris";
 import { API, Book, Search } from "nhentai-api";
 import { GuildLanguage } from "../../Interfaces";
 import LanguageConstants from "../../../Languages/LANG.json";
 import Reader from "../client";
 import moment from "moment";
+import RichEmbed from "../embed";
+
+/* I can't believe I wrote this all :O */
+
+type GuildDataLanguage = "English";
+type GuildDataReadState = "current" | "new";
+
+interface GuildData {
+    Language: GuildDataLanguage;
+    Prefix: string;
+    ReadState: GuildDataReadState;
+}
 
 class ButtonNavigator {
     api: API;
@@ -13,6 +25,7 @@ class ButtonNavigator {
     embed: number;
     client: Reader
     book: Book;
+    guildLanguage: GuildLanguage;
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
     authorMessage: Message<TextableChannel>;
@@ -23,10 +36,15 @@ class ButtonNavigator {
         this.client = client;
         this.embeds = book.pages.map((page) => ({ author: { name: `${book.id}`, url: `https://nhentai.net/g/${book.id}/`, icon_url: "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png" }, title: book.title.pretty, image: { url: this.api.getImageURL(page) }, thumbnail: { url: this.api.getImageURL(book.cover) }, color: this.client.config.COLOR, footer: { text: `Requested By: ${authorMessage.member.username}#${authorMessage.member.discriminator}` } } as EmbedOptions));;
         this.embed = 1;
+        this.guildLanguage = LanguageConstants[client.database.fetch(`Database.${this.authorMessage.guildID}.Language`)];
         this.invoker = message;
     }
 
-    async init() {
+    /**
+     * Initialize the button navigator
+     */
+    async init(): Promise<void> {
+        const guildData: GuildData = await this.client.database.fetch(`Database.${this.authorMessage.guildID}`);
         const messageContent: AdvancedMessageContent = {
             content: `Page **${this.embed}** / **${this.embeds.length}**`,
             embeds: [this.embeds[this.embed - 1]],
@@ -51,14 +69,24 @@ class ButtonNavigator {
             ]
         }
 
-        if (this.invoker.author.id === this.invoker.channel.client.user.id) {
+        if (guildData.ReadState === "current" && this.invoker.author.id === this.invoker.channel.client.user.id) {
+            this.message = await this.invoker.edit(messageContent);
+        } else if (guildData.ReadState === "new" && this.invoker.author.id === this.invoker.channel.client.user.id) {
+            this.message = await this.invoker.channel.createMessage(messageContent);
+        }
+
+        // Remove old construction
+        /* if (this.invoker.author.id === this.invoker.channel.client.user.id) {
             this.message = await this.invoker.edit(messageContent);
         } else {
             this.message = await this.invoker.channel.createMessage(messageContent);
-        }
+        } */
     }
 
-    update() {
+    /**
+     * Update the embed content and its components
+     */
+    update(): void {
         this.message.edit({
             content: `Page **${this.embed}** / **${this.embeds.length}**`,
             embeds: [this.embeds[this.embed - 1]],
@@ -84,14 +112,108 @@ class ButtonNavigator {
         });
     }
 
-    run() {
+    /**
+     * Run the main event via `interactionCreate` that helps navigating the content to other pages
+     */
+    run(): void {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
             if (interaction.member.bot) return;
+
+            const artistTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+            const characterTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
+            const contentTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+            const languageTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name);
+            const parodyTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
+            const uploadedAt: string = `\`${moment(this.book.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``;
+
+            let embed = new RichEmbed()
+                .setAuthor(this.book.id.toString(), `https://nhentai.net/g/${this.book.id}`, "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png")
+                .setColor(this.client.config.COLOR)
+                .addField(this.guildLanguage.MAIN.READ.TITLE, `\`${this.book.title.pretty}\``)
+                .addField(this.guildLanguage.MAIN.READ.PAGES, `\`${this.book.pages.length}\``)
+                .addField(this.guildLanguage.MAIN.READ.DATE, uploadedAt)
+                .addField(`${languageTags.length > 1 ? this.guildLanguage.MAIN.READ.LANGUAGES : this.guildLanguage.MAIN.READ.LANGUAGE}`, `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.guildLanguage.MAIN.READ.NONE}\``)
+                .addField(`${artistTags.length > 1 ? this.guildLanguage.MAIN.READ.ARTISTS : this.guildLanguage.MAIN.READ.ARTIST}`, `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.guildLanguage.MAIN.READ.NOT_PROVIDED}\``)
+                .addField(`${characterTags.length > 1 ? this.guildLanguage.MAIN.READ.CHARACTERS : this.guildLanguage.MAIN.READ.CHARACTER}`, `\`${characterTags.length !== 0 ? characterTags.join("`, `") : "Original"}\``)
+                .addField(this.guildLanguage.MAIN.READ.PARODY, `\`${parodyTags.length !== 0 ? parodyTags.join("`, `") : "Not Provided"}\``)
+                .addField(`${contentTags.length > 1 ? this.guildLanguage.MAIN.READ.TAGS : this.guildLanguage.MAIN.READ.TAG}`, `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.guildLanguage.MAIN.READ.NOT_PROVIDED}\``)
+                .setFooter(`⭐ ${this.book.favorites.toLocaleString()}`)
+                .setThumbnail(this.api.getImageURL(this.book.cover));
 
             switch (interaction.data.custom_id) {
                 case `read_prop_${this.authorMessage.id}`:
                     interaction.acknowledge();
                     this.init();
+                    break;
+                case `show_book_cover_${this.authorMessage.id}`:
+                    const hideComponent: ActionRow = {
+                        type: 1,
+                        components: [
+                            {
+                                label: this.guildLanguage.MAIN.READ.READ,
+                                custom_id: `read_prop_${this.authorMessage.id}`,
+                                style: 1,
+                                type: 2
+                            },
+                            {
+                                label: this.guildLanguage.MAIN.READ.DISMISS,
+                                custom_id: "kill_prop",
+                                style: 4,
+                                type: 2,
+                            },
+                            {
+                                label: this.guildLanguage.MAIN.READ.BOOKMARK,
+                                custom_id: "bookmark_prop",
+                                style: 2,
+                                type: 2
+                            },
+                            {
+                                label: this.guildLanguage.MAIN.READ.HIDE_COVER,
+                                custom_id: `hide_book_cover_${this.authorMessage.id}`,
+                                style: 1,
+                                type: 2
+                            }
+                        ]
+                    };
+
+                    embed.setImage(this.api.getImageURL(this.book.cover));
+
+                    this.invoker.edit({ embed: embed, components: [hideComponent] });
+                    break;
+                case `hide_book_cover_${this.authorMessage.id}`:
+                    const showComponent: ActionRow = {
+                        type: 1,
+                        components: [
+                            {
+                                label: this.guildLanguage.MAIN.READ.READ,
+                                custom_id: `read_prop_${this.authorMessage.id}`,
+                                style: 1,
+                                type: 2
+                            },
+                            {
+                                label: this.guildLanguage.MAIN.READ.DISMISS,
+                                custom_id: "kill_prop",
+                                style: 4,
+                                type: 2,
+                            },
+                            {
+                                label: this.guildLanguage.MAIN.READ.BOOKMARK,
+                                custom_id: "bookmark_prop",
+                                style: 2,
+                                type: 2
+                            },
+                            {
+                                label: this.guildLanguage.MAIN.READ.SHOW_COVER,
+                                custom_id: `show_book_cover_${this.authorMessage.id}`,
+                                style: 1,
+                                type: 2
+                            }
+                        ]
+                    };
+
+                    embed.setImage("");
+
+                    this.invoker.edit({ embed: embed, components: [showComponent] });
                     break;
                 case `next_page_${this.invoker.id}`:
                     interaction.acknowledge();
@@ -219,7 +341,10 @@ class SearchDetailButtonNavigator {
         this.search = search;
     }
 
-    async init() {
+    /**
+     * Initialize the button navigator
+     */
+    async init(): Promise<void> {
         const title: string = this.search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
         const embeds: EmbedOptions[] = this.search.books.map((book, index) =>
         ({
@@ -270,7 +395,7 @@ class SearchDetailButtonNavigator {
 
             ],
             footer: {
-                text: `⭐ ${book.favorites}`
+                text: `⭐ ${book.favorites.toLocaleString()}`
             }
         } as EmbedOptions));
 
@@ -310,7 +435,8 @@ class SearchDetailButtonNavigator {
                     type: 1,
                     components: [
                         { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
-                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                        { style: 1, type: 2, custom_id: `show_book_cover_${this.invoker.id}`, label: "Show Cover" }
                     ]
                 }
             ]
@@ -325,7 +451,10 @@ class SearchDetailButtonNavigator {
         this.update();
     }
 
-    update() {
+    /**
+     * Update the embed content and its components
+     */
+    update(): void {
         this.message.edit({
             embeds: [this.embeds[this.embed - 1]],
             components: [
@@ -360,21 +489,113 @@ class SearchDetailButtonNavigator {
                     type: 1,
                     components: [
                         { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
-                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                        { style: 1, type: 2, custom_id: `show_book_cover_${this.invoker.id}`, label: "Show Cover" }
                     ]
                 }
             ]
         });
     }
 
-    run() {
+    /**
+     * Run the main event via `interactionCreate` that helps navigating the content to other pages
+     */
+    run(): void {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
             if (interaction.member.bot) return;
+
+            let embed = new RichEmbed(interaction.message.embeds[0]);
 
             switch (interaction.data.custom_id) {
                 case `see_detail_${this.authorMessage.id}`:
                     interaction.acknowledge();
                     this.init();
+                    break;
+                case `show_book_cover_${this.invoker.id}`:
+                    const showComponent: ActionRow[] = [
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `first_result_${this.invoker.id}`, label: "First Result" },
+                                { style: 2, type: 2, custom_id: `previous_result_${this.invoker.id}`, label: "Back" },
+                                { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
+                                { style: 2, type: 2, custom_id: `next_result_${this.invoker.id}`, label: "Next" },
+                                { style: 1, type: 2, custom_id: `last_result_${this.invoker.id}`, label: "Last Result" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `first_result_page_${this.invoker.id}`, label: "First Page" },
+                                { style: 2, type: 2, custom_id: `previous_result_page_${this.invoker.id}`, label: "Back" },
+                                { style: 4, type: 2, custom_id: `easter_kill_prop`, label: "Stop" },
+                                { style: 2, type: 2, custom_id: `next_result_page_${this.invoker.id}`, label: "Next" },
+                                { style: 1, type: 2, custom_id: `last_result_page_${this.invoker.id}`, label: "Last Page" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
+                                { style: 1, type: 2, custom_id: `jumpto_result_page_${this.invoker.id}`, label: "Enter Page" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
+                                { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                                { style: 1, type: 2, custom_id: `hide_book_cover_${this.invoker.id}`, label: "Hide Cover" }
+                            ]
+                        }
+                    ]
+
+                    embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(interaction.message.embeds[0].author.name))).cover))
+
+                    this.invoker.edit({ embed, components: showComponent });
+                    break;
+                case `hide_book_cover_${this.invoker.id}`:
+                    const hideComponent: ActionRow[] = [
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `first_result_${this.invoker.id}`, label: "First Result" },
+                                { style: 2, type: 2, custom_id: `previous_result_${this.invoker.id}`, label: "Back" },
+                                { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
+                                { style: 2, type: 2, custom_id: `next_result_${this.invoker.id}`, label: "Next" },
+                                { style: 1, type: 2, custom_id: `last_result_${this.invoker.id}`, label: "Last Result" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `first_result_page_${this.invoker.id}`, label: "First Page" },
+                                { style: 2, type: 2, custom_id: `previous_result_page_${this.invoker.id}`, label: "Back" },
+                                { style: 4, type: 2, custom_id: `easter_kill_prop`, label: "Stop" },
+                                { style: 2, type: 2, custom_id: `next_result_page_${this.invoker.id}`, label: "Next" },
+                                { style: 1, type: 2, custom_id: `last_result_page_${this.invoker.id}`, label: "Last Page" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
+                                { style: 1, type: 2, custom_id: `jumpto_result_page_${this.invoker.id}`, label: "Enter Page" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
+                                { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                                { style: 1, type: 2, custom_id: `show_book_cover_${this.invoker.id}`, label: "Show Cover" }
+                            ]
+                        }
+                    ]
+
+                    embed.setImage("");
+
+                    this.invoker.edit({ embed: embed, components: hideComponent });
                     break;
                 case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();
@@ -459,7 +680,7 @@ class SearchDetailButtonNavigator {
 
                                 ],
                                 footer: {
-                                    text: `⭐ ${book.favorites}`
+                                    text: `⭐ ${book.favorites.toLocaleString()}`
                                 }
                             } as EmbedOptions));
 
@@ -524,7 +745,7 @@ class SearchDetailButtonNavigator {
 
                                 ],
                                 footer: {
-                                    text: `⭐ ${book.favorites}`
+                                    text: `⭐ ${book.favorites.toLocaleString()}`
                                 }
                             } as EmbedOptions));
 
@@ -588,7 +809,7 @@ class SearchDetailButtonNavigator {
 
                             ],
                             footer: {
-                                text: `⭐ ${book.favorites}`
+                                text: `⭐ ${book.favorites.toLocaleString()}`
                             }
                         } as EmbedOptions));
 
@@ -651,7 +872,7 @@ class SearchDetailButtonNavigator {
 
                             ],
                             footer: {
-                                text: `⭐ ${book.favorites}`
+                                text: `⭐ ${book.favorites.toLocaleString()}`
                             }
                         } as EmbedOptions));
 
@@ -771,7 +992,7 @@ class SearchDetailButtonNavigator {
 
                                 ],
                                 footer: {
-                                    text: `⭐ ${book.favorites}`
+                                    text: `⭐ ${book.favorites.toLocaleString()}`
                                 }
                             } as EmbedOptions));
 
@@ -950,7 +1171,7 @@ class BookmarkButtonNavigator {
 
             ],
             footer: {
-                text: `⭐ ${book.favorites}`
+                text: `⭐ ${book.favorites.toLocaleString()}`
             }
         } as EmbedOptions));
 
@@ -974,7 +1195,8 @@ class BookmarkButtonNavigator {
                     components: [
                         { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
                         { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
-                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                        { style: 1, type: 2, custom_id: `show_book_cover_${this.invoker.id}`, label: "Show Cover" }
                     ]
                 }
             ]
@@ -1008,7 +1230,8 @@ class BookmarkButtonNavigator {
                     components: [
                         { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
                         { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
-                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" }
+                        { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                        { style: 1, type: 2, custom_id: `show_book_cover_${this.invoker.id}`, label: "Show Cover" }
                     ]
                 }
             ]
@@ -1019,10 +1242,66 @@ class BookmarkButtonNavigator {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
             if (interaction.member.bot) return;
 
+            let embed = new RichEmbed(interaction.message.embeds[0]);
+
             switch (interaction.data.custom_id) {
                 case `see_detail_${this.authorMessage.id}`:
                     interaction.acknowledge();
                     this.init();
+                    break;
+                case `show_book_cover_${this.invoker.id}`:
+                    const showComponent: ActionRow[] = [
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `first_result_${this.invoker.id}`, label: "First Result" },
+                                { style: 2, type: 2, custom_id: `previous_result_${this.invoker.id}`, label: "Back" },
+                                { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
+                                { style: 2, type: 2, custom_id: `next_result_${this.invoker.id}`, label: "Next" },
+                                { style: 1, type: 2, custom_id: `last_result_${this.invoker.id}`, label: "Last Result" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
+                                { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
+                                { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                                { style: 1, type: 2, custom_id: `hide_book_cover_${this.invoker.id}`, label: "Hide Cover" }
+                            ]
+                        }
+                    ]
+
+                    embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(interaction.message.embeds[0].author.name))).cover));
+
+                    this.invoker.edit({ embed: embed, components: showComponent });
+                    break;
+                case `hide_book_cover_${this.invoker.id}`:
+                    const hideComponent: ActionRow[] = [
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `first_result_${this.invoker.id}`, label: "First Result" },
+                                { style: 2, type: 2, custom_id: `previous_result_${this.invoker.id}`, label: "Back" },
+                                { style: 4, type: 2, custom_id: `kill_prop`, label: "Stop" },
+                                { style: 2, type: 2, custom_id: `next_result_${this.invoker.id}`, label: "Next" },
+                                { style: 1, type: 2, custom_id: `last_result_${this.invoker.id}`, label: "Last Result" }
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                { style: 1, type: 2, custom_id: `jumpto_result_${this.invoker.id}`, label: "Enter Result" },
+                                { style: 1, type: 2, custom_id: `read_prop_${this.invoker.id}`, label: "Read" },
+                                { style: 2, type: 2, custom_id: "bookmark_prop", label: "Bookmark" },
+                                { style: 1, type: 2, custom_id: `show_book_cover_${this.invoker.id}`, label: "Show Cover" }
+                            ]
+                        }
+                    ]
+
+                    embed.setImage("");
+
+                    this.invoker.edit({ embed: embed, components: hideComponent });
                     break;
                 case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();

@@ -1,11 +1,11 @@
 # Reader (Discord Bot)
 
-**[W.I.P]** Uhh...
+A Discord bot.
 
 - **Open-Source Libraries Used:**
     - Discord Library: [Eris](https://github.com/abalabahaha/eris) 
         - provided by [abal](https://github.com/abalabahaha)
-    - Database: [XenDB](https://github.com/NotMarx/xen.db)
+    - Database: [XenDB](https://github.com/reinhello/xen.db)
         - provided by [me, Reinhardt](https://github.com/reinhello)
 
     

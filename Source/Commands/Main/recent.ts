@@ -9,7 +9,7 @@ import RichEmbed from "../../Extensions/embed";
 export const command: Command = {
     name: "recent",
     description: "Shows the top 10 recent uploaded doujins",
-    aliases: ["recent_doujin", "recent-upload"],
+    aliases: ["recent-doujin", "recent-upload"],
     category: "Main",
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
