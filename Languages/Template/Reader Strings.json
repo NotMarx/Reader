@@ -1,144 +1,144 @@
 {
-    "ADMIN": {
-        "CONFIG": {
-            "META": {
-                "DESC": "Configure the Bot with your own customization settings",
-                "CATEGORY": "Admin"
-            },
-            "PREFIX_TOO_LONG": "Prefix must be at least 64 characters or below!",
-            "NO_PERMS": "You don't have the required permissions to run this command!",
-            "NO_OPT": "Please choose one of these following valid options: `{options}`",
-            "NO_PREFIX": "Please specify a new prefix!",
-            "PREFIX_SUCCESS": "Successfully changed the prefix to `{prefix}`",
-            "NO_LANG": "Please specify a language to be used! \n\n The only supported languages are: **{language}**",
-            "INVALID_LANG": "The only supported languages are: **{language}**",
-            "LANG_SUCCESS": "Successfully changed the language to **{language}**",
-            "NO_READSTATE": "Please choose one of these following valid options: `{options}`",
-            "INVALID_READSTATE": "Invalid option! The valid options are: {options}",
-            "READSTATE_SUCCESS_NEW": "Successfully changed the reading state to `new`. I'll now send you a new page instead of overriding your current search query/bookmark.",
-            "READSTATE_SUCCESS_CURRENT": "Successfully changed the reading state to `current`. I'll now override your search query/bookmark with the requested page"
-        }
-    },
-    "GENERAL": {
-        "HELP": {
-            "META": {
-                "DESC": "Display all available commands",
-                "CATEGORY": "General"
-            },
-            "CATEGORIES": {
-                "ADMIN": "Admin",
-                "GENERAL": "General",
-                "MAIN": "Main"
-            },
-            "TITLE": "{bot}'s Commands",
-            "DESC": "Use {command} for a command detail",
-            "TRUE": "True",
-            "FALSE": "False",
-            "ALIASES": "Aliases",
-            "CATEGORY": "Category",
-            "USAGE": "Usage",
-            "ADMIN_ONLY": "Admin Only",
-            "NSFW_ONLY": "NSFW Only"
-        },
-        "PING": {
-            "META": {
-                "DESC": "Ping the Bot",
-                "CATEGORY": "General"
-            },
-            "TEXT": "Pong! | {latency}ms"
-        },
-        "STATS": {
-            "META": {
-                "DESC": "Shows the bot's stats",
-                "CATEGORY": "General"
-            },
-            "TITLE": "{bot}'s Stats",
-            "DESC": "This is the current stats for **{bot}**. \n She's currently in shard ID: **{shard}** \n\n **Fun Fact**: **{bot}** is now Open-Source! You can find her [Here]({gh_url}).",
-            "FIELDS": {
-                "MEMORY_USAGE": {
-                    "NAME": "Memory Usage",
-                    "VALUE": "{total_mem} \n ({percentage}%)"
-                },
-                "CPU_USAGE": {
-                    "NAME": "CPU Usage",
-                    "VALUE": "{percentage}%"
-                },
-                "DATABASE_SIZE": {
-                    "NAME": "Database Size",
-                    "VALUE": "{size}"
-                },
-                "NODEJS": {
-                    "NAME": "NodeJS",
-                    "VALUE": "{version}"
-                },
-                "ERIS": {
-                    "NAME": "Eris",
-                    "VALUE": "{version}"
-                },
-                "PLATFORM": {
-                    "NAME": "Platform",
-                    "VALUE": "{platform}"
-                }
-            },
-            "FOOTER": "Made by {dev}"
-        }
-    },
-    "MAIN": {
-        "BOOKMARK": {
-            "META": {
-                "DESC": "A library of your bookmarked Doujins",
-                "CATEGORY": "Main"
-            },
-            "MEMBER": {
-                "DESC": "This is {user}'s bookmarks, don't expect too much.",
-                "LOADING_STATE": "Fetching their data, please wait..."
-            },
-            "TITLE": "{user}'s Bookmarks",
-            "DESC": "Welcome, **{user}** to your library! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Visit the page (`{prefix}read <doujin>`) and click the **Bookmark** button to remove.",
-            "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",
-            "NONE": "None",
-            "LOADING_STATE": "Fetching your data, please wait..."
-        },
-        "READ": {
-            "META": {
-                "DESC": "Read a Doujin",
-                "CATEGORY": "Main"
-            },
-            "TITLE": "Title",
-            "PAGES": "Pages",
-            "DATE": "Date Released",
-            "LANGUAGE": "Language",
-            "LANGUAGES": "Languages",
-            "ARTIST": "Artist",
-            "ARTISTS": "Artists",
-            "CHARACTER": "Character",
-            "CHARACTERS": "Characters",
-            "PARODY": "Parody",
-            "TAG": "Tag",
-            "TAGS": "Tags",
-            "NONE": "None",
-            "NOT_PROVIDED": "Not Provided",
-            "READ": "Read",
-            "DISMISS": "Dismiss",
-            "BOOKMARK": "Bookmark"
-        },
-        "SEARCH": {
-            "META": {
-                "DESC": "Search for Doujins",
-                "CATEGORY": "Main"
-            },
-            "NOT_FOUND": "No Results Found!",
-            "NO_QUERY": "Please specify a search query otherwise, what'd you want to search? \n\n `{command_example}`",
-            "INVALID_PAGE": "Page should be in number!",
-            "PAGE": "Page {page}",
-            "TITLES": "**Titles** \n {titles}",
-            "DETAIL": "See More Detail"
-        },
-        "SEARCHLIKE": {
-            "META": {
-                "DESC": "Search for similar Doujins",
-                "CATEGORY": "Main"
-            }
-        }
+  "ADMIN": {
+    "CONFIG": {
+      "META": {
+        "DESC": "Configure the Bot with your own customization settings",
+        "CATEGORY": "Admin"
+      },
+      "PREFIX_TOO_LONG": "Prefix must be at least 64 characters or below!",
+      "NO_PERMS": "You don't have the required permissions to run this command!",
+      "NO_OPT": "Please choose one of these following valid options: `{options}`",
+      "NO_PREFIX": "Please specify a new prefix!",
+      "PREFIX_SUCCESS": "Successfully changed the prefix to `{prefix}`",
+      "NO_LANG": "Please specify a language to be used! \n\n The only supported languages are: **{language}**",
+      "INVALID_LANG": "The only supported languages are: **{language}**",
+      "LANG_SUCCESS": "Successfully changed the language to **{language}**",
+      "NO_READSTATE": "Please choose one of these following valid options: `{options}`",
+      "INVALID_READSTATE": "Invalid option! The valid options are: {options}",
+      "READSTATE_SUCCESS_NEW": "Successfully changed the reading state to `new`. I'll now send you a new page instead of overriding your current search query/bookmark.",
+      "READSTATE_SUCCESS_CURRENT": "Successfully changed the reading state to `current`. I'll now override your search query/bookmark with the requested page"
     }
+  },
+  "GENERAL": {
+    "HELP": {
+      "META": {
+        "DESC": "Display all available commands",
+        "CATEGORY": "General"
+      },
+      "CATEGORIES": {
+        "ADMIN": "Admin",
+        "GENERAL": "General",
+        "MAIN": "Main"
+      },
+      "TITLE": "{bot}'s Commands",
+      "DESC": "Use {command} for a command detail",
+      "TRUE": "True",
+      "FALSE": "False",
+      "ALIASES": "Aliases",
+      "CATEGORY": "Category",
+      "USAGE": "Usage",
+      "ADMIN_ONLY": "Admin Only",
+      "NSFW_ONLY": "NSFW Only"
+    },
+    "PING": {
+      "META": {
+        "DESC": "Ping the Bot",
+        "CATEGORY": "General"
+      },
+      "TEXT": "Pong! | {latency}ms"
+    },
+    "STATS": {
+      "META": {
+        "DESC": "Shows the bot's stats",
+        "CATEGORY": "General"
+      },
+      "TITLE": "{bot}'s Stats",
+      "DESC": "This is the current stats for **{bot}**. \n She's currently in shard ID: **{shard}** \n\n **Fun Fact**: **{bot}** is now Open-Source! You can find her [Here]({gh_url}).",
+      "FIELDS": {
+        "MEMORY_USAGE": {
+          "NAME": "Memory Usage",
+          "VALUE": "{total_mem} \n ({percentage}%)"
+        },
+        "CPU_USAGE": {
+          "NAME": "CPU Usage",
+          "VALUE": "{percentage}%"
+        },
+        "DATABASE_SIZE": {
+          "NAME": "Database Size",
+          "VALUE": "{size}"
+        },
+        "NODEJS": {
+          "NAME": "NodeJS",
+          "VALUE": "{version}"
+        },
+        "ERIS": {
+          "NAME": "Eris",
+          "VALUE": "{version}"
+        },
+        "PLATFORM": {
+          "NAME": "Platform",
+          "VALUE": "{platform}"
+        }
+      },
+      "FOOTER": "Made by {dev}"
+    }
+  },
+  "MAIN": {
+    "BOOKMARK": {
+      "META": {
+        "DESC": "A library of your bookmarked Doujins",
+        "CATEGORY": "Main"
+      },
+      "MEMBER": {
+        "DESC": "This is {user}'s bookmarks, don't expect too much.",
+        "LOADING_STATE": "Fetching their data, please wait..."
+      },
+      "TITLE": "{user}'s Bookmarks",
+      "DESC": "Welcome, **{user}** to your library! Please have a look. \n\n **Wanna remove your bookmarked Doujin?** \n Visit the page (`{prefix}read <doujin>`) and click the **Bookmark** button to remove.",
+      "BOOKMARKED": "⭐ Bookmarked Doujin [{count}]",
+      "NONE": "None",
+      "LOADING_STATE": "Fetching your data, please wait..."
+    },
+    "READ": {
+      "META": {
+        "DESC": "Read a Doujin",
+        "CATEGORY": "Main"
+      },
+      "TITLE": "Title",
+      "PAGES": "Pages",
+      "DATE": "Date Released",
+      "LANGUAGE": "Language",
+      "LANGUAGES": "Languages",
+      "ARTIST": "Artist",
+      "ARTISTS": "Artists",
+      "CHARACTER": "Character",
+      "CHARACTERS": "Characters",
+      "PARODY": "Parody",
+      "TAG": "Tag",
+      "TAGS": "Tags",
+      "NONE": "None",
+      "NOT_PROVIDED": "Not Provided",
+      "READ": "Read",
+      "DISMISS": "Dismiss",
+      "BOOKMARK": "Bookmark"
+    },
+    "SEARCH": {
+      "META": {
+        "DESC": "Search for Doujins",
+        "CATEGORY": "Main"
+      },
+      "NOT_FOUND": "No Results Found!",
+      "NO_QUERY": "Please specify a search query otherwise, what'd you want to search? \n\n `{command_example}`",
+      "INVALID_PAGE": "Page should be in number!",
+      "PAGE": "Page {page}",
+      "TITLES": "**Titles** \n {titles}",
+      "DETAIL": "See More Detail"
+    },
+    "SEARCHLIKE": {
+      "META": {
+        "DESC": "Search for similar Doujins",
+        "CATEGORY": "Main"
+      }
+    }
+  }
 }
