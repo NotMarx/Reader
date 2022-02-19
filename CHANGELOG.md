@@ -51,6 +51,6 @@ News update regarding to `0.1.4` dev code edition.
 
 # Contributors
 
-- @reinhello (**Project Lead**, **Contributor**)
+- [@reinhello](https://github.com/reinhello) (**Project Lead**, **Contributor**)
 
 ---
