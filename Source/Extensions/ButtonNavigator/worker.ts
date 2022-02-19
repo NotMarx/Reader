@@ -9,6 +9,15 @@ import moment from "moment";
 
 /* I can't believe I wrote this all :O */
 
+type GuildDataLanguage = "English";
+type GuildDataReadState = "current" | "new";
+
+interface GuildData {
+    Language: GuildDataLanguage;
+    Prefix: string;
+    ReadState: GuildDataReadState;
+}
+
 class ButtonNavigator {
     api: API;
     embeds: EmbedOptions[]
@@ -28,7 +37,11 @@ class ButtonNavigator {
         this.invoker = message;
     }
 
-    async init() {
+    /**
+     * Initialize the button navigator
+     */
+    async init(): Promise<void> {
+        const guildData: GuildData = await this.client.database.fetch(`Database.${this.authorMessage.guildID}`);
         const messageContent: AdvancedMessageContent = {
             content: `Page **${this.embed}** / **${this.embeds.length}**`,
             embeds: [this.embeds[this.embed - 1]],
@@ -53,14 +66,24 @@ class ButtonNavigator {
             ]
         }
 
-        if (this.invoker.author.id === this.invoker.channel.client.user.id) {
+        if (guildData.ReadState === "current" && this.invoker.author.id === this.invoker.channel.client.user.id) {
+            this.message = await this.invoker.edit(messageContent);
+        } else if (guildData.ReadState === "new" && this.invoker.author.id === this.invoker.channel.client.user.id) {
+            this.message = await this.invoker.channel.createMessage(messageContent);
+        }
+
+        // Remove old construction
+        /* if (this.invoker.author.id === this.invoker.channel.client.user.id) {
             this.message = await this.invoker.edit(messageContent);
         } else {
             this.message = await this.invoker.channel.createMessage(messageContent);
-        }
+        } */
     }
 
-    update() {
+    /**
+     * Update the embed content and its components
+     */
+    update(): void {
         this.message.edit({
             content: `Page **${this.embed}** / **${this.embeds.length}**`,
             embeds: [this.embeds[this.embed - 1]],
@@ -86,7 +109,10 @@ class ButtonNavigator {
         });
     }
 
-    run() {
+    /**
+     * Run the main event via `interactionCreate` that helps navigating the content to other pages
+     */
+    run(): void {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
             if (interaction.member.bot) return;
 
@@ -221,7 +247,10 @@ class SearchDetailButtonNavigator {
         this.search = search;
     }
 
-    async init() {
+    /**
+     * Initialize the button navigator
+     */
+    async init(): Promise<void> {
         const title: string = this.search.books.map((book, index) => `**${index + 1}.** \`[${book.id}]\` - \`${book.title.pretty}\``).join("\n");
         const embeds: EmbedOptions[] = this.search.books.map((book, index) =>
         ({
@@ -327,7 +356,10 @@ class SearchDetailButtonNavigator {
         this.update();
     }
 
-    update() {
+    /**
+     * Update the embed content and its components
+     */
+    update(): void {
         this.message.edit({
             embeds: [this.embeds[this.embed - 1]],
             components: [
@@ -369,7 +401,10 @@ class SearchDetailButtonNavigator {
         });
     }
 
-    run() {
+    /**
+     * Run the main event via `interactionCreate` that helps navigating the content to other pages
+     */
+    run(): void {
         this.client.on("interactionCreate", async (interaction: ComponentInteraction<TextableChannel>) => {
             if (interaction.member.bot) return;
 
