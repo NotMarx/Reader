@@ -64,9 +64,15 @@ export const command: Command = {
                             custom_id: "bookmark_prop",
                             style: 2,
                             type: 2
+                        },
+                        {
+                            label: guildLanguage.MAIN.READ.SHOW_COVER,
+                            custom_id: `show_book_cover_${message.id}`,
+                            style: 1,
+                            type: 2
                         }
                     ]
-                }
+                };
 
             const msg = await message.channel.createMessage({ embed: embed, components: [component], messageReference: { messageID: message.id }});
             createPaginationEmbed(client, res, msg, message);
