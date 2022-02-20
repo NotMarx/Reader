@@ -178,6 +178,7 @@ class ButtonNavigator {
 
                     embed.setImage(this.api.getImageURL(this.book.cover));
 
+                    interaction.acknowledge();
                     this.invoker.edit({ embed: embed, components: [hideComponent] });
                     break;
                 case `hide_book_cover_${this.authorMessage.id}`:
@@ -213,6 +214,7 @@ class ButtonNavigator {
 
                     embed.setImage("");
 
+                    interaction.acknowledge();
                     this.invoker.edit({ embed: embed, components: [showComponent] });
                     break;
                 case `next_page_${this.invoker.id}`:
@@ -512,7 +514,7 @@ class SearchDetailButtonNavigator {
                     this.init();
                     break;
                 case `show_book_cover_${this.invoker.id}`:
-                    const showComponent: ActionRow[] = [
+                    const hideComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -552,10 +554,11 @@ class SearchDetailButtonNavigator {
 
                     embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(interaction.message.embeds[0].author.name))).cover))
 
-                    this.invoker.edit({ embed, components: showComponent });
+                    interaction.acknowledge();
+                    this.invoker.edit({ embed, components: hideComponent });
                     break;
                 case `hide_book_cover_${this.invoker.id}`:
-                    const hideComponent: ActionRow[] = [
+                    const showComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -595,7 +598,8 @@ class SearchDetailButtonNavigator {
 
                     embed.setImage("");
 
-                    this.invoker.edit({ embed: embed, components: hideComponent });
+                    interaction.acknowledge()
+                    this.invoker.edit({ embed: embed, components: showComponent });
                     break;
                 case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();
@@ -1250,7 +1254,7 @@ class BookmarkButtonNavigator {
                     this.init();
                     break;
                 case `show_book_cover_${this.invoker.id}`:
-                    const showComponent: ActionRow[] = [
+                    const hideComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -1274,10 +1278,11 @@ class BookmarkButtonNavigator {
 
                     embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(interaction.message.embeds[0].author.name))).cover));
 
-                    this.invoker.edit({ embed: embed, components: showComponent });
+                    interaction.acknowledge();
+                    this.invoker.edit({ embed: embed, components: hideComponent });
                     break;
                 case `hide_book_cover_${this.invoker.id}`:
-                    const hideComponent: ActionRow[] = [
+                    const showComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -1301,7 +1306,8 @@ class BookmarkButtonNavigator {
 
                     embed.setImage("");
 
-                    this.invoker.edit({ embed: embed, components: hideComponent });
+                    interaction.acknowledge();
+                    this.invoker.edit({ embed: embed, components: showComponent });
                     break;
                 case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();
