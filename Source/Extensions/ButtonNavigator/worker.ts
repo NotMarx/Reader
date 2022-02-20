@@ -19,6 +19,9 @@ interface GuildData {
     ReadState: GuildDataReadState;
 }
 
+/**
+ * The main ButtonNavigator class to navigate pages
+ */
 class ButtonNavigator {
     api: API;
     embeds: EmbedOptions[]
@@ -29,6 +32,13 @@ class ButtonNavigator {
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
     authorMessage: Message<TextableChannel>;
+    /**
+     * 
+     * @param client Reader client
+     * @param book The specific book API
+     * @param message The sent message
+     * @param authorMessage The author of the message (who specifically runs the command)
+     */
     constructor(client: Reader, book: Book, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
         this.api = new API();
         this.authorMessage = authorMessage;
@@ -178,6 +188,7 @@ class ButtonNavigator {
 
                     embed.setImage(this.api.getImageURL(this.book.cover));
 
+                    interaction.acknowledge();
                     this.invoker.edit({ embed: embed, components: [hideComponent] });
                     break;
                 case `hide_book_cover_${this.authorMessage.id}`:
@@ -213,6 +224,7 @@ class ButtonNavigator {
 
                     embed.setImage("");
 
+                    interaction.acknowledge();
                     this.invoker.edit({ embed: embed, components: [showComponent] });
                     break;
                 case `next_page_${this.invoker.id}`:
@@ -322,6 +334,9 @@ class ButtonNavigator {
     }
 }
 
+/**
+ * Another ButtonNavigator class for Search queries
+ */
 class SearchDetailButtonNavigator {
     api: API;
     authorMessage?: Message<TextableChannel>;
@@ -331,6 +346,13 @@ class SearchDetailButtonNavigator {
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
     search: Search;
+    /**
+     * 
+     * @param client Reader client
+     * @param book The specific book API
+     * @param message The sent message
+     * @param authorMessage The author of the message (who specifically runs the command)
+     */
     constructor(client: Reader, search: Search, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
         this.api = new API();
         this.authorMessage = authorMessage;
@@ -512,7 +534,7 @@ class SearchDetailButtonNavigator {
                     this.init();
                     break;
                 case `show_book_cover_${this.invoker.id}`:
-                    const showComponent: ActionRow[] = [
+                    const hideComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -552,10 +574,11 @@ class SearchDetailButtonNavigator {
 
                     embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(interaction.message.embeds[0].author.name))).cover))
 
-                    this.invoker.edit({ embed, components: showComponent });
+                    interaction.acknowledge();
+                    this.invoker.edit({ embed, components: hideComponent });
                     break;
                 case `hide_book_cover_${this.invoker.id}`:
-                    const hideComponent: ActionRow[] = [
+                    const showComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -595,7 +618,8 @@ class SearchDetailButtonNavigator {
 
                     embed.setImage("");
 
-                    this.invoker.edit({ embed: embed, components: hideComponent });
+                    interaction.acknowledge()
+                    this.invoker.edit({ embed: embed, components: showComponent });
                     break;
                 case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();
@@ -1100,6 +1124,9 @@ class SearchDetailButtonNavigator {
     }
 }
 
+/**
+ * Another ButtonNavigator for bookmark
+ */
 class BookmarkButtonNavigator {
     api: API;
     authorMessage?: Message<TextableChannel>;
@@ -1110,6 +1137,13 @@ class BookmarkButtonNavigator {
     guildLanguage: GuildLanguage;
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
+    /**
+     * 
+     * @param client Reader client
+     * @param books The bookmarked books API
+     * @param message The sent message
+     * @param authorMessage The author of the message (who specifically runs the command)
+     */
     constructor(client: Reader, books: Book[], message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
         this.api = new API();
         this.authorMessage = authorMessage;
@@ -1250,7 +1284,7 @@ class BookmarkButtonNavigator {
                     this.init();
                     break;
                 case `show_book_cover_${this.invoker.id}`:
-                    const showComponent: ActionRow[] = [
+                    const hideComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -1274,10 +1308,11 @@ class BookmarkButtonNavigator {
 
                     embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(interaction.message.embeds[0].author.name))).cover));
 
-                    this.invoker.edit({ embed: embed, components: showComponent });
+                    interaction.acknowledge();
+                    this.invoker.edit({ embed: embed, components: hideComponent });
                     break;
                 case `hide_book_cover_${this.invoker.id}`:
-                    const hideComponent: ActionRow[] = [
+                    const showComponent: ActionRow[] = [
                         {
                             type: 1,
                             components: [
@@ -1301,7 +1336,8 @@ class BookmarkButtonNavigator {
 
                     embed.setImage("");
 
-                    this.invoker.edit({ embed: embed, components: hideComponent });
+                    interaction.acknowledge();
+                    this.invoker.edit({ embed: embed, components: showComponent });
                     break;
                 case `next_result_${this.invoker.id}`:
                     interaction.acknowledge();
