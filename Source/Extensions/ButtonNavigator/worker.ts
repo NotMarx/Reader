@@ -19,6 +19,9 @@ interface GuildData {
     ReadState: GuildDataReadState;
 }
 
+/**
+ * The main ButtonNavigator class to navigate pages
+ */
 class ButtonNavigator {
     api: API;
     embeds: EmbedOptions[]
@@ -29,6 +32,13 @@ class ButtonNavigator {
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
     authorMessage: Message<TextableChannel>;
+    /**
+     * 
+     * @param client Reader client
+     * @param book The specific book API
+     * @param message The sent message
+     * @param authorMessage The author of the message (who specifically runs the command)
+     */
     constructor(client: Reader, book: Book, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
         this.api = new API();
         this.authorMessage = authorMessage;
@@ -324,6 +334,9 @@ class ButtonNavigator {
     }
 }
 
+/**
+ * Another ButtonNavigator class for Search queries
+ */
 class SearchDetailButtonNavigator {
     api: API;
     authorMessage?: Message<TextableChannel>;
@@ -333,6 +346,13 @@ class SearchDetailButtonNavigator {
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
     search: Search;
+    /**
+     * 
+     * @param client Reader client
+     * @param book The specific book API
+     * @param message The sent message
+     * @param authorMessage The author of the message (who specifically runs the command)
+     */
     constructor(client: Reader, search: Search, message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
         this.api = new API();
         this.authorMessage = authorMessage;
@@ -1104,6 +1124,9 @@ class SearchDetailButtonNavigator {
     }
 }
 
+/**
+ * Another ButtonNavigator for bookmark
+ */
 class BookmarkButtonNavigator {
     api: API;
     authorMessage?: Message<TextableChannel>;
@@ -1114,6 +1137,13 @@ class BookmarkButtonNavigator {
     guildLanguage: GuildLanguage;
     invoker: Message<TextableChannel>;
     message: Message<TextableChannel>;
+    /**
+     * 
+     * @param client Reader client
+     * @param books The bookmarked books API
+     * @param message The sent message
+     * @param authorMessage The author of the message (who specifically runs the command)
+     */
     constructor(client: Reader, books: Book[], message: Message<TextableChannel>, authorMessage?: Message<TextableChannel>) {
         this.api = new API();
         this.authorMessage = authorMessage;
