@@ -1,8 +1,7 @@
 "use strict";
 
 import { ActionRow } from "eris";
-import { API } from "nhentai-api";
-import { Book } from "nhentai-api";
+import { API, Book } from "nhentai-api";
 import { Command } from "../../Interfaces";
 import { createBookmarkButtonNavigator } from "../../Extensions/ButtonNavigator/worker";
 import RichEmbed from "../../Extensions/embed";
