@@ -19,7 +19,7 @@ export const command: Command = {
         os.cpuUsage(async (cpu) => {
             const embed: EmbedOptions = {
                 title: guildLanguage.GENERAL.STATS.TITLE.replace("{bot}", client.user.username),
-                description: guildLanguage.GENERAL.STATS.DESC.replace(/{bot}/g, client.user.username).replace("{shard}", `${message.member.guild.shard.id}`).replace("{gh_url}", "https://github.com/NotMarx/Reader"),
+                description: guildLanguage.GENERAL.STATS.DESC.replace(/{bot}/g, client.user.username).replace("{shard}", `${message.member.guild.shard.id}`).replace("{gh_url}", "https://github.com/reinhello/Reader"),
                 color: client.config.COLOR,
                 fields: [
                     {
