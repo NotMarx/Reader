@@ -1,7 +1,6 @@
 "use strict";
 
 import Reader from "./Extensions/client";
-import { Dashboard } from "../Dashboard/Dashboard";
 import { TOKEN } from "./Interfaces/config.json";
 
 const client = new Reader(`Bot ${TOKEN}`, {
@@ -20,4 +19,3 @@ const client = new Reader(`Bot ${TOKEN}`, {
 // Initialize the bot
 client.init();
 client.setMaxListeners(Infinity);
-// Dashboard(client);
