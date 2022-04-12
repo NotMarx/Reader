@@ -71,7 +71,7 @@ export const event: Event = {
             if (command.adminOnly && !client.config.ADMIN_ID.includes(message.author.id)) return;
 
             if (command) {
-                Logger.command("COMMAND", `${message.author.username}#${message.author.discriminator} (${message.author.id}) Runs "${command.name}" At Guild: ${message.member.guild.name} (${message.guildID})`);
+                // Logger.command("COMMAND", `${message.author.username}#${message.author.discriminator} (${message.author.id}) Runs "${command.name}" At Guild: ${message.member.guild.name} (${message.guildID})`);
                 return command.run(client, message, args, guildLanguage);
             }
         }
