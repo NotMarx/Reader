@@ -77,7 +77,7 @@ export const command: Command = {
             const msg = await message.channel.createMessage({ embed: embed, components: [component], messageReference: { messageID: message.id }});
             createPaginationEmbed(client, res, msg, message);
         }).catch((err) => {
-            return message.channel.createMessage({ content: err, messageReference: { messageID: message.id }});
+            message.channel.createMessage({ content: err, messageReference: { messageID: message.id }});
         });
     }
 };
