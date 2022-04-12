@@ -49,10 +49,8 @@ export const event: Event = {
         if (!experience) {
             message.author.getDMChannel().then((dm) => {
                 return dm.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
-            // eslint-disable-next-line
-            // @ts-ignore
             }).catch(() => {
-                return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
+                message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
             });
         } else if (experience === true) {
             const messageArray: string[] = message.content.split(" ");
