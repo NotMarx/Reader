@@ -23,7 +23,7 @@ export const command: Command = {
                 const embed = new RichEmbed()
                     .setDescription("Cannot find that user!")
                     .setColor(client.config.COLOR);
-    
+
                 return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id }});
             }
 
@@ -34,10 +34,10 @@ export const command: Command = {
                     .setColor(client.config.COLOR)
                     .setDescription(guildLanguage.MAIN.BOOKMARK.MEMBER.DESC.replace("{user}", otherMember.username))
                     .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", "0"), guildLanguage.MAIN.BOOKMARK.NONE);
-    
+
                 return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
             }
-    
+
             const msg = await message.channel.createMessage({
                 embeds: [
                     { description: guildLanguage.MAIN.BOOKMARK.MEMBER.LOADING_STATE, color: client.config.COLOR }
@@ -46,10 +46,10 @@ export const command: Command = {
                     messageID: message.id
                 }
             });
-    
+
             const bookmarkedTitle: string[] = [];
-            let books: Book[] = [];
-    
+            const books: Book[] = [];
+
             for (let i = 0; i < bookmarked.length; i++) {
                 const theAPI = await api.getBook(parseInt(bookmarked[i])).then((res) => `\`[${res.id}]\` - \`${res.title.pretty}\``);
                 const book = await api.getBook(parseInt(bookmarked[i]));
@@ -62,14 +62,14 @@ export const command: Command = {
                 components: [
                     { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
                 ]
-            }
-    
+            };
+
             const embed: RichEmbed = new RichEmbed()
                 .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", otherMember.username))
                 .setThumbnail(otherMember.avatarURL)
                 .setColor(client.config.COLOR)
-                .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", otherMember.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`)
-    
+                .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", otherMember.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`);
+
             msg.edit({ components: [component], embed: embed, messageReference: { messageID: message.id } });
             createBookmarkButtonNavigator(client, books, msg, message);
         } else {
@@ -80,10 +80,10 @@ export const command: Command = {
                     .setColor(client.config.COLOR)
                     .setDescription(guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix))
                     .addField(guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", "0"), guildLanguage.MAIN.BOOKMARK.NONE);
-    
+
                 return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
             }
-    
+
             const msg = await message.channel.createMessage({
                 embeds: [
                     { description: guildLanguage.MAIN.BOOKMARK.LOADING_STATE, color: client.config.COLOR }
@@ -92,9 +92,9 @@ export const command: Command = {
                     messageID: message.id
                 }
             });
-    
-            let bookmarkedTitle: string[] = [];
-            let books: Book[] = [];
+
+            const bookmarkedTitle: string[] = [];
+            const books: Book[] = [];
 
             for (let i = 0; i < bookmarked.length; i++) {
                 const title = await api.getBook(parseInt(bookmarked[i])).then((res) => `\`[${res.id}]\` - \`${res.title.pretty}\``);
@@ -108,16 +108,16 @@ export const command: Command = {
                 components: [
                     { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
                 ]
-            }
-    
+            };
+
             const embed: RichEmbed = new RichEmbed()
                 .setTitle(guildLanguage.MAIN.BOOKMARK.TITLE.replace("{user}", message.author.username))
                 .setThumbnail(message.author.avatarURL)
                 .setColor(client.config.COLOR)
-                .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`)
-    
+                .setDescription(`${guildLanguage.MAIN.BOOKMARK.DESC.replace("{user}", message.author.username).replace("{prefix}", prefix)} \n\n **${guildLanguage.MAIN.BOOKMARK.BOOKMARKED.replace("{count}", `${bookmarked.length}`)}** \n ${bookmarkedTitle.join("\n")}`);
+
             msg.edit({ components: [component], embed: embed, messageReference: { messageID: message.id } });
             createBookmarkButtonNavigator(client, books, msg, message);
         }
     }
-}
+};

@@ -14,7 +14,7 @@ export const command: Command = {
         const prefix: string = client.database.fetch(`Database.${message.guildID}.Prefix`) || client.config.PREFIX;
         const command: Command = client.commands.get(args[0]) || client.aliases.get(args[0]);
 
-        // If the first args (command name) is specified 
+        // If the first args (command name) is specified
         if (args[0]) {
             if (!command) return;
 
@@ -24,7 +24,7 @@ export const command: Command = {
             const description: string = command.description ? command.description : "No Description";
             const name: string = command.name;
             const nsfwOnly: "`True`" | "`False`" = command.nsfwOnly ? "`True`" : "`False`";
-            const usage: string = command.usage ? `\`${prefix}${command.usage}\`` : "No Usage"
+            const usage: string = command.usage ? `\`${prefix}${command.usage}\`` : "No Usage";
 
             if (command.nsfwOnly && !(message.channel as TextChannel).nsfw && client.config.ADMIN_ID.includes(message.author.id)) {
                 const helpEmbed: EmbedOptions = {
@@ -83,7 +83,7 @@ export const command: Command = {
             } else {
                 const commands: Command[] = await client.commands.filter((cmd) => cmd.name !== "eval" && cmd.name !== "sweep");
 
-                let embed: RichEmbed = new RichEmbed()
+                const embed: RichEmbed = new RichEmbed()
                     .setTitle(`${client.user.username}'s Commands`)
                     .setDescription(`Use \`${prefix}help <command_name>\` for a command detail`)
                     .setColor(client.config.COLOR)
@@ -91,9 +91,9 @@ export const command: Command = {
                     .setTimestamp()
                     .setFooter("Made by reinhardt");
 
-                let com: object = {};
+                const com = {};
 
-                for (let comm of commands.values()) {
+                for (const comm of commands.values()) {
                     const category = comm.category || "Unknown";
                     const name = comm.name;
 
@@ -104,8 +104,8 @@ export const command: Command = {
                 }
 
                 for (const [key, value] of Object.entries(com)) {
-                    let category: string = key;
-                    let desc: string = "`" + (value as string[]).join("`, `") + "`";
+                    const category: string = key;
+                    const desc: string = "`" + (value as string[]).join("`, `") + "`";
 
                     embed.addField(`${category} [${(value as string[]).length}]`, desc);
                 }
@@ -173,7 +173,7 @@ export const command: Command = {
         } else {
             const commands: Command[] = await client.commands.filter((cmd) => cmd.name !== "eval" && cmd.name !== "sweep");
 
-            let embed: RichEmbed = new RichEmbed()
+            const embed: RichEmbed = new RichEmbed()
                 .setTitle(`${client.user.username}'s Commands`)
                 .setDescription(`Use \`${prefix}help <command_name>\` for a command detail`)
                 .setColor(client.config.COLOR)
@@ -181,9 +181,9 @@ export const command: Command = {
                 .setTimestamp()
                 .setFooter("Made by reinhardt");
 
-            let com: object = {};
+            const com = {};
 
-            for (let comm of commands.values()) {
+            for (const comm of commands.values()) {
                 const category = comm.category || "Unknown";
                 const name = comm.name;
 
@@ -194,8 +194,8 @@ export const command: Command = {
             }
 
             for (const [key, value] of Object.entries(com)) {
-                let category: string = key;
-                let desc: string = "`" + (value as string[]).join("`, `") + "`";
+                const category: string = key;
+                const desc: string = "`" + (value as string[]).join("`, `") + "`";
 
                 embed.addField(`${category} [${(value as string[]).length}]`, desc);
             }
@@ -203,4 +203,4 @@ export const command: Command = {
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
     }
-}
+};

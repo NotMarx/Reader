@@ -25,4 +25,4 @@ export const command: Command = {
             Logger.error("EVAL", err);
         }
     }
-}
+};

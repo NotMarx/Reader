@@ -11,4 +11,4 @@ export const event: Event = {
         client.shards.get(id).editStatus("dnd", { name: "Reading...", type: 0 });
         Logger.log(`SHARD READY | ID: ${id}`, `Shard #${id+ 1} Successfully Connected In ${(((id + 1) / client.shards.size) * 100).toFixed(1)}% With Ping: ${latency === Infinity ? "N/A" : latency}ms`, "#FFA500");
     }
-}
+};

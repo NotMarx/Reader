@@ -27,7 +27,7 @@ export default class Reader extends Client {
 
         /* Commands Section */
         const commandPath: string = path.join(__dirname, "..", "Commands");
-        
+
         readdirSync(commandPath).forEach((dir) => {
             const commands: string[] = readdirSync(`${commandPath}/${dir}`).filter((file) => file.endsWith(".ts"));
 

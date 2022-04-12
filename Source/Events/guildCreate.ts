@@ -10,7 +10,7 @@ export const event: Event = {
         Logger.system("JOINED GUILD", `Connected To Guild: ${guild.name} (${guild.id}) | Total Guilds: ${client.guilds.size}`);
 
         const guildHasDB: boolean = await client.database.fetch(`Database.${guild.id}`);
-        
+
         if (!guildHasDB) {
             client.database.set(`Database.${guild.id}`, {
                 Language: "ENGLISH",
@@ -19,4 +19,4 @@ export const event: Event = {
             });
         }
     }
-}
+};

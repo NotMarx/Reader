@@ -6,7 +6,7 @@ import Logger from "../Extensions/logger";
 export const event: Event = {
     name: "ready",
     run: async (client) => {
-        Logger.success(`DISCORD`, `${client.user.username}#${client.user.discriminator} Has Connected!`);
+        Logger.success("DISCORD", `${client.user.username}#${client.user.discriminator} Has Connected!`);
 
         const guilds = client.guilds.map((guild) => guild.id);
 
@@ -22,4 +22,4 @@ export const event: Event = {
             }
         }
     }
-}
+};

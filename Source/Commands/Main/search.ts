@@ -22,7 +22,7 @@ export const command: Command = {
         if (!flag.query) {
             const embed = new RichEmbed()
                 .setDescription(guildLanguage.MAIN.SEARCH.NO_QUERY.replace("{command_example}", `${prefix}search --query Search Something Here --page 3`))
-                .setColor(client.config.COLOR)
+                .setColor(client.config.COLOR);
 
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
@@ -30,7 +30,7 @@ export const command: Command = {
         if (flag.query.length === 0) {
             const embed = new RichEmbed()
                 .setDescription(guildLanguage.MAIN.SEARCH.NO_QUERY.replace("{command_example}", `${prefix}search --query Search Something Here --page 3`))
-                .setColor(client.config.COLOR)
+                .setColor(client.config.COLOR);
 
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
@@ -38,7 +38,7 @@ export const command: Command = {
         if (flag.page && typeof flag.page[0] !== "number") {
             const embed = new RichEmbed()
                 .setDescription(guildLanguage.MAIN.SEARCH.INVALID_PAGE)
-                .setColor(client.config.COLOR)
+                .setColor(client.config.COLOR);
 
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         }
@@ -64,7 +64,7 @@ export const command: Command = {
                 components: [
                     { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
                 ]
-            }
+            };
 
             const msg = await message.channel.createMessage({ embed: embed, components: [component], messageReference: { messageID: message.id } });
             createSearchResultPaginationEmbed(client, res, msg, message);
@@ -76,4 +76,4 @@ export const command: Command = {
             return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         });
     }
-}
+};
