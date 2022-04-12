@@ -7,7 +7,10 @@
     "node": ">=10.4.0"
   },
   "scripts": {
-    "init": "ts-node-dev --respawn --transpile-only --poll ./Source/Reader.ts"
+    "start": "ts-node ./Source/Reader.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --poll ./Source/Reader.ts",
+    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
+    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\""
   },
   "keywords": [
     "typescript",

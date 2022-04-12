@@ -8,7 +8,7 @@ export const event: Event = {
     run: async (client, err: string, id?: number) => {
         Logger.error("ERROR", `Shard ID: ${id || "N/A"} | ${err}`);
     }
-}
+};
 
 process.on("unhandledRejection", (err: string) => {
     Logger.error("ERROR", err);

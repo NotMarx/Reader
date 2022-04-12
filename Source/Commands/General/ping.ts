@@ -10,4 +10,4 @@ export const command: Command = {
     run: async (client, message, args, guildLanguage) => {
         return message.channel.createMessage({ content: guildLanguage.GENERAL.PING.TEXT.replace("{latency}", `${message.member.guild.shard.latency}`), messageReference: { messageID: message.id }});
     }
-}
+};

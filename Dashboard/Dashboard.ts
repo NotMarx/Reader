@@ -34,7 +34,6 @@ export const Dashboard = async (client: Reader) => {
     passport.serializeUser((user, done) => done(null, user));
     passport.deserializeUser((obj, done) => done(null, obj));
 
-    let callbackURL: string;
     let domain: DomainOptions;
 
     try {
@@ -47,7 +46,7 @@ export const Dashboard = async (client: Reader) => {
         Logger.error("DASHBORD ERROR", err);
     }
 
-    callbackURL = `${domain.protocol}//${domain.host}:${config.PORT}/callback`;
+    const callbackURL = `${domain.protocol}//${domain.host}:${config.PORT}/callback`;
 
     passport.use(new Strategy({
         clientID: config.CLIENT_ID,
@@ -87,7 +86,7 @@ export const Dashboard = async (client: Reader) => {
             path: req.path,
             user: req.isAuthenticated() ? req.user : null
         };
-    
+
         res.render(path.resolve(`${templateDir}${path.sep}${template}`), Object.assign(baseData, data));
     };
 
@@ -95,13 +94,14 @@ export const Dashboard = async (client: Reader) => {
         if (req.isAuthenticated()) return next();
         req.session.backURL = req.url;
         res.redirect("/login");
-    }
+    };
 
-   
+
     app.get("/login", (req, res, next) => {
-      
+
         if (req.session.backURL) {
-            req.session.backURL = req.session.backURL; 
+            // eslint-disable-next-line
+            req.session.backURL = req.session.backURL;
         } else if (req.headers.referer) {
             const parsed = parse(req.headers.referer);
             if (parsed.hostname === app.locals.domain) {
@@ -110,12 +110,12 @@ export const Dashboard = async (client: Reader) => {
         } else {
             req.session.backURL = "/";
         }
-        
+
         next();
     },
         passport.authenticate("discord"));
 
-    
+
     app.get("/callback", passport.authenticate("discord", { failureRedirect: "/" }), (req, res) => {
         if (req.session.backURL) {
             const url = req.session.backURL;
@@ -127,7 +127,7 @@ export const Dashboard = async (client: Reader) => {
     });
 
     app.get("/logout", function (req, res) {
-        
+
         req.session.destroy(() => {
             req.logout();
             res.redirect("/");
@@ -200,4 +200,4 @@ export const Dashboard = async (client: Reader) => {
     });
 
     app.listen(config.PORT, null, null, () => Logger.system("DASHBOARD", `Dashboard Is Up And Running On Port ${config.PORT}.`));
-}       
+};
