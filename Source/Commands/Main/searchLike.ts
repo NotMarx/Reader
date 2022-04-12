@@ -36,10 +36,10 @@ export const command: Command = {
                 components: [
                     { style: 1, label: guildLanguage.MAIN.SEARCH.DETAIL, custom_id: `see_detail_${message.id}`, type: 2 }
                 ]
-            }
+            };
 
             const msg = await message.channel.createMessage({ embed: embed, components: [component], messageReference: { messageID: message.id } });
             createSearchResultPaginationEmbed(client, res, msg, message);
         });
     }
-}
+};

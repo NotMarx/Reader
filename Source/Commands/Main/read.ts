@@ -28,7 +28,7 @@ export const command: Command = {
             const contentTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
             const languageTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name);
             const parodyTags: string[] = res.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-            const uploadedAt: string = `\`${moment(res.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``;
+            const uploadedAt = `\`${moment(res.uploaded).format("On dddd, MMMM Do, YYYY h:mm A")}\``;
 
             const embed = new RichEmbed()
                 .setAuthor(args[0], `https://nhentai.net/g/${args[0]}`, "https://cdn.discordapp.com/attachments/755253854819582114/894895960931590174/845298862184726538.png")
@@ -80,4 +80,4 @@ export const command: Command = {
             return message.channel.createMessage({ content: err, messageReference: { messageID: message.id }});
         });
     }
-}
+};

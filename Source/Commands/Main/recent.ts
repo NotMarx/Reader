@@ -13,7 +13,7 @@ export const command: Command = {
     category: "Main",
     nsfwOnly: true,
     run: async (client, message, args, guildLanguage) => {
-        let api = new API();
+        const api = new API();
 
         api.search("*", 1).then(async (res) => {
             const title: Book[] = [];
@@ -24,7 +24,7 @@ export const command: Command = {
             }
 
             const embed = new RichEmbed()
-                .setTitle(`Top 10 Recent Uploaded Doujins`)
+                .setTitle("Top 10 Recent Uploaded Doujins")
                 .addField("Title", title.map((book) => `\`[${book.id}]\` - \`${book.title.pretty}\``).join("\n"))
                 .setColor(client.config.COLOR);
 
@@ -33,11 +33,11 @@ export const command: Command = {
                 components: [
                     { style: 1, label: "See More Detail", custom_id: `see_detail_${message.id}`, type: 2 }
                 ]
-            }
+            };
 
             const msg = await message.channel.createMessage({ embed: embed, components: [component], messageReference: { messageID: message.id } });
             createSearchResultPaginationEmbed(client, res, msg, message);
         });
     }
 
-}
+};
