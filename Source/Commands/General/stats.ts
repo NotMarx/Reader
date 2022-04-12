@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 import { Command } from "../../Interfaces";
 import { EmbedOptions, VERSION } from "eris";
@@ -11,8 +11,8 @@ export const command: Command = {
     aliases: ["status"],
     category: "General",
     run: async (client, message, args, guildLanguage) => {
-        const memory: number = process.memoryUsage().rss
-        const totalMemory: string = `${Util.bytes(memory).value}${Util.bytes(memory).unit} / ${Util.bytes(require("os").totalmem()).value}${Util.bytes(require("os").totalmem()).unit}`;
+        const memory: number = process.memoryUsage().rss;
+        const totalMemory = `${Util.bytes(memory).value}${Util.bytes(memory).unit} / ${Util.bytes(require("os").totalmem()).value}${Util.bytes(require("os").totalmem()).unit}`;
         const totalMem = Util.bytes(require("os").totalmem()).value * 1000;
         const used: number = process.memoryUsage().rss / totalMem / totalMem;
 
@@ -60,9 +60,9 @@ export const command: Command = {
                     text: guildLanguage.GENERAL.STATS.FOOTER.replace("{dev}", "reinhardt"),
                     icon_url: "https://cdn.discordapp.com/avatars/516186529547288576/0bf219f20a58380d381649dcde4d38e5.png?size=512"
                 }
-            }
-    
-            message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id }}); 
+            };
+
+            message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id }});
         });
     }
-}
+};

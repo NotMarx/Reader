@@ -26,7 +26,7 @@ export class MongoDatabase  {
 
         connect(this.mongoDBURI, this.options);
         return this.model = model("reader", schema);
-        
+
     }
 }
 

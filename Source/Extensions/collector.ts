@@ -54,21 +54,21 @@ export class MessageCollector extends EventEmitter {
     if (!this.running) return;
     if (this.channel.id !== msg.channel.id) return;
     if (!this.filter(msg)) return;
-    this.emit('collect', msg);
+    this.emit("collect", msg);
   }
 
   _onMessageUpdate(msg: Eris.Message<Eris.TextableChannel>, oldMsg: Eris.Message<Eris.TextableChannel>) {
     if (!this.running) return;
     if (this.channel.id !== msg.channel.id) return;
     if (!this.filter(msg)) return this.collected.remove(msg);
-    if (!this.collected.has(oldMsg.id)) return this.emit('collect', msg);
-    this.emit('update', msg);
+    if (!this.collected.has(oldMsg.id)) return this.emit("collect", msg);
+    this.emit("update", msg);
   }
 
   _onMessageDelete(msg: Eris.Message<Eris.TextableChannel>) {
     if (!this.running) return;
     if (!this.collected.has(msg.id)) return;
-    this.emit('delete', msg);
+    this.emit("delete", msg);
   }
 
   /**
@@ -78,17 +78,17 @@ export class MessageCollector extends EventEmitter {
     this.running = true;
     return new Promise((res) => {
       this.channel.client.setMaxListeners(this.getMaxListeners() + 1);
-      this.channel.client.on('messageCreate', this._onMessageCreate);
-      this.channel.client.on('messageUpdate', this._onMessageUpdate);
-      this.channel.client.on('messageDelete', this._onMessageDelete);
+      this.channel.client.on("messageCreate", this._onMessageCreate);
+      this.channel.client.on("messageUpdate", this._onMessageUpdate);
+      this.channel.client.on("messageDelete", this._onMessageDelete);
 
       this.setMaxListeners(this.getMaxListeners() + 1);
-      this.on('collect', this.onCollect);
-      this.on('update', this.onUpdate);
-      this.on('delete', this.onDelete);
+      this.on("collect", this.onCollect);
+      this.on("update", this.onUpdate);
+      this.on("delete", this.onDelete);
 
       if (this.timeout) setTimeout(() => this.stop(), this.timeout);
-      this.once('stop', () => res(this));
+      this.once("stop", () => res(this));
     });
   }
 
@@ -98,15 +98,15 @@ export class MessageCollector extends EventEmitter {
   stop(): MessageCollector {
     this.running = false;
     this.channel.client.setMaxListeners(this.getMaxListeners() - 1);
-    this.channel.client.off('messageCreate', this._onMessageCreate);
-    this.channel.client.off('messageUpdate', this._onMessageUpdate);
-    this.channel.client.off('messageDelete', this._onMessageDelete);
+    this.channel.client.off("messageCreate", this._onMessageCreate);
+    this.channel.client.off("messageUpdate", this._onMessageUpdate);
+    this.channel.client.off("messageDelete", this._onMessageDelete);
 
     this.setMaxListeners(this.getMaxListeners() - 1);
-    this.off('collect', this.onCollect);
-    this.off('update', this.onUpdate);
-    this.off('delete', this.onDelete);
-    this.emit('stop');
+    this.off("collect", this.onCollect);
+    this.off("update", this.onUpdate);
+    this.off("delete", this.onDelete);
+    this.emit("stop");
     return this;
   }
 

@@ -4,7 +4,7 @@ import chalk from "chalk";
 import moment from "moment";
 
 export default class Logger {
-    
+
     static log(t: string, m: string, c: string) {
         console.log(`[ ${chalk.hex(c)(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.hex(c)(m)}`);
     }

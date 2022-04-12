@@ -7,16 +7,16 @@ export const command: Command = {
     category: "Admin",
     adminOnly: true,
     run: async (client, message, args) => {
-        const user = message.member.guild.members.find((member) => member.id === args[1]) || message.member.guild.members.find((member) => member.username === args[1]) || message.mentions[0]
+        const user = message.member.guild.members.find((member) => member.id === args[1]) || message.member.guild.members.find((member) => member.username === args[1]) || message.mentions[0];
         const userIsPremium: boolean = client.database.fetch(`Database.${user.id}.Premium`);
 
         if (!args[0]) {
-            return message.channel.createMessage({ content: `Please choose the correct option: \`add\`, \`remove\``, messageReference: { messageID: message.id } });
+            return message.channel.createMessage({ content: "Please choose the correct option: `add`, `remove`", messageReference: { messageID: message.id } });
         }
 
         if (args[0] === "add") {
             if (!user) {
-                return message.channel.createMessage({ content: `Cannot find that user, please try again!`, messageReference: { messageID: message.id } });
+                return message.channel.createMessage({ content: "Cannot find that user, please try again!", messageReference: { messageID: message.id } });
             }
 
             if (userIsPremium) {
@@ -29,7 +29,7 @@ export const command: Command = {
 
         if (args[0] === "remove") {
             if (!user) {
-                return message.channel.createMessage({ content: `Cannot find that user, please try again!`, messageReference: { messageID: message.id } });
+                return message.channel.createMessage({ content: "Cannot find that user, please try again!", messageReference: { messageID: message.id } });
             }
 
             if (!userIsPremium) {
@@ -40,4 +40,4 @@ export const command: Command = {
             }
         }
     }
-}
+};

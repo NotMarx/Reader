@@ -12,7 +12,7 @@ export const command: Command = {
     usage: "config --option <option> --value <value>",
     run: async (client, message, args, guildLanguage) => {
         const flag = await yargs(args.slice(0)).array(["option", "value"]).argv;
-        let embed: RichEmbed = new RichEmbed()
+        const embed: RichEmbed = new RichEmbed()
             .setColor(client.config.COLOR);
 
         // Ignore for non-admin users
@@ -72,7 +72,7 @@ export const command: Command = {
 
                 const cfgLanguage: string = (flag.value[0] as string).toLowerCase();
 
-                embed.setDescription(guildLanguage.ADMIN.CONFIG.LANG_SUCCESS.replace("{language}", cfgLanguage.charAt(0).toUpperCase() + cfgLanguage.slice(1)))
+                embed.setDescription(guildLanguage.ADMIN.CONFIG.LANG_SUCCESS.replace("{language}", cfgLanguage.charAt(0).toUpperCase() + cfgLanguage.slice(1)));
 
                 message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
                 client.database.set(`Database.${message.guildID}.Language`, (flag.value[0] as string).toUpperCase());
@@ -109,4 +109,4 @@ export const command: Command = {
                 break;
         }
     }
-}
+};

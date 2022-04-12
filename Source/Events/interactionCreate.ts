@@ -30,11 +30,11 @@ export const event: Event = {
                         title: "First Experience [APPROVED]",
                         description: `You've agreed to the **Privacy Policy**! You may start using the commands. If you're completely new, type \`${client.database.fetch(`Database.${interaction.guildID}.Prefix`) || client.config.PREFIX}help\``,
                         color: client.config.COLOR
-                    }
+                    };
 
                     interaction.acknowledge().then(() => {
                         interaction.editMessage(interaction.message.id, { embeds: [agreeEmbed], components: [{ type: 1, components: agreeComponent }] });
-                    })
+                    });
                     client.database.set(`Database.${interaction.member ? interaction.member.id : interaction.user.id}.Experience`, true);
                     break;
                 case "disagree_privacy":
@@ -57,13 +57,13 @@ export const event: Event = {
 
                     const disagreeEmbed: EmbedOptions = {
                         title: "First Experience [DISAPPROVED]",
-                        description: `You've **NOT** agree to the **Privacy Policy**! You're not permitted to use any commands unless you click **Agree**.`,
+                        description: "You've **NOT** agree to the **Privacy Policy**! You're not permitted to use any commands unless you click **Agree**.",
                         color: client.config.COLOR
-                    }
+                    };
 
                     interaction.acknowledge().then(() => {
                         interaction.editMessage(interaction.message.id, { embeds: [disagreeEmbed], components: [{ type: 1, components: disagreeComponent }] });
-                    })
+                    });
                     client.database.set(`${interaction.member ? interaction.member.id : interaction.user.id}`, false);
                     break;
                 case "bookmark_prop":
@@ -128,4 +128,4 @@ export const event: Event = {
             }
         }
     }
-}
+};

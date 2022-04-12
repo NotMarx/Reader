@@ -50,19 +50,19 @@ export const event: Event = {
             message.author.getDMChannel().then((dm) => {
                 return dm.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
             }).catch(() => {
-                return message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
+                message.channel.createMessage({ content: `${message.author.mention}`, embeds: [experienceEmbed], components: [{ type: 1, components: experienceComponent }] });
             });
         } else if (experience === true) {
-            let messageArray: string[] = message.content.split(" ");
-            let args: string[] = messageArray.slice(1);
-            let commandName: string = messageArray[0].slice(prefix.length);
-            let command: Command = client.commands.get(commandName) || client.aliases.get(commandName);
+            const messageArray: string[] = message.content.split(" ");
+            const args: string[] = messageArray.slice(1);
+            const commandName: string = messageArray[0].slice(prefix.length);
+            const command: Command = client.commands.get(commandName) || client.aliases.get(commandName);
 
             if (!command) return;
 
             // Checking Circumstances
             if (command.nsfwOnly && client.config.ADMIN_ID.includes(message.author.id)) {
-                Logger.command("COMMAND", `${message.author.username}#${message.author.discriminator} (${message.author.id}) Runs "${command.name}" At Guild: ${message.member.guild.name} (${message.guildID})`);
+                // Logger.command("COMMAND", `${message.author.username}#${message.author.discriminator} (${message.author.id}) Runs "${command.name}" At Guild: ${message.member.guild.name} (${message.guildID})`);
                 return command.run(client, message, args, guildLanguage);
             } else if (command.nsfwOnly && !(message.channel as TextChannel).nsfw) {
                 return message.channel.createMessage({ embeds: [{ description: "This command is only executable in **NSFW Channels**!", color: client.config.COLOR }], messageReference: { messageID: message.id } });
@@ -76,4 +76,4 @@ export const event: Event = {
             }
         }
     }
-}
+};
