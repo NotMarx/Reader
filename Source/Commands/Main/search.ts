@@ -73,7 +73,7 @@ export const command: Command = {
                 .setDescription(guildLanguage.MAIN.SEARCH.NOT_FOUND)
                 .setColor(client.config.COLOR);
 
-            return message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
+            message.channel.createMessage({ embed: embed, messageReference: { messageID: message.id } });
         });
     }
 };
