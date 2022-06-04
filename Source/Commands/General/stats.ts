@@ -24,12 +24,12 @@ export const command: Command = {
                 fields: [
                     {
                         name: guildLanguage.GENERAL.STATS.FIELDS.MEMORY_USAGE.NAME,
-                        value: guildLanguage.GENERAL.STATS.FIELDS.MEMORY_USAGE.VALUE.replace("{total_mem}", totalMemory).replace("{percentage}", `${Math.round(used * 100) / 100}`),
+                        value: guildLanguage.GENERAL.STATS.FIELDS.MEMORY_USAGE.VALUE.replace("{total_mem}", totalMemory).replace("{percentage}", `${Math.round(used * 100) / 100}%`),
                         inline: true
                     },
                     {
                         name: guildLanguage.GENERAL.STATS.FIELDS.CPU_USAGE.NAME,
-                        value: guildLanguage.GENERAL.STATS.FIELDS.CPU_USAGE.VALUE.replace("{percentage}", `${Util.round(cpu, 2)}`),
+                        value: guildLanguage.GENERAL.STATS.FIELDS.CPU_USAGE.VALUE.replace("{percentage}", `${Util.round(cpu, 2)}%`),
                         inline: true
                     },
                     {
