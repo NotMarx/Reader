@@ -58,11 +58,11 @@
         "FIELDS": {
           "MEMORY_USAGE": {
             "NAME": "Memory Usage",
-            "VALUE": "{total_mem} \n ({percentage}%)"
+            "VALUE": "{total_mem} \n ({percentage})"
           },
           "CPU_USAGE": {
             "NAME": "CPU Usage",
-            "VALUE": "{percentage}%"
+            "VALUE": "{percentage}"
           },
           "DATABASE_SIZE": {
             "NAME": "Database Size",
