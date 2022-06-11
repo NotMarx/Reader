@@ -1,6 +1,7 @@
 {
     "ADMIN_ID": ["YOUR_USER_ID_HERE"],
     "COLOR": "HEX_COLOR_IN_NUMBER_HERE",
+    "DEBUG_MODE": false,
     "PREFIX": "PREFIX_HERE",
     "HOST": "HOST",
     "MONGODB_URI": "URI_HERE",
