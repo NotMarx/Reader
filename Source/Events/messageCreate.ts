@@ -2,7 +2,6 @@
 
 import { Event, Command } from "../Interfaces";
 import { ActionRowComponents, EmbedOptions, Message, TextableChannel, TextChannel } from "eris";
-import Logger from "../Extensions/logger";
 import LanguageConstants from "../../Languages/LANG.json";
 import { GuildLanguage } from "../Interfaces";
 
