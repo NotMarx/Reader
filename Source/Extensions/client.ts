@@ -5,6 +5,7 @@ import Collection from "./collection";
 import { Command, Config, Event } from "../Interfaces";
 import ConfigJSON from "../Interfaces/config.json";
 import { Database } from "xen.db";
+import { Logger } from "./logger";
 import { MessageCollector, MessageCollectorOptions } from "../Extensions/collector";
 import path from "path";
 import { MongoDatabase } from "./database";
@@ -17,6 +18,7 @@ export default class Reader extends Client {
     public events = new Map<string, Event>();
     public database: Database = new Database("Database/ReaderBase.sqlite", { path: "Database", table: "READER", useWalMode: false });
     public db = new MongoDatabase(ConfigJSON.MONGODB_URI).init();
+    public logger = new Logger();
 
     /**
      * Initalize the bot
@@ -50,6 +52,12 @@ export default class Reader extends Client {
             this.events.set(event.name, event);
             this.on(event.name, event.run.bind(null, this));
         });
+
+        /* Log Loaded Commands & Events */
+        setTimeout(() => {
+            this.logger.success({ message: `Successfully Loaded ${this.commands.size} Commands`, subTitle: "Reader::Collections::Commands", title: "CLIENT" });
+            this.logger.success({ message: `Successfully Loaded ${this.events.size} Events`, subTitle: "Reader::Collections::Events", title: "CLIENT" });
+        }, 2000);
     }
 
     public awaitChannelMessages(channel: TextableChannel, options: MessageCollectorOptions) {
