@@ -1,15 +1,15 @@
 "use strict";
 
 import { Event } from "../Interfaces";
-import Logger from "../Extensions/logger";
+import { Logger } from "../Extensions/logger";
 
 export const event: Event = {
     name: "error",
     run: async (client, err: string, id?: number) => {
-        Logger.error("ERROR", `Shard ID: ${id || "N/A"} | ${err}`);
+        client.logger.error({ message: err, subTitle: "Reader::Gateway::Error", title: `SHARD ${id ? id : "N/A"}` });
     }
 };
 
 process.on("unhandledRejection", (err: string) => {
-    Logger.error("ERROR", err);
+    new Logger().error({ message: err, subTitle: "TypeScript::Error", title: "UNHANDLED REJECTION"});
 });
