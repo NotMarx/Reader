@@ -3,7 +3,6 @@
 import { Command } from "../../Interfaces";
 import { inspect } from "util";
 import { API } from "nhentai-api";
-import Logger from "../../Extensions/logger";
 
 export const command: Command = {
     name: "eval",
@@ -18,11 +17,11 @@ export const command: Command = {
             const evaluated = inspect(eval(args.join(" ")), { depth: 0 });
 
             message.addReaction("✅");
-            Logger.success("EVAL", "Code Successfully Evaluated!");
+            client.logger.system({ message: "Code Evaluated", subTitle: "Reader::Commands::Eval", title: "CODE EVAL" });
             console.log(evaluated);
         } catch (err) {
             message.addReaction("❎");
-            Logger.error("EVAL", err);
+            client.logger.error({ message: err, subTitle: "Reader::Commands::Eval", title: "CODE EVAL"});
         }
     }
 };
