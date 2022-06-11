@@ -1,12 +1,11 @@
 "use strict";
 
 import { Event } from "../Interfaces";
-import Logger from "../Extensions/logger";
 
 export const event: Event = {
     name: "ready",
     run: async (client) => {
-        Logger.success("DISCORD", `${client.user.username}#${client.user.discriminator} Has Connected!`);
+        client.logger.system({ message: `${client.user.username}#${client.user.discriminator} Has Connected`, subTitle: "Reader::Gateway::Ready", title: "CLIENT" });
 
         const guilds = client.guilds.map((guild) => guild.id);
 

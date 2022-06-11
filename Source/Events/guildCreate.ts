@@ -2,12 +2,11 @@
 
 import { Event } from "../Interfaces";
 import { Guild } from "eris";
-import Logger from "../Extensions/logger";
 
 export const event: Event = {
     name: "guildCreate",
     run: async (client, guild: Guild) => {
-        Logger.system("JOINED GUILD", `Connected To Guild: ${guild.name} (${guild.id}) | Total Guilds: ${client.guilds.size}`);
+        client.logger.info({ message: `Connected to Guild: ${guild.name} (${guild.id})`, subTitle: "Reader::Gateway::GuildCreate", title: `SHARD ${guild.shard.id ? guild.shard.id : "N/A"}` });
 
         const guildHasDB: boolean = await client.database.fetch(`Database.${guild.id}`);
 
