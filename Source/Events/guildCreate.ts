@@ -6,7 +6,7 @@ import { Guild } from "eris";
 export const event: Event = {
     name: "guildCreate",
     run: async (client, guild: Guild) => {
-        client.logger.info({ message: `Connected to Guild: ${guild.name} (${guild.id})`, subTitle: "Reader::Gateway::GuildCreate", title: `SHARD ${guild.shard.id ? guild.shard.id : "N/A"}` });
+        client.logger.info({ message: `Connected to Guild: ${guild.name} (${guild.id})`, subTitle: "Reader::Gateway::GuildCreate", title: `SHARD ${guild.shard.id ?? "N/A"}` });
 
         const guildHasDB: boolean = await client.database.fetch(`Database.${guild.id}`);
 
