@@ -3,34 +3,103 @@
 import chalk from "chalk";
 import moment from "moment";
 
-export default class Logger {
-
-    static log(t: string, m: string, c: string) {
-        console.log(`[ ${chalk.hex(c)(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.hex(c)(m)}`);
-    }
-
-    static error(t: string, m: string) {
-        console.log(`[ ${chalk.redBright(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.redBright(m)}`);
-    }
-
-    static success(t: string, m: string) {
-        console.log(`[ ${chalk.greenBright(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.greenBright(m)}`);
-    }
-
-    static info(t: string, m: string) {
-        console.log(`[ ${chalk.cyanBright(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.cyanBright(m)}`);
-    }
-
-    static warn(t: string, m: string) {
-        console.log(`[ ${chalk.yellow(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.yellow(m)}`);
-    }
-
-    static command(t: string, m: string) {
-        console.log(`[ ${chalk.hex("#DAEE94")(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.hex("#DAEE94")(m)}`);
-    }
-
-    static system(t: string, m: string) {
-        console.log(`[ ${chalk.blue(t)} ] - ${chalk.grey(moment().format("MMMM Do YYYY, h:mm:ss a"))} - ${chalk.blue(m)}`);
-    }
+export interface ICustomLoggingOptions {
+    type: string;
+    title: string;
+    subTitle?: string;
+    message: string;
+    colour: string;
 }
 
+export interface ILoggingOptions {
+    type?: string;
+    title: string;
+    subTitle?: string;
+    message: string;
+
+}
+
+
+/**
+ * Represents a Logger class to facilitate the logging implementation
+ */
+export class Logger {
+    /**
+     * Logs an error logging message
+     * @param options The logging options
+     * @param options.message The message of the log
+     * @param options.type The type of the log
+     * @param options.title The title of the log
+     * @param options.subTitle The sub title of the log. This comes after the title
+     * @returns {void}
+     */
+    error(options: ILoggingOptions): void {
+        return console.log(`${chalk.bgRed(` ${options.type ? options.type.toUpperCase() : "ERROR"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.red(options.message)}`);
+    }
+
+    /**
+     * Logs an info logging message
+     * @param options The logging options
+     * @param options.message The message of the log
+     * @param options.type The type of the log
+     * @param options.title The title of the log
+     * @param options.subTitle The sub title of the log. This comes after the title
+     * @returns {void}
+     */
+    info(options: ILoggingOptions): void {
+        return console.log(`${chalk.bgCyan(` ${options.type ? options.type.toUpperCase() : "INFO"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.cyan(options.message)}`);
+    }
+
+    /**
+     * Logs a custom logging message
+     * @param options The logging options
+     * @param options.colour The colour of the log
+     * @param options.message The message of the log
+     * @param options.type The type of the log
+     * @param options.title The title of the log
+     * @param options.subTitle The sub title of the log. This comes after the title
+     * @returns {void}
+     */
+    log(options: ICustomLoggingOptions): void {
+        return console.log(`${chalk.bgHex(options.colour)(` ${options.type.toUpperCase()} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.hex(options.colour)(options.message)}`);
+    }
+
+    /**
+     * Logs a success logging message
+     * @param options The logging options
+     * @param options.message The message of the log
+     * @param options.type The type of the log
+     * @param options.title The title of the log
+     * @param options.subTitle The sub title of the log. This comes after the title
+     * @returns {void}
+     */
+    success(options: ILoggingOptions): void {
+        return console.log(`${chalk.bgGreen(` ${options.type ? options.type.toUpperCase() : "SUCCESS"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.green(options.message)}`);
+    }
+
+    /**
+     * Logs a system logging message
+     * @param options The logging options
+     * @param options.message The message of the log
+     * @param options.type The type of the log
+     * @param options.title The title of the log
+     * @param options.subTitle The sub title of the log. This comes after the title
+     * @returns {void}
+     */
+    system(options: ILoggingOptions): void {
+        return console.log(`${chalk.bgBlue(` ${options.type ? options.type.toUpperCase() : "SYSTEM"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.blue(options.message)}`);
+    }
+
+    /**
+     * Logs a warning logging message
+     * @param options The logging options
+     * @param options.message The message of the log
+     * @param options.type The type of the log
+     * @param options.title The title of the log
+     * @param options.subTitle The sub title of the log. This comes after the title
+     * @returns {void}
+     */
+    warn(options: ILoggingOptions): void {
+        return console.log(`${chalk.bgYellow(` ${options.type ? options.type.toUpperCase() : "WARNING"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.yellow(options.message)}`);
+    }
+}
