@@ -7,7 +7,7 @@ import { Utils } from "givies-framework";
 
 export function searchCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
-    jar.setCookie("cf_clearance=wknDFa_slMQACS1WhjF.ew4urrNbNyxuzIm9nod9qaY-1657590028-0-150", "https://nhentai.net/");
+    jar.setCookie("cf_clearance=q.vXMnN0OYjby.7IVpb79vIujJpiKysmj_udGw1wj70-1657627490-0-150", "https://nhentai.net/");
 
     const agent = new HttpsCookieAgent({ cookies: { jar } });
     // @ts-ignore

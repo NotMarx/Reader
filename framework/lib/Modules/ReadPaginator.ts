@@ -52,7 +52,7 @@ export class ReadPaginator {
      */
     constructor(client: ReaderClient, book: Book, interaction: CommandInteraction<TextableChannel>) {
         const jar = new CookieJar();
-        jar.setCookie("cf_clearance=wknDFa_slMQACS1WhjF.ew4urrNbNyxuzIm9nod9qaY-1657590028-0-150", "https://nhentai.net/");
+        jar.setCookie("cf_clearance=q.vXMnN0OYjby.7IVpb79vIujJpiKysmj_udGw1wj70-1657627490-0-150", "https://nhentai.net/");
         const agent = new HttpsCookieAgent({ cookies: { jar } });
 
         // @ts-ignore
@@ -151,7 +151,7 @@ export class ReadPaginator {
             const artistTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
             const contentTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-            const languageTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name);
+            const languageTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
             const parodyTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
             const uploadedAt = moment(this.book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
 

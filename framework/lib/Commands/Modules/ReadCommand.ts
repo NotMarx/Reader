@@ -10,7 +10,7 @@ import moment from "moment";
 
 export function readCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
-    jar.setCookie("cf_clearance=wknDFa_slMQACS1WhjF.ew4urrNbNyxuzIm9nod9qaY-1657590028-0-150", "https://nhentai.net/");
+    jar.setCookie("cf_clearance=q.vXMnN0OYjby.7IVpb79vIujJpiKysmj_udGw1wj70-1657627490-0-150", "https://nhentai.net/");
 
     const agent = new HttpsCookieAgent({ cookies: { jar } });
     // @ts-ignore
@@ -26,7 +26,7 @@ export function readCommand(client: ReaderClient, interaction: CommandInteractio
         const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
         const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
         const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-        const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name);
+        const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
         const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
         const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
 
