@@ -34,7 +34,7 @@ export async function interactionCreateEvent(client: ReaderClient, interaction: 
             id: interaction.member.id,
             settings: {
                 premium: false,
-                readState: "new"
+                readState: "current"
             }
         });
 
