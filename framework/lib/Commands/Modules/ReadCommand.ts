@@ -77,6 +77,6 @@ export function readCommand(client: ReaderClient, interaction: CommandInteractio
         interaction.createMessage({ components: [component], embeds: [embed] });
         createReadPaginator(client, book, interaction);
     }).catch((err) => {
-        return client.logger.error({ message: err, subTitle: "NHentai::API::Book", title: "API" });
+        return client.logger.error({ message: err, subTitle: "NHentaiAPI::Book", title: "API" });
     });
 }
