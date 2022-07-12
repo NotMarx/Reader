@@ -1,0 +1,47 @@
+{
+  "name": "reader-framework",
+  "version": "0.1.0",
+  "description": "Read Something",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=16.10.0"
+  },
+  "scripts": {
+    "build": "tsc && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
+    "build:locale": "ts-node ./lib/Modules/LocalisationCompiler.ts",
+    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
+    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\""
+  },
+  "keywords": [
+    "typescript",
+    "reader",
+    "eris"
+  ],
+  "author": "Reinhardt",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/tough-cookie": "^4.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "ts-node": "^10.8.2",
+    "ts-node-dev": "^1.1.8",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "byte-size": "^8.1.0",
+    "chalk": "^4.1.2",
+    "eris": "^0.17.1",
+    "givies-framework": "^2022.706.0",
+    "http-cookie-agent": "^4.0.1",
+    "i18next": "^21.8.13",
+    "i18next-icu": "^2.0.3",
+    "moment": "^2.29.1",
+    "mongoose": "^6.0.12",
+    "nhentai-api": "^3.1.0",
+    "tough-cookie": "^4.0.0"
+  }
+}
