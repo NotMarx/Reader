@@ -35,4 +35,12 @@ export class ReaderCommand {
     public readCommand() {
         return CommandModules.readCommand(this.client, this.interaction);
     }
+
+    /**
+     * Executes a `search` command
+     * @returns {Promise<void>}
+     */
+    public searchCommand() {
+        return CommandModules.searchCommand(this.client, this.interaction);
+    }
 }
