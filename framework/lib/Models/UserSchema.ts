@@ -23,7 +23,7 @@ const userSchema = new Schema<IUserSchema>({
             type: Boolean
         },
         readState: {
-            default: "new",
+            default: "current",
             required: true,
             type: String
         }
