@@ -148,6 +148,7 @@ export class ReadPaginator {
             if (interaction.member.bot) return;
 
             const guildData = await GuildModel.findOne({ id: interaction.guildID });
+            const userData = await UserModel.findOne({ id: interaction.member.id });
             const artistTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
             const contentTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
@@ -253,9 +254,6 @@ export class ReadPaginator {
                     interaction.acknowledge();
                     break;
                 case `bookmark_${this.interaction.id}`:
-
-                    const userData = await UserModel.findOne({ id: interaction.member.id })
-
                     if (userData.bookmark.includes(this.embeds[0].author.name)) {
                         interaction.createMessage({
                             embeds: [
