@@ -4,6 +4,7 @@ import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris"
 import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { Utils } from "givies-framework";
+import { createSearchPaginator } from "../../Modules/SearchPaginator";
 
 export function searchCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
@@ -22,7 +23,7 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.search.none"))
+                .setDescription(client.translate("main.search.none"));
 
             return interaction.createMessage({
                 embeds: [embed],
@@ -30,15 +31,14 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
             });
         }
 
-        const title = search.books.map((book, index) => `**${index + 1}**. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+        const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translate("main.search.titles", { titles: `\u2063 ${title.join("\n")}`}))
+            .setDescription(client.translate("main.search.titles", { titles: `\u2063 ${title.join("\n")}` }))
             .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.pages }));
 
         const component: ActionRow = {
-            type: 1,
             components: [
                 {
                     custom_id: `see_more_${interaction.id}`,
@@ -46,12 +46,14 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
                     style: 1,
                     type: 2
                 }
-            ]
+            ],
+            type: 1
         };
 
+        createSearchPaginator(client, search, interaction);
         interaction.createMessage({
-            embeds: [embed],
-            components: [component]
+            components: [component],
+            embeds: [embed]
         });
     }).catch((err: string) => {
         return client.logger.error({ message: err, subTitle: "NHentaiAPI::Search", title: "API" });
