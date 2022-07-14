@@ -45,11 +45,6 @@ export class ReadSearchPaginator {
     message: Message<TextableChannel>;
 
     /**
-     * Whether this paginator is running or not
-     */
-    running: boolean;
-
-    /**
      * Creates a read paginator
      * @param client Reader client
      * @param book Current book
