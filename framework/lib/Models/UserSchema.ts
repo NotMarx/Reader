@@ -1,11 +1,12 @@
 import { model, Model, Schema } from "mongoose";
+import { Book } from "nhentai-api";
 import { IUserSchema } from "../Interfaces";
 
 const userSchema = new Schema<IUserSchema>({
     bookmark: {
         default: [],
         required: true,
-        type: [String]
+        type: [Book]
     },
     createdAt: {
         default: new Date(),
