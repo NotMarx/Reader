@@ -119,7 +119,6 @@ export class SearchPaginator {
                     components: [
                         { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
                         { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: "stop", label: this.client.translate("main.stop"), style: 4, type: 2 },
                         { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
                         { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
@@ -134,9 +133,8 @@ export class SearchPaginator {
                 },
                 {
                     components: [
-                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 1, type: 2 },
+                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
                         { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `home_result_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 },
                         { custom_id: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
                     ],
                     type: 1
@@ -169,7 +167,6 @@ export class SearchPaginator {
                     components: [
                         { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
                         { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: "stop", label: this.client.translate("main.stop"), style: 4, type: 2 },
                         { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
                         { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
@@ -184,9 +181,8 @@ export class SearchPaginator {
                 },
                 {
                     components: [
-                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 1, type: 2 },
+                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
                         { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `home_result_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 },
                         { custom_id: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
                     ],
                     type: 1
@@ -222,7 +218,6 @@ export class SearchPaginator {
                     components: [
                         { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
                         { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: "stop", label: this.client.translate("main.stop"), style: 4, type: 2 },
                         { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
                         { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
@@ -237,9 +232,8 @@ export class SearchPaginator {
                 },
                 {
                     components: [
-                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 1, type: 2 },
+                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
                         { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `home_result_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 },
                         { custom_id: `hide_cover_${this.interaction.id}`, label: this.client.translate("main.cover.hide"), style: 1, type: 2 }
                     ],
                     type: 1
@@ -261,7 +255,6 @@ export class SearchPaginator {
                     components: [
                         { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
                         { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: "stop", label: this.client.translate("main.stop"), style: 4, type: 2 },
                         { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
                         { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
@@ -276,9 +269,8 @@ export class SearchPaginator {
                 },
                 {
                     components: [
-                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 1, type: 2 },
+                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
                         { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `home_result_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 },
                         { custom_id: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
                     ],
                     type: 1
