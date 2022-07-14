@@ -247,31 +247,28 @@ export class ReadSearchPaginator {
                 interaction.acknowledge();
                 break;
             case `bookmark_${this.interaction.id}`:
-                /* eslint-disable-next-line */
-                const book = await this.api.getBook(parseInt(this.embeds[0].author.name));
-
-                if (userData.bookmark.includes(book)) {
+                if (userData.bookmark.includes(this.embeds[0].author.name)) {
                     interaction.createMessage({
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: book }))
+                                .setDescription(this.client.translate("main.bookmark.removed", { id: this.embeds[0].author.name }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": book } }).exec();
+                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": this.embeds[0].author.name } }).exec();
                 } else {
                     interaction.createMessage({
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[${book.id}](https://nhentai.net/g/${book.id})` }))
+                                .setDescription(this.client.translate("main.bookmark.saved", { id: this.embeds[0].author.name }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": book } }).exec();
+                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": this.embeds[0].author.name } }).exec();
                 }
 
                 break;
