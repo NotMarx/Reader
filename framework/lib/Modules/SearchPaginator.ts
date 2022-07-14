@@ -458,7 +458,7 @@ export class SearchPaginator {
                     if (parseInt(embed.title.split("Page")[1].split("/")[0]) < this.search.pages) {
                         this.api.search(this.search.query, parseInt(embed.title.split("Page")[1].split("/")[0]) + 1).then((search) => {
                             const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
-                            const embeds = this.search.books.map((book, index) => {
+                            const embeds = search.books.map((book, index) => {
                                 const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                                 const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
                                 const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
@@ -471,7 +471,7 @@ export class SearchPaginator {
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(title.join("\n").replace(`${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**${index + 1}**. **[\`${book.id}\`](https://nhentai.net/g/${book.id})** - **\`${book.title.pretty}\`**`))
                                     .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                    .setTitle(this.client.translate("main.page", { firstIndex: this.search.pages.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
+                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                     .setThumbnail(this.api.getImageURL(book.cover))
                                     .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                                     .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
@@ -496,7 +496,7 @@ export class SearchPaginator {
                     if (parseInt(embed.title.split("Page")[1].split("/")[0]) > 1) {
                         this.api.search(this.search.query, parseInt(embed.title.split("Page")[1].split("/")[0]) - 1).then((search) => {
                             const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
-                            const embeds = this.search.books.map((book, index) => {
+                            const embeds = search.books.map((book, index) => {
                                 const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                                 const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
                                 const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
@@ -509,7 +509,7 @@ export class SearchPaginator {
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(title.join("\n").replace(`${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**${index + 1}**. **[\`${book.id}\`](https://nhentai.net/g/${book.id})** - **\`${book.title.pretty}\`**`))
                                     .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                    .setTitle(this.client.translate("main.page", { firstIndex: this.search.pages.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
+                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                     .setThumbnail(this.api.getImageURL(book.cover))
                                     .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                                     .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
@@ -533,7 +533,7 @@ export class SearchPaginator {
 
                     this.api.search(this.search.query, 1).then((search) => {
                         const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
-                        const embeds = this.search.books.map((book, index) => {
+                        const embeds = search.books.map((book, index) => {
                             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
                             const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
@@ -546,7 +546,7 @@ export class SearchPaginator {
                                 .setColor(this.client.config.BOT.COLOUR)
                                 .setDescription(title.join("\n").replace(`${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**${index + 1}**. **[\`${book.id}\`](https://nhentai.net/g/${book.id})** - **\`${book.title.pretty}\`**`))
                                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: this.search.pages.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                 .setThumbnail(this.api.getImageURL(book.cover))
                                 .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                                 .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
@@ -567,7 +567,7 @@ export class SearchPaginator {
                 case `last_result_page_${this.interaction.id}`:
                     this.api.search(this.search.query, this.search.pages).then((search) => {
                         const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
-                        const embeds = this.search.books.map((book, index) => {
+                        const embeds = search.books.map((book, index) => {
                             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
                             const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
@@ -580,7 +580,7 @@ export class SearchPaginator {
                                 .setColor(this.client.config.BOT.COLOUR)
                                 .setDescription(title.join("\n").replace(`${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**${index + 1}**. **[\`${book.id}\`](https://nhentai.net/g/${book.id})** - **\`${book.title.pretty}\`**`))
                                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: this.search.pages.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                 .setThumbnail(this.api.getImageURL(book.cover))
                                 .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                                 .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
