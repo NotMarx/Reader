@@ -447,8 +447,8 @@ export class SearchPaginator {
                 case `next_result_page_${this.interaction.id}`:
                     interaction.acknowledge();
 
-                    if (parseInt(embed.title.split("Page")[1].split("/")[0]) < this.search.pages) {
-                        this.api.search(this.search.query, parseInt(embed.title.split("Page")[1].split("/")[0]) + 1).then((search) => {
+                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.pages) {
+                        this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
                             const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
                             const embeds = search.books.map((book, index) => {
                                 const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
@@ -485,8 +485,8 @@ export class SearchPaginator {
                 case `previous_result_page_${this.interaction.id}`:
                     interaction.acknowledge();
 
-                    if (parseInt(embed.title.split("Page")[1].split("/")[0]) > 1) {
-                        this.api.search(this.search.query, parseInt(embed.title.split("Page")[1].split("/")[0]) - 1).then((search) => {
+                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
+                        this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
                             const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
                             const embeds = search.books.map((book, index) => {
                                 const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
