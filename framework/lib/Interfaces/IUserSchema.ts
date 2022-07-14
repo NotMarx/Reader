@@ -1,4 +1,3 @@
-import { Book } from "nhentai-api";
 import { TReadState } from "../Types";
 
 export interface IUserSchemaSettings {
@@ -7,7 +6,7 @@ export interface IUserSchemaSettings {
 }
 
 export interface IUserSchema {
-    bookmark: Book[];
+    bookmark: string[];
     createdAt: Date;
     id: string;
     settings: IUserSchemaSettings;
