@@ -274,7 +274,7 @@ export class SearchPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: this.embeds[0].author.name }))
+                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](https://nhentai.net/g/${this.embeds[0].author.name})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
@@ -285,7 +285,7 @@ export class SearchPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: this.embeds[0].author.name }))
+                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](https://nhentai.net/g/${this.embeds[0].author.name})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
