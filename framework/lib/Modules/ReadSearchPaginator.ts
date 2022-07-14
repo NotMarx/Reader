@@ -247,6 +247,7 @@ export class ReadSearchPaginator {
                 interaction.acknowledge();
                 break;
             case `bookmark_${this.interaction.id}`:
+                /* eslint-disable-next-line */
                 const book = await this.api.getBook(parseInt(this.embeds[0].author.name));
 
                 if (userData.bookmark.includes(book)) {
