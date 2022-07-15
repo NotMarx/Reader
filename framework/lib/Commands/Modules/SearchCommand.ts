@@ -45,6 +45,12 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
                     label: client.translate("main.detail"),
                     style: 1,
                     type: 2
+                },
+                {
+                    custom_id: `stop_result_${interaction.id}`,
+                    label: client.translate("main.stop"),
+                    style: 4,
+                    type: 2
                 }
             ],
             type: 1
