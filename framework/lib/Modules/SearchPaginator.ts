@@ -267,6 +267,7 @@ export class SearchPaginator {
                 interaction.message.delete();
                 interaction.acknowledge();
                 this.stopPaginator();
+                this.paginationEmbed.stopPaginator();
                 break;
             case `bookmark_${this.interaction.id}`:
                 if (userData.bookmark.includes(this.embeds[0].author.name)) {
