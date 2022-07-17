@@ -270,28 +270,28 @@ export class SearchPaginator {
                 this.paginationEmbed.stopPaginator();
                 break;
             case `bookmark_${this.interaction.id}`:
-                if (userData.bookmark.includes(this.embeds[0].author.name)) {
+                if (userData.bookmark.includes(embed.author.name)) {
                     interaction.createMessage({
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](https://nhentai.net/g/${this.embeds[0].author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](https://nhentai.net/g/${embed.author.name})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": this.embeds[0].author.name } }).exec();
+                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
                 } else {
                     interaction.createMessage({
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](https://nhentai.net/g/${this.embeds[0].author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](https://nhentai.net/g/${embed.author.name})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": this.embeds[0].author.name } }).exec();
+                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": embed.author.name } }).exec();
                 }
 
                 break;
