@@ -1,0 +1,48 @@
+import { join } from "path";
+import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from "fs";
+import { Utils } from "givies-framework";
+
+const logger = new Utils.Logger();
+const folders = readdirSync(join(__dirname, "../../../localisation"));
+const compilingDate = new Date();
+
+logger.info({ message: "Compiling Localisations...", subTitle: "ReaderFramework::Localisation", title: "LOCALE" });
+
+for (const key in folders) {
+    const folder = folders[key];
+    if (folder.length !== 2) continue;
+
+    const files = readdirSync(join(__dirname, `../../../localisation/${folder}`));
+    let object = {};
+
+    for (const keyFile in files) {
+        const file = files[keyFile];
+
+        if (!file.endsWith(".json")) continue;
+
+        /* eslint-disable-next-line */
+        const content = require(join(
+            __dirname,
+            `../../../localisation/${folder}/${file}`
+        ));
+
+        if (!Object.keys(content).length) continue;
+
+        object = { ...object, ...content };
+    }
+
+    if (!existsSync(join(__dirname, "../Locales"))) {
+        mkdirSync(join(__dirname, "../Locales"));
+    }
+
+    if (existsSync(join(__dirname, `../Locales/${folder}.json`))) {
+        unlinkSync(join(__dirname, `../Locales/${folder}.json`));
+    }
+
+    writeFileSync(
+        join(__dirname, `../Locales/${folder}.json`),
+        JSON.stringify(object)
+    );
+}
+
+logger.success({ message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`, subTitle: "ReaderFramework::Localisation", title: "LOCALE" });
