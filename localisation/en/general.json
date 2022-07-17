@@ -1,0 +1,4 @@
+{
+    "general.ping": "Pong! | {latency}ms",
+    "general.register": "You've been registered to the database. Please run the command again to continue."
+}

@@ -4,14 +4,6 @@
 
 A Discord bot.
 
-- **Open-Source Libraries Used:**
-    - Discord Library: [Eris](https://github.com/abalabahaha/eris) 
-        - provided by [abal](https://github.com/abalabahaha)
-    - Database: [XenDB](https://github.com/reinhello/xen.db)
-        - provided by [me, Reinhardt](https://github.com/reinhello)
-
-    
-
 ## How to Setup:
 
 - Rename `config-example.json` to `config.json`
@@ -20,12 +12,10 @@ A Discord bot.
 
 ## Task List
 
-- [x] Configuration
-- [x] Customize prefix, embed's hex color, etc...
-- [x] More commands
+- [ ] Configuration
+- [x] Support fully Slash Commands
 - [x] Multilingual
-- [ ] ~~Dashboard~~ Going to rewrite using [Vue.js](https://vuejs.org) instead.
-- [ ] ~~Slash Commands~~ Won't be implement at any time.
+- [ ] ~~Dashboard~~ 
 
 ## Translate Reader
 

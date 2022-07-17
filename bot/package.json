@@ -1,0 +1,23 @@
+{
+  "name": "reader-bot",
+  "version": "0.1.0",
+  "description": "Reader",
+  "scripts": {
+    "dev": "ts-node-dev ./src/Reader.ts",
+    "start": "ts-node ./src/Reader.ts"
+  },
+  "keywords": [
+    "reader"
+  ],
+  "author": "Reinhardt",
+  "license": "MIT",
+  "dependencies": {
+    "eris": "^0.17.1",
+    "reader-framework": "file:../framework"
+  },
+  "devDependencies": {
+    "ts-node": "^10.8.2",
+    "ts-node-dev": "^2.0.0",
+    "tslib": "^2.4.0"
+  }
+}
