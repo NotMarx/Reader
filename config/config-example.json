@@ -1,5 +1,7 @@
 {
     "BOT": {
+        "COLOUR": "COLOUR",
+        "DEBUG": false,
         "MONGODB": "",
         "TOKEN": ""
     }
