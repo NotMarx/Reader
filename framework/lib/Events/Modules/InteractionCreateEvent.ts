@@ -45,6 +45,8 @@ export async function interactionCreateEvent(client: ReaderClient, interaction: 
     }
 
     if (interaction.type === 2) {
-        return command.run(payload);
+        if (command) {
+            return command.run(payload);
+        }
     }
 }
