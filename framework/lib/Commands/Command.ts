@@ -43,4 +43,12 @@ export class ReaderCommand {
     public searchCommand() {
         return CommandModules.searchCommand(this.client, this.interaction);
     }
+
+    /**
+     * Executes a `search-similar` command
+     * @returns {Promise<void>}
+     */
+    public searchSimilarCommand() {
+        return CommandModules.searchSimilarCommand(this.client, this.interaction);
+    }
 }
