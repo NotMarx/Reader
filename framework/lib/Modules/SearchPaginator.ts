@@ -267,7 +267,13 @@ export class SearchPaginator {
                 interaction.message.delete();
                 interaction.acknowledge();
                 this.stopPaginator();
-                this.paginationEmbed.stopPaginator();
+
+                try {
+                    this.paginationEmbed.stopPaginator();
+                } catch (err) {
+                    return;
+                }
+
                 break;
             case `bookmark_${this.interaction.id}`:
                 if (userData.bookmark.includes(embed.author.name)) {
