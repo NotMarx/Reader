@@ -42,6 +42,14 @@ export class ReaderEvent {
     }
 
     /**
+     * Fires a `debug` event
+     * @returns {void}
+     */
+    public debugEvent(): void {
+        return EventModules.debugEvent(this.client, this.firstParam, this.secondParam);
+    }
+
+    /**
      * Fires a `error` event
      * @returns {void}
      */
