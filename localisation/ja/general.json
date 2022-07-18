@@ -1,3 +1,4 @@
 {
-    "general.ping": "ポン！ {latency}ms"
+    "general.ping": "ポン！{latency}ms",
+    "general.register": "データベースに登録されました。続行するにはもう一度コマンドを実行してください。"
 }
