@@ -45,6 +45,11 @@ export class ReadSearchPaginator {
     message: Message<TextableChannel>;
 
     /**
+     * Whether the paginator is running or not
+     */
+    running: boolean;
+
+    /**
      * Creates a read paginator
      * @param client Reader client
      * @param book Current book
@@ -71,6 +76,7 @@ export class ReadSearchPaginator {
         });
         this.interaction = interaction;
         this.onRead = this.onRead.bind(this);
+        this.running = false;
     }
 
     /**
@@ -387,6 +393,7 @@ export class ReadSearchPaginator {
      */
     public runPaginator() {
         this.client.on("interactionCreate", this.onRead);
+        this.running = true;
     }
 
     /**
@@ -394,6 +401,7 @@ export class ReadSearchPaginator {
      */
     public stopPaginator() {
         this.client.off("interactionCreate", this.onRead);
+        this.running = false;
     }
 }
 
