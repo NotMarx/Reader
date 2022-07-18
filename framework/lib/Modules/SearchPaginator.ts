@@ -46,6 +46,11 @@ export class SearchPaginator {
     paginationEmbed: ReadSearchPaginator;
 
     /**
+     * Whether the paginator is running or not
+     */
+    running: boolean;
+
+    /**
      * The search result
      */
     search: Search;
@@ -68,6 +73,7 @@ export class SearchPaginator {
         this.embeds = [];
         this.interaction = interaction;
         this.onSearch = this.onSearch.bind(this);
+        this.running = false;
         this.search = search;
     }
 
@@ -276,6 +282,10 @@ export class SearchPaginator {
 
                 break;
             case `bookmark_${this.interaction.id}`:
+                if (this.paginationEmbed.running) {
+                    return;
+                }
+
                 if (userData.bookmark.includes(embed.author.name)) {
                     interaction.createMessage({
                         embeds: [
@@ -607,6 +617,7 @@ export class SearchPaginator {
      */
     public runPaginator() {
         this.client.on("interactionCreate", this.onSearch);
+        this.running = true;
     }
 
     /**
@@ -614,6 +625,7 @@ export class SearchPaginator {
      */
     public stopPaginator() {
         this.client.off("interactionCreate", this.onSearch);
+        this.running = false;
     }
 }
 
