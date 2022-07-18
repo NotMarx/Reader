@@ -39,7 +39,7 @@ export function readCommand(client: ReaderClient, interaction: CommandInteractio
             .addField(languageTags.length > 1 ? client.translate("main.languages") : client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : client.translate("main.none")}\``)
             .addField(artistTags.length > 1 ? client.translate("main.artists") : client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : client.translate("main.none")}\``)
             .addField(characterTags.length > 1 ? client.translate("main.characters") : client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : client.translate("main.original")}\``)
-            .addField(parodyTags.length > 1 ? client.translate("main.parodies") : client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `") : client.translate("main.none")}\``)
+            .addField(parodyTags.length > 1 ? client.translate("main.parodies") : client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${client.translate("main.original")}`) : client.translate("main.none")}\``)
             .addField(contentTags.length > 1 ? client.translate("main.tags") : client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : client.translate("main.none")}\``)
             .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
             .setThumbnail(api.getImageURL(book.cover));
