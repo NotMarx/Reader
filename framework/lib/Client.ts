@@ -4,6 +4,7 @@ import { ICommand, IConfig, IEvent } from "./Interfaces";
 import { TLocale } from "./Types";
 import { Utils } from "givies-framework";
 import { connect } from "mongoose";
+import { GuildModel } from "./Models";
 import { join } from "path";
 import { readdirSync } from "fs";
 import { t, TFunction, use } from "i18next";
@@ -48,6 +49,34 @@ export class ReaderClient extends Client {
         this.connect();
         connect(this.config.BOT.MONGODB).then(() => {
             this.logger.info({ message: "Database Connected", subTitle: "ReaderFramework::MongoDB", title: "DATABASE" });
+
+            const guilds = this.guilds.map((guild) => guild.id);
+            const commands = this.commands.map((command) => command);
+
+            if (commands) {
+                commands.forEach(async (command) => {
+                    for (let i = 0; i < guilds.length; i++) {
+                        const guildData = await GuildModel.findOne({ id: guilds[i] });
+
+                        if (!guildData) {
+                            GuildModel.create({
+                                createdAt: new Date(),
+                                id: guilds[i],
+                                settings: {
+                                    locale: "en"
+                                }
+                            });
+                        }
+
+                        this.createGuildCommand(guilds[i], {
+                            description: command.description,
+                            name: command.name,
+                            options: command.options,
+                            type: command.type
+                        } as any).catch(() => { });
+                    }
+                });
+            }
         });
 
         this.editStatus("dnd", {
