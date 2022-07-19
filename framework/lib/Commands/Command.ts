@@ -21,6 +21,14 @@ export class ReaderCommand {
     }
 
     /**
+     * Executes a `config` command
+     * @returns {Promise<void>}
+     */
+    public configCommand() {
+        return CommandModules.configCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `ping` command
      * @returns  {Promise<void>}
      */
