@@ -1,5 +1,5 @@
 import { ReaderClient } from "../Client";
-import { ApplicationCommandTypes, ApplicationCommandOption, CommandInteraction, TextableChannel } from "eris";
+import { ApplicationCommandTypes, ApplicationCommandOptions, CommandInteraction, TextableChannel } from "eris";
 
 export interface ICommandRunPayload {
     client: ReaderClient;
@@ -17,7 +17,7 @@ export interface ICommand {
     guildOwnerOnly?: boolean;
     name: string;
     nsfwOnly?: boolean;
-    options?: ApplicationCommandOption<3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>[];
+    options?: ApplicationCommandOptions[];
     run: ICommandRun;
     type: ApplicationCommandTypes;
 }
