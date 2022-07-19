@@ -8,7 +8,7 @@ import { createSearchPaginator } from "../../Modules/SearchPaginator";
 
 export function searchSimilarCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
-    jar.setCookie("cf_clearance=q.vXMnN0OYjby.7IVpb79vIujJpiKysmj_udGw1wj70-1657627490-0-150", "https://nhentai.net/");
+    jar.setCookie("cf_clearance=h87Y8lBhhqkjIKC_X5lW8XUIbjaJ5dMVnmhWVU27aWw-1658193445-0-150", "https://nhentai.net/");
 
     const agent = new HttpsCookieAgent({ cookies: { jar } });
     // @ts-ignore
