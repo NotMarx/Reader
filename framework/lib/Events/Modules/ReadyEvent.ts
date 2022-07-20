@@ -1,5 +1,4 @@
 import { ReaderClient } from "../../Client";
-import { GuildModel } from "../../Models";
 
 export function readyEvent(client: ReaderClient) {
     if (client.ready) {

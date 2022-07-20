@@ -25,4 +25,3 @@ export function configCommand(client: ReaderClient, interaction: CommandInteract
         });
     }
 }
-
