@@ -159,7 +159,6 @@ export class BookmarkPaginator {
 
         const embed = new Utils.RichEmbed(interaction.message.embeds[0]);
         const userData = await UserModel.findOne({ id: interaction.member.id });
-        const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
         const hideComponent: ActionRow[] = [
             {
