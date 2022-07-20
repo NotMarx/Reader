@@ -21,6 +21,14 @@ export class ReaderCommand {
     }
 
     /**
+     * Executes a `bookmark` command
+     * @returns {Promise<void>}
+     */
+    public bookmarkCommand() {
+        return CommandModules.bookmarkCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `config` command
      * @returns {Promise<void>}
      */
