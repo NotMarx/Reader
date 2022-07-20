@@ -282,7 +282,7 @@ export class SearchPaginator {
 
                 break;
             case `bookmark_${this.interaction.id}`:
-                if (this.paginationEmbed.running) {
+                if (this.paginationEmbed && this.paginationEmbed.running) {
                     return;
                 }
 
