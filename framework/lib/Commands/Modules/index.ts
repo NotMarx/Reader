@@ -1,3 +1,4 @@
+export * from "./BookmarkCommand";
 export * from "./ConfigCommand";
 export * from "./PingCommand";
 export * from "./ReadCommand";
