@@ -1,4 +1,7 @@
 {
+    "API": {
+        "COOKIE": ""
+    },
     "BOT": {
         "COLOUR": "COLOUR",
         "DEBUG": false,
