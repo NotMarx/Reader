@@ -10,7 +10,7 @@ import moment from "moment";
 
 export function readCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
-    jar.setCookie("cf_clearance=h87Y8lBhhqkjIKC_X5lW8XUIbjaJ5dMVnmhWVU27aWw-1658193445-0-150", "https://nhentai.net/");
+    jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
     const agent = new HttpsCookieAgent({ cookies: { jar } });
     // @ts-ignore
