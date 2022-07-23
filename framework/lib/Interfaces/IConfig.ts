@@ -1,3 +1,7 @@
+export interface IConfigAPI {
+    COOKIE: string;
+}
+
 export interface IConfigBot {
     COLOUR: number;
     DEBUG: boolean;
@@ -6,5 +10,6 @@ export interface IConfigBot {
 }
 
 export interface IConfig {
+    API: IConfigAPI;
     BOT: IConfigBot;
 }
