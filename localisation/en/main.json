@@ -17,6 +17,7 @@
     "main.language": "Language",
     "main.languages": "Languages",
     "main.none": "Not Provided",
+    "main.noperms": "This command is only accessible in **NSFW** channels!",
     "main.page": "Page {firstIndex} / {lastIndex}",
     "main.page.enter": "Enter Page",
     "main.page.enter.hint": "Please enter the page you want to see. You've got **30 Seconds** before I ignore you",
