@@ -17,6 +17,7 @@
     "main.language": "言語",
     "main.languages": "言語",
     "main.none": "未提供です",
+    "main.noperms": "このコマンドは**NSFW**チャネルでのみ使用できます！",
     "main.page": "ページ {firstIndex} / {lastIndex}",
     "main.page.enter": "ページを入力",
     "main.page.enter.hint": "表示したいページを入力してください。あなたを無視する前に **30 秒** が必要です",
