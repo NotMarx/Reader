@@ -1,7 +1,7 @@
 import { ReaderClient } from "../Client";
 import * as EventModules from "./Modules";
 
-export class ReaderEvent {
+export class ReaderEvent<F, S, T, L> {
 
     /**
      * Reader client
@@ -33,7 +33,7 @@ export class ReaderEvent {
      * @param client Reader client
      * @param args Parameters passed for gateway events
      */
-    constructor(client: ReaderClient, firstParam?: any, secondParam?: any, thirdParam?: any, fourthParam?: any) {
+    constructor(client: ReaderClient, firstParam?: F, secondParam?: S, thirdParam?: T, fourthParam?: L) {
         this.client = client;
         this.firstParam = firstParam;
         this.secondParam = secondParam;
@@ -55,6 +55,14 @@ export class ReaderEvent {
      */
     public errorEvent(): void {
         return EventModules.errorEvent(this.client, this.firstParam, this.secondParam);
+    }
+
+    /**
+     * Fires a `guildCreate` event
+     * @returns {Promise<void>}
+     */
+    public guildCreateEvent(): Promise<void> {
+        return EventModules.guildCreateEvent(this.client, this.firstParam);
     }
 
     /**
