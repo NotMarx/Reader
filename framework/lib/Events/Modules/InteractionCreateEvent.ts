@@ -1,11 +1,12 @@
 import { ReaderClient } from "../../Client";
-import { CommandInteraction, Constants, TextableChannel } from "eris";
+import { CommandInteraction, Constants, TextChannel } from "eris";
 import { ICommandRunPayload } from "../../Interfaces";
 import { t } from "i18next";
 import { GuildModel, UserModel } from "../../Models";
 import { Utils } from "givies-framework";
+import { Util } from "../../Utils";
 
-export async function interactionCreateEvent(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function interactionCreateEvent(client: ReaderClient, interaction: CommandInteraction<TextChannel>) {
     if (!interaction.guildID) return;
 
     if (interaction.member.bot) return;
@@ -46,7 +47,7 @@ export async function interactionCreateEvent(client: ReaderClient, interaction: 
 
     if (interaction.type === 2) {
         if (command) {
-            return command.run(payload);
+            return Util.checkCommandPerms(client, interaction);
         }
     }
 }
