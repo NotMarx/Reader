@@ -3,6 +3,7 @@ import {  ReaderCommand, ReaderInterface } from "reader-framework";
 export const command: ReaderInterface.ICommand = {
     name: "config",
     description: "Configure the bot settings",
+    guildModOnly: true,
     type: 1,
     options: [
         {
