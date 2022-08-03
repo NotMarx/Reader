@@ -1,3 +1,4 @@
 {
-    "mod.language.set": "Language has been set to `{language}`"
+    "mod.language.set": "Language has been set to `{language}`",
+    "mod.noperms": "You don't have the right permission to run this command!"
 }
