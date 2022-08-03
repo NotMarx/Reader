@@ -3,10 +3,10 @@ import { ReaderEvent, ReaderInterface } from "reader-framework";
 export const event: ReaderInterface.IEvent = {
     name: "error",
     run: (client, err: string, id: number) => {
-        return new ReaderEvent(client, err, id).errorEvent();
+        return new ReaderEvent<string, number, any, any>(client, err, id).errorEvent();
     }
 }
 
 process.on("unhandledRejection", (err: string) => {
-    return new ReaderEvent(null, err).tsError();
+    return new ReaderEvent<string, any, any, any>(null, err).tsError();
 });
