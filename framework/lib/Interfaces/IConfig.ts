@@ -3,6 +3,7 @@ export interface IConfigAPI {
 }
 
 export interface IConfigBot {
+    ADMIN: string[];
     COLOUR: number;
     DEBUG: boolean;
     MONGODB: string;

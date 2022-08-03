@@ -3,6 +3,7 @@ import { ReaderCommand, ReaderInterface } from "reader-framework";
 export const command: ReaderInterface.ICommand = {
     description: "Read a doujin from NHentai",
     name: "read",
+    nsfwOnly: true,
     type: 1,
     options: [
         {

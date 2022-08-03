@@ -3,6 +3,7 @@
         "COOKIE": ""
     },
     "BOT": {
+        "ADMIN": [],
         "COLOUR": "COLOUR",
         "DEBUG": false,
         "MONGODB": "",

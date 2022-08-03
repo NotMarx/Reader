@@ -3,6 +3,7 @@ import { ReaderCommand, ReaderInterface } from "reader-framework";
 export const command: ReaderInterface.ICommand = {
     name: "search",
     description: "Search for NHentai doujin",
+    nsfwOnly: true,
     options: [
         {
             name: "query",
