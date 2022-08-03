@@ -73,7 +73,7 @@ export class ReaderClient extends Client {
                             name: command.name,
                             options: command.options,
                             type: command.type
-                        } as any).catch(() => { });
+                        }).catch(() => { });
                     }
                 });
             }
