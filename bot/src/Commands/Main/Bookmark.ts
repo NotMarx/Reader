@@ -4,6 +4,7 @@ export const command: ReaderInterface.ICommand = {
     name: "bookmark",
     description: "Check the user bookmark library",
     type: 1,
+    nsfwOnly: true,
     options: [
         {
             name: "user",
