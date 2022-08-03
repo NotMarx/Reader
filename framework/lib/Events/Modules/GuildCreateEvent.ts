@@ -23,7 +23,7 @@ export async function guildCreateEvent(client: ReaderClient, guild: Guild) {
         commands.forEach((command) => {
             client.createGuildCommand(guild.id, {
                 description: command.description,
-                name: command.description,
+                name: command.name,
                 options: command.options,
                 type: command.type
             }).catch(() => { });
