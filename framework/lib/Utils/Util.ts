@@ -3,8 +3,23 @@ import { CommandInteraction, Constants, TextChannel } from "eris";
 import { ReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
 import { Utils } from "givies-framework";
+import byteSize from "byte-size";
+
+interface IByteSize {
+    value: string;
+    unit: string;
+}
 
 export class Util {
+
+    /**
+     * Convert a number to a readable size
+     * @param bytes The bytes to convert
+     * @returns {IByteSize}
+     */
+    public static bytesToSize(bytes: number): IByteSize {
+        return byteSize(bytes);
+    }
 
     /**
      * Check for slash commands member permission
@@ -27,7 +42,7 @@ export class Util {
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
-        
+
         // Check if user with no `manageGuild` perms runs the slash commands for guild mods
         if (command.guildModOnly && !interaction.member.permissions.has("manageGuild")) {
             return interaction.createMessage({
@@ -74,5 +89,48 @@ export class Util {
         }
 
         return output;
+    }
+
+    /**
+     * Round a number value
+     * @param value The value to convert
+     * @param decimals The number of decimals to round to
+     * @returns {number}
+     */
+    public static round(value: number, decimals: number): number {
+        const multiplier = Math.pow(10, decimals || 0);
+
+        return Math.round(value * multiplier) / multiplier;
+    }
+
+    public static time(s: number): string {
+        const pad = (n: number, z = 2) => {
+            return ("00" + n).slice(-z);
+        };
+
+        const ms = s % 1000;
+        s = (s - ms) / 1000;
+        const secs = s % 60;
+        s = (s - secs) / 60;
+        const mins = s % 60;
+        let hrs = (s - mins) / 60;
+
+        let days = Math.floor(hrs / 24);
+        hrs = hrs % 24;
+
+        let weeks = Math.floor(days / 7);
+        days = days % 7;
+
+        const months = Math.floor(weeks / 7);
+        weeks = weeks % 7;
+
+        return (
+            (months > 0 ? pad(months) + " mo, " : "") +
+            (weeks > 0 ? pad(weeks) + " week, " : "") +
+            (days > 0 ? pad(days) + " days, " : "") +
+            (hrs > 0 ? pad(hrs) + " hrs, " : "") +
+            (mins > 0 ? pad(mins) + " mins and " : "") +
+            (pad(secs) + " secs")
+        );
     }
 }
