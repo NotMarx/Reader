@@ -6,7 +6,7 @@ import { Utils } from "givies-framework";
 import byteSize from "byte-size";
 
 interface IByteSize {
-    value: string;
+    value: number;
     unit: string;
 }
 
@@ -18,7 +18,7 @@ export class Util {
      * @returns {IByteSize}
      */
     public static bytesToSize(bytes: number): IByteSize {
-        return byteSize(bytes);
+        return byteSize(bytes)  as any;
     }
 
     /**

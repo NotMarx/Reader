@@ -1,6 +1,5 @@
 import { ReaderClient } from "../../Client";
 import { CommandInteraction, Constants, TextChannel } from "eris";
-import { ICommandRunPayload } from "../../Interfaces";
 import { t } from "i18next";
 import { GuildModel, UserModel } from "../../Models";
 import { Utils } from "givies-framework";
@@ -12,7 +11,6 @@ export async function interactionCreateEvent(client: ReaderClient, interaction: 
     if (interaction.member.bot) return;
 
     const command = client.commands.get(interaction.data.name);
-    const payload: ICommandRunPayload = { client, interaction };
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
     const userData = await UserModel.findOne({ id: interaction.member.id });
 
