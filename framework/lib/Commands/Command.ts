@@ -67,4 +67,12 @@ export class ReaderCommand {
     public searchSimilarCommand() {
         return CommandModules.searchSimilarCommand(this.client, this.interaction);
     }
+
+    /**
+     * Executes a `stats` command
+     * @returns {Promise<void>}
+     */
+    public statsCommand() {
+        return CommandModules.statsCommand(this.client, this.interaction);
+    }
 }
