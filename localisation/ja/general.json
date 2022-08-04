@@ -1,4 +1,9 @@
 {
     "general.ping": "ポン！{latency}ms",
-    "general.register": "データベースに登録されました。続行するにはもう一度コマンドを実行してください。"
+    "general.register": "データベースに登録されました。続行するにはもう一度コマンドを実行してください。",
+    "general.stats.cpu": "CPU使用率",
+    "general.stats.memory": "メモリ使用",
+    "general.stats.platform": "プラットフォーム",
+    "general.stats.title": "{bot}の統計",
+    "general.stats.uptime": "アップタイム"
 }
