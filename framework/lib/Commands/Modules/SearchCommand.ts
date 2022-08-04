@@ -23,7 +23,7 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.search.none"));
+                .setDescription(client.translate("main.search.none", { query: args.query } ));
 
             return interaction.createMessage({
                 embeds: [embed],

@@ -23,7 +23,7 @@ export function searchSimilarCommand(client: ReaderClient, interaction: CommandI
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.search.none"));
+                .setDescription(client.translate("main.search.empty"));
 
             return interaction.createMessage({
                 embeds: [embed],
@@ -61,7 +61,18 @@ export function searchSimilarCommand(client: ReaderClient, interaction: CommandI
             components: [component],
             embeds: [embed]
         });
-    }).catch((err: string) => {
-        return client.logger.error({ message: err, subTitle: "NHentaiAPI::SearchALike", title: "API" });
+    }).catch((err: Error) => {
+        if (err.message === "Request failed with status code 404") {
+            const embed = new Utils.RichEmbed()
+                .setColor(client.config.BOT.COLOUR)
+                .setDescription(client.translate("main.read.none", { id: args.id } ));
+
+            return interaction.createMessage({
+                embeds: [embed],
+                flags: Constants.MessageFlags.EPHEMERAL
+            });
+        }
+
+        return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::SearchALike", title: "API" });
     });
 }
