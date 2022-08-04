@@ -18,7 +18,7 @@ export class Util {
      * @returns {IByteSize}
      */
     public static bytesToSize(bytes: number): IByteSize {
-        return byteSize(bytes)  as any;
+        return byteSize(bytes) as any;
     }
 
     /**
