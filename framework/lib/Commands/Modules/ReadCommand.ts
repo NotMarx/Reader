@@ -1,5 +1,5 @@
 import { ReaderClient } from "../../Client";
-import { ActionRow, CommandInteraction, TextableChannel } from "eris";
+import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
 import { API } from "nhentai-api";
 import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
@@ -76,7 +76,18 @@ export function readCommand(client: ReaderClient, interaction: CommandInteractio
 
         interaction.createMessage({ components: [component], embeds: [embed] });
         createReadPaginator(client, book, interaction);
-    }).catch((err) => {
-        return client.logger.error({ message: err, subTitle: "NHentaiAPI::Book", title: "API" });
+    }).catch((err: Error) => {
+        if (err.message === "Request failed with status code 404") {
+            const embed = new Utils.RichEmbed()
+                .setColor(client.config.BOT.COLOUR)
+                .setDescription(client.translate("main.read.none", { id: args.id } ));
+
+            return interaction.createMessage({
+                embeds: [embed],
+                flags: Constants.MessageFlags.EPHEMERAL
+            });
+        }
+
+        return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::Book", title: "API" });
     });
 }
