@@ -1,4 +1,9 @@
 {
     "general.ping": "Pong! | {latency}ms",
-    "general.register": "You've been registered to the database. Please run the command again to continue."
+    "general.register": "You've been registered to the database. Please run the command again to continue.",
+    "general.stats.cpu": "CPU Usage",
+    "general.stats.memory": "Memory Usage",
+    "general.stats.platform": "Platform",
+    "general.stats.title": "{bot}'s Statistics",
+    "general.stats.uptime": "Uptime"
 }
