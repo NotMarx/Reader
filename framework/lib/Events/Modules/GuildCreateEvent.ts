@@ -17,7 +17,7 @@ export async function guildCreateEvent(client: ReaderClient, guild: Guild) {
                 settings: ({
                     locale: "en"
                 } as IGuildSchemaSettings)
-            })
+            });
         }
 
         commands.forEach((command) => {
