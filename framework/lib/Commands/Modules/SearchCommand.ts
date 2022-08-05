@@ -7,7 +7,7 @@ import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 
-export function searchCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function searchCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
@@ -15,26 +15,26 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
     // @ts-ignore
     const api = new API({ agent });
     const args: { page?: number, query?: string } = {};
+    const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
     for (const option of interaction.data.options) {
         args[option.name] = (option as any).value as string;
     }
 
-    api.search(encodeURIComponent(args.query), args.page || 1).then(async (search) => {
-        const queryArgs = args.query.split(" ");
-        const guildData = await GuildModel.findOne({ id: interaction.guildID });
+    const queryArgs = args.query.split(" ");
 
-        if (Utils.Util.findCommonElement(queryArgs, ["lolicon", "loli"]) && !guildData.settings.whitelisted) {
-            const embed = new Utils.RichEmbed()
-                .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
+    if (Utils.Util.findCommonElement(queryArgs, ["lolicon", "loli"]) && !guildData.settings.whitelisted) {
+        const embed = new Utils.RichEmbed()
+            .setColor(client.config.BOT.COLOUR)
+            .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
 
-            return interaction.createMessage({
-                embeds: [embed],
-                flags: Constants.MessageFlags.EPHEMERAL
-            });
-        }
+        return interaction.createMessage({
+            embeds: [embed],
+            flags: Constants.MessageFlags.EPHEMERAL
+        });
+    }
 
+    api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon`), args.page || 1).then(async (search) => {
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
