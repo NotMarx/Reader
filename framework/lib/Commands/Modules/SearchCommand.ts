@@ -5,6 +5,7 @@ import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
+import { GuildModel } from "../../Models";
 
 export function searchCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
@@ -20,6 +21,20 @@ export function searchCommand(client: ReaderClient, interaction: CommandInteract
     }
 
     api.search(encodeURIComponent(args.query), args.page || 1).then(async (search) => {
+        const queryArgs = args.query.split(" ");
+        const guildData = await GuildModel.findOne({ id: interaction.guildID });
+
+        if (Utils.Util.findCommonElement(queryArgs, ["lolicon", "loli"]) && !guildData.settings.whitelisted) {
+            const embed = new Utils.RichEmbed()
+                .setColor(client.config.BOT.COLOUR)
+                .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
+
+            return interaction.createMessage({
+                embeds: [embed],
+                flags: Constants.MessageFlags.EPHEMERAL
+            });
+        }
+
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
