@@ -23,7 +23,7 @@ export async function searchCommand(client: ReaderClient, interaction: CommandIn
 
     const queryArgs = args.query.split(" ");
 
-    if (Utils.Util.findCommonElement(queryArgs, ["lolicon", "loli"]) && !guildData.settings.whitelisted) {
+    if (Utils.Util.findCommonElement(queryArgs, ["lolicon", "loli", "shotacon"]) && !guildData.settings.whitelisted) {
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
@@ -34,7 +34,7 @@ export async function searchCommand(client: ReaderClient, interaction: CommandIn
         });
     }
 
-    api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon`), args.page || 1).then(async (search) => {
+    api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1).then(async (search) => {
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
