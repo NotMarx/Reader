@@ -15,7 +15,9 @@ export async function guildCreateEvent(client: ReaderClient, guild: Guild) {
                 createdAt: new Date(),
                 id: guild.id,
                 settings: ({
-                    locale: "en"
+                    blacklisted: false,
+                    locale: "en",
+                    whitelisted: false
                 } as IGuildSchemaSettings)
             });
         }
