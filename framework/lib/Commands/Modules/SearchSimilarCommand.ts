@@ -23,7 +23,7 @@ export async function searchSimilarCommand(client: ReaderClient, interaction: Co
         args[option.name] = (option as any).value as string;
     }
 
-    if (Utils.Util.findCommonElement(tags, ["lolicon", "loli"]) && !guildData.settings.whitelisted) {
+    if (Utils.Util.findCommonElement(tags, ["lolicon", "oppai loli", "shotacon"]) && !guildData.settings.whitelisted) {
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));

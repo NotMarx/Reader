@@ -31,7 +31,7 @@ export function readCommand(client: ReaderClient, interaction: CommandInteractio
         const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
         const tags = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name);
 
-        if (Utils.Util.findCommonElement(tags, ["lolicon", "oppai loli"]) && !guildData.settings.whitelisted) {
+        if (Utils.Util.findCommonElement(tags, ["lolicon", "oppai loli", "shotacon"]) && !guildData.settings.whitelisted) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
