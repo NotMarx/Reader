@@ -29,9 +29,9 @@ export function readCommand(client: ReaderClient, interaction: CommandInteractio
         const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
         const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
         const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
-        const tag = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name);
+        const tags = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name);
 
-        if (tag.includes("lolicon") && !guildData.settings.whitelisted) {
+        if (Utils.Util.findCommonElement(tags, ["lolicon", "oppai loli"]) && !guildData.settings.whitelisted) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
