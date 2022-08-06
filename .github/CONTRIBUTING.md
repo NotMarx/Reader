@@ -23,7 +23,7 @@ Again, if you are still confused, our [Discord Server](https://discord.gg/b7AW2Z
 
 ## Top Issues (Best to Get Started)
 
-Any issues that are marked with the label '**good first issue**' is the best place to start contributing. Besides these, we also have an issue(s) that we decide to keep in our mind.
+Any issues that are marked with the label "**good first issue**" is the best place to start contributing. Besides these, we also have an issue(s) that we decide to keep in our mind.
 
 - Code Typing Definition
-   - If you are a highly expert in TypeScript, you should be able to spot issues that we are unable to. Yes, the maintainer and developer of this project (aka @reinhello) is not a highly-expert TypeScript Wizard that works on the code typing definition. You are very welcome to make better changes on the typing definition.
+   - If you are a highly expert in TypeScript, you should be able to spot issues that we are unable to. Yes, the maintainer and developer of this project (aka [reinhello](https://github.com/reinhello)) is not a highly-expert TypeScript Wizard that works on the code typing definition. You are very welcome to make better changes on the typing definition.
