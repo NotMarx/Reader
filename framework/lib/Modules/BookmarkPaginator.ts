@@ -157,7 +157,7 @@ export class BookmarkPaginator {
     public async onSearch(interaction: ComponentInteraction<TextableChannel>) {
         if (interaction.member.bot) return;
 
-        const embed = new Utils.RichEmbed(interaction.message.embeds[0]);
+        const embed = new Utils.RichEmbed(interaction.message ? interaction.message.embeds[0] : undefined);
         const userData = await UserModel.findOne({ id: interaction.member.id });
 
         const hideComponent: ActionRow[] = [
