@@ -48,6 +48,7 @@
     "main.stop": "ストップ",
     "main.tag": "タグ",
     "main.tags": "タグ",
+    "main.tags.restricted": "この同人には表示できない制限付きタグが含まれています！ \n\n [Discord Server]({server})に参加し、詳細は{channel}をご確認ください。",
     "main.timeout": "**30 秒**が経過しました。応答がありません",
     "main.title": "タイトル"
 }
