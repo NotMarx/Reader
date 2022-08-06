@@ -1,6 +1,6 @@
 import { Client, ClientEvents, TextableChannel } from "eris";
 import { Collection } from "./Utils";
-import { ICommand, IConfig, IEvent } from "./Interfaces";
+import { ICommand, IConfig, IEvent, IGuildSchemaSettings } from "./Interfaces";
 import { TLocale } from "./Types";
 import { Utils } from "givies-framework";
 import { connect } from "mongoose";
@@ -62,9 +62,11 @@ export class ReaderClient extends Client {
                             GuildModel.create({
                                 createdAt: new Date(),
                                 id: guilds[i],
-                                settings: {
-                                    locale: "en"
-                                }
+                                settings: ({
+                                    blacklisted: false,
+                                    locale: "en",
+                                    whitelisted: false
+                                } as IGuildSchemaSettings)
                             });
                         }
 
