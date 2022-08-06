@@ -1,6 +1,6 @@
-import { ReaderCommand, ReaderInterface } from "reader-framework";
+import { NReaderCommand, NReaderInterface } from "nreader-framework";
 
-export const command: ReaderInterface.ICommand = {
+export const command: NReaderInterface.ICommand = {
     name: "bookmark",
     description: "Check the user bookmark library",
     type: 1,
@@ -16,6 +16,6 @@ export const command: ReaderInterface.ICommand = {
         }
     ],
     run: async (payload) => {
-        return new ReaderCommand(payload).bookmarkCommand();
+        return new NReaderCommand(payload).bookmarkCommand();
     }
 }

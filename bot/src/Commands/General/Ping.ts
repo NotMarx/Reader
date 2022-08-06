@@ -1,10 +1,10 @@
-import { ReaderCommand, ReaderInterface } from "reader-framework";
+import { NReaderCommand, NReaderInterface } from "nreader-framework";
 
-export const command: ReaderInterface.ICommand = {
+export const command: NReaderInterface.ICommand = {
     description: "Ping the bot",
     name: "ping",
     type: 1,
     run: async (payload) => {
-        return new ReaderCommand(payload).pingCommand();
+        return new NReaderCommand(payload).pingCommand();
     }
 }

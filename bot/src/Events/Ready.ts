@@ -1,8 +1,8 @@
-import { ReaderEvent, ReaderInterface } from "reader-framework";
+import { NReaderEvent, NReaderInterface } from "nreader-framework";
 
-export const event: ReaderInterface.IEvent = {
+export const event: NReaderInterface.IEvent = {
     name: "ready",
     run: (client) => {
-        return new ReaderEvent(client).readyEvent();
+        return new NReaderEvent(client).readyEvent();
     }
 }
