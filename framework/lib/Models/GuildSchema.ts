@@ -12,10 +12,20 @@ const guildSchema = new Schema<IGuildSchema>({
         type: String
     },
     settings: {
+        blacklisted: {
+            default: false,
+            required: true,
+            type: Boolean
+        },
         locale: {
             default: "en",
             required: true,
             type: String
+        },
+        whitelisted: {
+            default: false,
+            required: true,
+            type: Boolean
         }
     }
 });
