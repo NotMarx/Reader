@@ -1,4 +1,4 @@
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
 import { API, Book } from "nhentai-api";
 import { CookieJar } from "tough-cookie";
@@ -7,7 +7,7 @@ import { Utils } from "givies-framework";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 
-export async function bookmarkCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     interaction.defer(Constants.MessageFlags.EPHEMERAL);
 
     const jar = new CookieJar();

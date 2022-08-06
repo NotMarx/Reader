@@ -1,6 +1,6 @@
-import {  ReaderCommand, ReaderInterface } from "reader-framework";
+import {  NReaderCommand, NReaderInterface } from "nreader-framework";
 
-export const command: ReaderInterface.ICommand = {
+export const command: NReaderInterface.ICommand = {
     name: "config",
     description: "Configure the bot settings",
     guildModOnly: true,
@@ -32,6 +32,6 @@ export const command: ReaderInterface.ICommand = {
         }
     ],
     run: async (payload) => {
-        return new ReaderCommand(payload).configCommand();
+        return new NReaderCommand(payload).configCommand();
     }
 }

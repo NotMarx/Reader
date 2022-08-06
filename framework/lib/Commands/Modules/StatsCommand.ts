@@ -1,10 +1,10 @@
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 import { CommandInteraction, TextableChannel, VERSION } from "eris";
 import { Utils } from "givies-framework";
 import { Util } from "../../Utils";
 import osUtils from "os-utils";
 
-export async function statsCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function statsCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const memory: number = process.memoryUsage().rss;
 
     /* eslint-disable-next-line */

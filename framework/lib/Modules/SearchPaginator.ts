@@ -2,7 +2,7 @@ import { API, Search } from "nhentai-api";
 import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, TextableChannel } from "eris";
 import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
-import { ReaderClient } from "../Client";
+import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { GuildModel, UserModel } from "../Models";
 import moment from "moment";
@@ -16,9 +16,9 @@ export class SearchPaginator {
     api: API;
 
     /**
-     * Reader client
+     * NReader client
      */
-    client: ReaderClient;
+    client: NReaderClient;
 
     /**
      * The index of current embed page
@@ -57,11 +57,11 @@ export class SearchPaginator {
 
     /**
      * Creates a read paginator
-     * @param client Reader client
+     * @param client NReader client
      * @param book Current book
      * @param interaction Eris command interaction
      */
-    constructor(client: ReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
+    constructor(client: NReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
         const jar = new CookieJar();
         jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
         const agent = new HttpsCookieAgent({ cookies: { jar } });
@@ -629,7 +629,7 @@ export class SearchPaginator {
     }
 }
 
-export async function createSearchPaginator(client: ReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
+export async function createSearchPaginator(client: NReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
     const paginator = new SearchPaginator(client, search, interaction);
 
     paginator.runPaginator();
