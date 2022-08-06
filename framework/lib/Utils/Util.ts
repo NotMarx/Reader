@@ -76,6 +76,9 @@ export class Util {
         let output: string;
 
         switch (locale) {
+            case "cn":
+                output = "中文";
+                break;
             case "en":
                 output = "English";
                 break;
