@@ -8,7 +8,7 @@ import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 
 export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    interaction.defer(Constants.MessageFlags.EPHEMERAL);
+    interaction.defer();
 
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
