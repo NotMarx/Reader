@@ -13,7 +13,7 @@ A Discord bot.
 
 ## Task List
 
-- [ ] Configuration
+- [x] Configuration
 - [x] Support fully Slash Commands
 - [x] Multilingual
 - [ ] ~~Dashboard~~ 
