@@ -19,6 +19,10 @@ export const command: NReaderInterface.ICommand = {
                     /* @ts-ignore */
                     choices: [
                         {
+                            name: "Chinese",
+                            value: "cn"
+                        },
+                        {
                             name: "English",
                             value: "en"
                         },
