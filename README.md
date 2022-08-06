@@ -5,12 +5,6 @@
 
 A Discord bot.
 
-## How to Setup:
-
-- Rename `config-example.json` to `config.json`
-- Fill in everything you need in `config.json`
-- I don't know the rest
-
 ## Task List
 
 - [x] Configuration
@@ -26,4 +20,6 @@ A Discord bot.
 
 ## Support Guide
 
-There isn't. 
+The source code is provided so everyone are able to see how this bot functions.
+
+We don't provide guide or allowed for anyone to self-host this project. If you encounter issues from any modifications you made, you're on your own.
