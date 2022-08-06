@@ -1,11 +1,11 @@
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 import { CommandInteraction, Constants, InteractionDataOptionsString, InteractionDataOptionsSubCommand, TextableChannel } from "eris";
 import { Utils } from "givies-framework";
 import { Util } from "../../Utils";
 import { TLocale } from "../../Types";
 import { GuildModel } from "../../Models";
 
-export function configCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export function configCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const args: { language?: TLocale } = {};
 
     for (const option of (interaction.data.options[0] as InteractionDataOptionsSubCommand).options) {

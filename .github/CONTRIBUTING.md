@@ -1,3 +1,3 @@
-# Contributing to Reader (Discord Bot)
+# Contributing to NReader (Discord Bot)
 
 Just do it.

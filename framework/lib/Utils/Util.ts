@@ -1,6 +1,6 @@
 import { TLocale } from "../Types";
 import { CommandInteraction, Constants, TextChannel } from "eris";
-import { ReaderClient } from "../Client";
+import { NReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
 import { Utils } from "givies-framework";
 import byteSize from "byte-size";
@@ -23,11 +23,11 @@ export class Util {
 
     /**
      * Check for slash commands member permission
-     * @param client Reader client
+     * @param client NReader client
      * @param interaction Eris command interaction
      * @returns {Promise<void>}
      */
-    public static checkCommandPerms(client: ReaderClient, interaction: CommandInteraction<TextChannel>): Promise<void> {
+    public static checkCommandPerms(client: NReaderClient, interaction: CommandInteraction<TextChannel>): Promise<void> {
         const command = client.commands.get(interaction.data.name);
         const payload: ICommandRunPayload = { client, interaction };
         const embed = new Utils.RichEmbed()

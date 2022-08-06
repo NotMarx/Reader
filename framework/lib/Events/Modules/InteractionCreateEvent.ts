@@ -1,11 +1,11 @@
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 import { CommandInteraction, Constants, TextChannel } from "eris";
 import { t } from "i18next";
 import { GuildModel, UserModel } from "../../Models";
 import { Utils } from "givies-framework";
 import { Util } from "../../Utils";
 
-export async function interactionCreateEvent(client: ReaderClient, interaction: CommandInteraction<TextChannel>) {
+export async function interactionCreateEvent(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     if (!interaction.guildID) return;
 
     if (interaction.member.bot) return;

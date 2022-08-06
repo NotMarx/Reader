@@ -1,5 +1,5 @@
 import { API } from "nhentai-api";
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
 import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
@@ -7,7 +7,7 @@ import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 
-export async function searchCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 

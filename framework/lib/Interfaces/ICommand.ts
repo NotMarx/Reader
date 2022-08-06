@@ -1,8 +1,8 @@
-import { ReaderClient } from "../Client";
+import { NReaderClient } from "../Client";
 import { ApplicationCommandTypes, ApplicationCommandOptions, CommandInteraction, TextableChannel } from "eris";
 
 export interface ICommandRunPayload {
-    client: ReaderClient;
+    client: NReaderClient;
     interaction: CommandInteraction<TextableChannel>;
 }
 

@@ -1,8 +1,8 @@
 import { CommandInteraction, Constants, TextableChannel } from "eris";
 import { Utils } from "givies-framework";
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 
-export function pingCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export function pingCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const embed = new Utils.RichEmbed()
         .setColor(client.config.BOT.COLOUR)
         .setDescription(client.translate("general.ping", { latency: interaction.member.guild.shard.latency.toString() }));

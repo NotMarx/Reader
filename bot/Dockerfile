@@ -1,3 +1,3 @@
-FROM node:14.16.0
-WORKDIR /Reader
-RUN npm run init
+FROM node:16.13.0
+WORKDIR /NReader/bot
+RUN npm start

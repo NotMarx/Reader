@@ -1,12 +1,12 @@
-import { ReaderEvent, ReaderInterface } from "reader-framework";
+import { NReaderEvent, NReaderInterface } from "nreader-framework";
 
-export const event: ReaderInterface.IEvent = {
+export const event: NReaderInterface.IEvent = {
     name: "error",
     run: (client, err: string, id: number) => {
-        return new ReaderEvent<string, number, any, any>(client, err, id).errorEvent();
+        return new NReaderEvent<string, number, any, any>(client, err, id).errorEvent();
     }
 }
 
 process.on("unhandledRejection", (err: string) => {
-    return new ReaderEvent<string, any, any, any>(null, err).tsError();
+    return new NReaderEvent<string, any, any, any>(null, err).tsError();
 });

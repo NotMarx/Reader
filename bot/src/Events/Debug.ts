@@ -1,8 +1,8 @@
-import { ReaderEvent, ReaderInterface } from "reader-framework";
+import { NReaderEvent, NReaderInterface } from "nreader-framework";
 
-export const event: ReaderInterface.IEvent = {
+export const event: NReaderInterface.IEvent = {
     name: "debug",
     run: async (client, message: string, id: number) => {
-        return new ReaderEvent<string, number, any, any>(client, message, id).debugEvent();
+        return new NReaderEvent<string, number, any, any>(client, message, id).debugEvent();
     }
 }

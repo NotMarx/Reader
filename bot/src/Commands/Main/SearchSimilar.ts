@@ -1,6 +1,6 @@
-import { ReaderCommand, ReaderInterface } from "reader-framework";
+import { NReaderCommand, NReaderInterface } from "nreader-framework";
 
-export const command: ReaderInterface.ICommand = {
+export const command: NReaderInterface.ICommand = {
     name: "search-similar",
     description: "Search for similar NHentai doujin",
     nsfwOnly: true,
@@ -15,6 +15,6 @@ export const command: ReaderInterface.ICommand = {
     ],
     type: 1,
     run: (payload) => {
-        return new ReaderCommand(payload).searchSimilarCommand();
+        return new NReaderCommand(payload).searchSimilarCommand();
     }
 }
