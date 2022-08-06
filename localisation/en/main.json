@@ -48,6 +48,7 @@
     "main.stop": "Stop",
     "main.tag": "Tag",
     "main.tags": "Tags",
+    "main.tags.restricted": "This doujin contains restricted tags that cannot be displayed publically! \n\n Please join our [Discord Server]({server}) and check {channel} for more info",
     "main.timeout": "**30 Seconds** has passed and I received no response from you",
     "main.title": "Title"
 }
