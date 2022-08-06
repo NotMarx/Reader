@@ -1,14 +1,14 @@
 import { CommandInteraction, TextableChannel } from "eris";
-import { ReaderClient } from "../Client";
+import { NReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
 import * as CommandModules from "./Modules";
 
-export class ReaderCommand {
+export class NReaderCommand {
 
     /**
-     * Reader client
+     * NReader client
      */
-    private client: ReaderClient;
+    private client: NReaderClient;
 
     /**
      * Eris command interaction

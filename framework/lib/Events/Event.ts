@@ -1,12 +1,12 @@
-import { ReaderClient } from "../Client";
+import { NReaderClient } from "../Client";
 import * as EventModules from "./Modules";
 
-export class ReaderEvent<F, S, T, L> {
+export class NReaderEvent<F, S, T, L> {
 
     /**
-     * Reader client
+     * NReader client
      */
-    private client: ReaderClient;
+    private client: NReaderClient;
 
     /**
      * First paramter passed in the event
@@ -29,11 +29,11 @@ export class ReaderEvent<F, S, T, L> {
     private fourthParam?: any;
 
     /**
-     * Reader's Gateway event class
-     * @param client Reader client
+     * NReader's Gateway event class
+     * @param client NReader client
      * @param args Parameters passed for gateway events
      */
-    constructor(client: ReaderClient, firstParam?: F, secondParam?: S, thirdParam?: T, fourthParam?: L) {
+    constructor(client: NReaderClient, firstParam?: F, secondParam?: S, thirdParam?: T, fourthParam?: L) {
         this.client = client;
         this.firstParam = firstParam;
         this.secondParam = secondParam;

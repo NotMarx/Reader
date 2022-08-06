@@ -1,9 +1,9 @@
-import { ReaderEvent, ReaderInterface } from "reader-framework";
+import { NReaderEvent, NReaderInterface } from "nreader-framework";
 import { Guild } from "eris";
 
-export const event: ReaderInterface.IEvent = {
+export const event: NReaderInterface.IEvent = {
     name: "guildCreate",
     run: async (client, guild: Guild) => {
-        return new ReaderEvent<Guild, any, any, any>(client, guild).guildCreateEvent();
+        return new NReaderEvent<Guild, any, any, any>(client, guild).guildCreateEvent();
     }
 }

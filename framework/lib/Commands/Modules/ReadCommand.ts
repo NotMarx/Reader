@@ -1,4 +1,4 @@
-import { ReaderClient } from "../../Client";
+import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
 import { API } from "nhentai-api";
 import { CookieJar } from "tough-cookie";
@@ -8,7 +8,7 @@ import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { Utils } from "givies-framework";
 import moment from "moment";
 
-export function readCommand(client: ReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 

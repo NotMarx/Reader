@@ -1,7 +1,7 @@
-import { ReaderClient } from "reader-framework";
+import { NReaderClient } from "nreader-framework";
 import * as Config from "../../config/config.json";
 
-const client = new ReaderClient(Config.BOT.TOKEN, {
+const client = new NReaderClient(Config.BOT.TOKEN, {
     defaultImageFormat: "png",
     intents: [
         "guilds",

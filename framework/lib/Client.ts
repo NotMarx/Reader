@@ -13,7 +13,7 @@ import localeEN from "./Locales/en.json";
 import localeJA from "./Locales/ja.json";
 import { MessageCollector, MessageCollectorOptions } from "./Modules/MessageCollector";
 
-export class ReaderClient extends Client {
+export class NReaderClient extends Client {
 
     /**
      * Collection of the bot's commands
@@ -43,12 +43,12 @@ export class ReaderClient extends Client {
     }
 
     /**
-     * Initialise every handler for Reader
+     * Initialise every handler for NReader
      */
     public initialiseEverything() {
         this.connect();
         connect(this.config.BOT.MONGODB).then(() => {
-            this.logger.info({ message: "Database Connected", subTitle: "ReaderFramework::MongoDB", title: "DATABASE" });
+            this.logger.info({ message: "Database Connected", subTitle: "NReaderFramework::MongoDB", title: "DATABASE" });
 
             const guilds = this.guilds.map((guild) => guild.id);
             const commands = this.commands.map((command) => command);
@@ -112,7 +112,7 @@ export class ReaderClient extends Client {
     }
 
     /**
-     * Initialise localisation for Reader
+     * Initialise localisation for NReader
      * @param locale The requested locale
      * @returns {Promise<TFunction>}
      */

@@ -6,7 +6,7 @@ const logger = new Utils.Logger();
 const folders = readdirSync(join(__dirname, "../../../localisation"));
 const compilingDate = new Date();
 
-logger.info({ message: "Compiling Localisations...", subTitle: "ReaderFramework::Localisation", title: "LOCALE" });
+logger.info({ message: "Compiling Localisations...", subTitle: "NReaderFramework::Localisation", title: "LOCALE" });
 
 for (const key in folders) {
     const folder = folders[key];
@@ -45,4 +45,4 @@ for (const key in folders) {
     );
 }
 
-logger.success({ message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`, subTitle: "ReaderFramework::Localisation", title: "LOCALE" });
+logger.success({ message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`, subTitle: "NReaderFramework::Localisation", title: "LOCALE" });

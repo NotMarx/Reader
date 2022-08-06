@@ -1,8 +1,8 @@
-import { ReaderClient } from "../Client";
+import { NReaderClient } from "../Client";
 import { ClientEvents } from "eris";
 
 export interface IEventRun {
-    (client: ReaderClient, ...args: any);
+    (client: NReaderClient, ...args: any);
 }
 
 export interface IEvent {
