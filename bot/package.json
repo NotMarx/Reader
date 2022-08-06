@@ -1,10 +1,10 @@
 {
-  "name": "reader-bot",
+  "name": "nreader-bot",
   "version": "0.2.1",
-  "description": "Reader",
+  "description": "NReader",
   "scripts": {
-    "dev": "ts-node-dev ./src/Reader.ts",
-    "start": "ts-node ./src/Reader.ts"
+    "dev": "ts-node-dev ./src/NReader.ts",
+    "start": "ts-node ./src/NReader.ts"
   },
   "keywords": [
     "reader"
@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "eris": "^0.17.1",
-    "reader-framework": "file:../framework"
+    "nreader-framework": "file:../framework"
   },
   "devDependencies": {
     "ts-node": "^10.8.2",

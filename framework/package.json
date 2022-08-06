@@ -1,5 +1,5 @@
 {
-  "name": "reader-framework",
+  "name": "nreader-framework",
   "version": "0.1.1",
   "description": "Read Something",
   "main": "src/index.js",
@@ -14,7 +14,7 @@
   },
   "keywords": [
     "typescript",
-    "reader",
+    "nreader",
     "eris"
   ],
   "author": "Reinhardt",
