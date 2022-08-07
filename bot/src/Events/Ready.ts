@@ -5,4 +5,4 @@ export const event: NReaderInterface.IEvent = {
     run: (client) => {
         return new NReaderEvent(client).readyEvent();
     }
-}
+};

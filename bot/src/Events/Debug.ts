@@ -5,4 +5,4 @@ export const event: NReaderInterface.IEvent = {
     run: async (client, message: string, id: number) => {
         return new NReaderEvent<string, number, any, any>(client, message, id).debugEvent();
     }
-}
+};

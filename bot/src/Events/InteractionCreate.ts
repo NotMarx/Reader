@@ -6,4 +6,4 @@ export const event: NReaderInterface.IEvent = {
     run: (client, interaction: CommandInteraction<TextableChannel>) => {
     return new NReaderEvent<CommandInteraction<TextableChannel>, any, any, any>(client, interaction).interactionCreateEvent();
     }
-}
+};
