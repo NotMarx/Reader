@@ -8,8 +8,6 @@ import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 
 export async function searchSimilarCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    interaction.defer();
-
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
