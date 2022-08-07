@@ -69,17 +69,17 @@ export class NReaderClient extends Client {
                 for (let i = 0; i < guilds.length; i++) {
                     const guildData = await GuildModel.findOne({ id: guilds[i] });
 
-                        if (!guildData) {
-                            GuildModel.create({
-                                createdAt: new Date(),
-                                id: guilds[i],
-                                settings: ({
-                                    blacklisted: false,
-                                    locale: "en",
-                                    whitelisted: false
-                                } as IGuildSchemaSettings)
-                            });
-                        }
+                    if (!guildData) {
+                        GuildModel.create({
+                            createdAt: new Date(),
+                            id: guilds[i],
+                            settings: ({
+                                blacklisted: false,
+                                locale: "en",
+                                whitelisted: false
+                            } as IGuildSchemaSettings)
+                        });
+                    }
                 }
             }
         });

@@ -6,4 +6,4 @@ export const event: NReaderInterface.IEvent = {
     run: async (client, guild: Guild) => {
         return new NReaderEvent<Guild, any, any, any>(client, guild).guildCreateEvent();
     }
-}
+};
