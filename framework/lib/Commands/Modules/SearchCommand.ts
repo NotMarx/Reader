@@ -8,8 +8,6 @@ import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    interaction.defer();
-
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
@@ -40,7 +38,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.search.none", { query: args.query } ));
+                .setDescription(client.translate("main.search.none", { query: args.query }));
 
             return interaction.createMessage({
                 embeds: [embed],
