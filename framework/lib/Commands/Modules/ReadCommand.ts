@@ -9,8 +9,6 @@ import { Utils } from "givies-framework";
 import moment from "moment";
 
 export function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    interaction.defer();
-
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
