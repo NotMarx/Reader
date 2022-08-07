@@ -17,4 +17,4 @@ export const command: NReaderInterface.ICommand = {
     run: (payload) => {
         return new NReaderCommand(payload).searchSimilarCommand();
     }
-}
+};
