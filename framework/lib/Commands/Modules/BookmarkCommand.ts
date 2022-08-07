@@ -8,8 +8,6 @@ import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 
 export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    interaction.defer();
-
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
@@ -18,6 +16,13 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
     const api = new API({ agent });
 
     const args: { user?: string } = {};
+
+    if (interaction.data.options) {
+        for (const option of interaction.data.options) {
+            args[option.name] = (option as any).value;
+        }
+    }
+
     const user = interaction.member.guild.members.get(args.user || interaction.member.id);
     const guildData = await UserModel.findOne({ id: user.id });
     const bookmarked = guildData.bookmark;
@@ -26,7 +31,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
         if (!bookmarked || bookmarked.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.bookmark.none"))
+                .setDescription(client.translate("main.bookmark.none", { user: user.username }))
                 .setTitle(client.translate("main.bookmark.title", { user: user.username }));
 
             return interaction.createMessage({
@@ -34,6 +39,8 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
+
+        interaction.defer();
 
         const bookmarkedTitle: string[] = [];
         const books: Book[] = [];
