@@ -48,7 +48,7 @@ export class NReaderClient extends Client {
      */
     public initialiseEverything() {
         this.connect();
-        connect(this.config.BOT.MONGODB).then(() => {
+        connect(this.config.BOT.MONGODB).then(async () => {
             this.logger.info({ message: "Database Connected", subTitle: "NReaderFramework::MongoDB", title: "DATABASE" });
 
             const guilds = this.guilds.map((guild) => guild.id);
@@ -57,7 +57,17 @@ export class NReaderClient extends Client {
             if (commands) {
                 commands.forEach(async (command) => {
                     for (let i = 0; i < guilds.length; i++) {
-                        const guildData = await GuildModel.findOne({ id: guilds[i] });
+                        this.createGuildCommand(guilds[i], {
+                            description: command.description,
+                            name: command.name,
+                            options: command.options,
+                            type: command.type
+                        }).catch(() => { });
+                    }
+                });
+
+                for (let i = 0; i < guilds.length; i++) {
+                    const guildData = await GuildModel.findOne({ id: guilds[i] });
 
                         if (!guildData) {
                             GuildModel.create({
@@ -70,15 +80,7 @@ export class NReaderClient extends Client {
                                 } as IGuildSchemaSettings)
                             });
                         }
-
-                        this.createGuildCommand(guilds[i], {
-                            description: command.description,
-                            name: command.name,
-                            options: command.options,
-                            type: command.type
-                        }).catch(() => { });
-                    }
-                });
+                }
             }
         });
 
