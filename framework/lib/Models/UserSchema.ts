@@ -1,31 +1,30 @@
 import { model, Model, Schema } from "mongoose";
 import { IUserSchema } from "../Interfaces";
-
 const userSchema = new Schema<IUserSchema>({
     bookmark: {
         default: [],
         required: true,
-        type: [String]
+        type: Schema.Types.Mixed
     },
     createdAt: {
         default: new Date(),
         required: true,
-        type: Date
+        type: Schema.Types.Date
     },
     id: {
         required: true,
-        type: String
+        type: Schema.Types.String
     },
     settings: {
         premium: {
             default: false,
             required: true,
-            type: Boolean
+            type: Schema.Types.Boolean
         },
         readState: {
             default: "current",
             required: true,
-            type: String
+            type: Schema.Types.String
         }
     }
 });
