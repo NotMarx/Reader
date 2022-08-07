@@ -2,6 +2,7 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/reinhello/NReader?color=%237289DA&include_prereleases)](https://github.com/reinhello/NReader/releases)
 [![Crowdin](https://badges.crowdin.net/nreader/localized.svg)](https://crowdin.com/project/nreader)
+[![Discord Server](https://canary.discord.com/api/guilds/763678230976659466/widget.png?style=shield)](https://discord.gg/b7AW2Zkcsw)
 
 A Discord bot.
 
@@ -10,16 +11,16 @@ A Discord bot.
 - [x] Configuration
 - [x] Support fully Slash Commands
 - [x] Multilingual
-- [ ] ~~Dashboard~~ 
+- [ ] Web Dashboard
 
 ## Translate NReader
 
-**NReader** supports languages other than English but we need help from someone who are able to dedicate their time on translating **NReader**'s strings.
+**NReader** is currently available in three languages. These include **English**, **Chinese**, and **Japanese**. Please keep in mind that most of them have a rough translation.
 
-- Click [Here](https://crowdin.com/project/nreader) to translate!
+- Click [Here](https://crowdin.com/project/nreader) to translate/proofread NReader!
 
 ## Support Guide
 
-The source code is provided so everyone are able to see how this bot functions.
+The source code is provided so everyone are able to see how this bot functions. If you need help with **NReader** itself, please join our [Discord Server](https://discord.gg/b7AW2Zkcsw)
 
 We don't provide guide or allowed for anyone to self-host this project. If you encounter issues from any modifications you made, you're on your own.
