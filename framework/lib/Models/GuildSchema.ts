@@ -5,27 +5,27 @@ const guildSchema = new Schema<IGuildSchema>({
     createdAt: {
         default: new Date(),
         required: true,
-        type: Date
+        type: Schema.Types.Date
     },
     id: {
         required: true,
-        type: String
+        type: Schema.Types.String
     },
     settings: {
         blacklisted: {
             default: false,
             required: true,
-            type: Boolean
+            type: Schema.Types.Boolean
         },
         locale: {
             default: "en",
             required: true,
-            type: String
+            type: Schema.Types.String
         },
         whitelisted: {
             default: false,
             required: true,
-            type: Boolean
+            type: Schema.Types.Boolean
         }
     }
 });
