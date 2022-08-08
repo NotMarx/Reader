@@ -6,6 +6,7 @@ import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
+import { setTimeout } from "node:timers/promises";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
@@ -33,6 +34,9 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
             flags: Constants.MessageFlags.EPHEMERAL
         });
     }
+
+    await interaction.defer();
+    await setTimeout(4000);
 
     api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1).then(async (search) => {
         if (search.books.length === 0) {
