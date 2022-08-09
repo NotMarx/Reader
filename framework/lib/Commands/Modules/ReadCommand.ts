@@ -100,7 +100,6 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
 
             return interaction.createMessage({
                 embeds: [embed],
-                flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 

@@ -46,7 +46,6 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
 
             return interaction.createMessage({
                 embeds: [embed],
-                flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 
@@ -88,7 +87,6 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
 
             return interaction.createMessage({
                 embeds: [embed],
-                flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 
