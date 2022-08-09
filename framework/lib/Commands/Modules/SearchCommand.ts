@@ -46,7 +46,6 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
 
             return interaction.createMessage({
                 embeds: [embed],
-                flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 
