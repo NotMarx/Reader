@@ -23,7 +23,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
     }
 
     await interaction.defer();
-    await setTimeout(4000);
+    await setTimeout(2000);
 
     api.getBook(args.id).then(async (book) => {
         const guildData = await GuildModel.findOne({ id: interaction.guildID });

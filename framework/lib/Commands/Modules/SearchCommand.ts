@@ -36,7 +36,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
     }
 
     await interaction.defer();
-    await setTimeout(4000);
+    await setTimeout(2000);
 
     api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1).then(async (search) => {
         if (search.books.length === 0) {
