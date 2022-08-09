@@ -90,7 +90,6 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
 
         return interaction.createMessage({
             embeds: [embed],
-            flags: Constants.MessageFlags.EPHEMERAL
         });
     }
 }
