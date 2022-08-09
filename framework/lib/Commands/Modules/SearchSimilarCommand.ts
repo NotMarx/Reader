@@ -36,7 +36,7 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
     }
 
     await interaction.defer();
-    await setTimeout(4000);
+    await setTimeout(2000);
 
     api.searchAlike(args.id).then(async (search) => {
         if (search.books.length === 0) {

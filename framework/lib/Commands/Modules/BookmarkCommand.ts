@@ -42,7 +42,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
         }
 
         await interaction.defer();
-        await setTimeout(4000);
+        await setTimeout(2000);
 
         const bookmarkedTitle: string[] = [];
         const books: Book[] = [];
