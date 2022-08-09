@@ -414,15 +414,6 @@ export class BookmarkPaginator {
                 },
                 {
                     components: [
-                        { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
                         { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
                     ],
                     type: 1
