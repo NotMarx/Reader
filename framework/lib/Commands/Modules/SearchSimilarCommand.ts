@@ -6,6 +6,7 @@ import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
+import { setTimeout } from "node:timers/promises";
 
 export async function searchSimilarCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
@@ -33,6 +34,9 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             flags: Constants.MessageFlags.EPHEMERAL
         });
     }
+
+    await interaction.defer();
+    await setTimeout(2000);
 
     api.searchAlike(args.id).then(async (search) => {
         if (search.books.length === 0) {

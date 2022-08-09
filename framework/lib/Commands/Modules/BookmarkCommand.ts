@@ -6,6 +6,7 @@ import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { Utils } from "givies-framework";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
+import { setTimeout } from "node:timers/promises";
 
 export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
@@ -40,7 +41,8 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
             });
         }
 
-        interaction.defer();
+        await interaction.defer();
+        await setTimeout(2000);
 
         const bookmarkedTitle: string[] = [];
         const books: Book[] = [];

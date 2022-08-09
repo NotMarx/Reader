@@ -7,8 +7,9 @@ import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { Utils } from "givies-framework";
 import moment from "moment";
+import { setTimeout } from "node:timers/promises";
 
-export function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const jar = new CookieJar();
     jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
 
@@ -20,6 +21,9 @@ export function readCommand(client: NReaderClient, interaction: CommandInteracti
     for (const option of interaction.data.options) {
         args[option.name] = (option as any).value as string;
     }
+
+    await interaction.defer();
+    await setTimeout(2000);
 
     api.getBook(args.id).then(async (book) => {
         const guildData = await GuildModel.findOne({ id: interaction.guildID });
