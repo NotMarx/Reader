@@ -88,7 +88,7 @@ export class BookmarkPaginator {
      */
     public async initialisePaginator() {
         const guildData = await GuildModel.findOne({ id: this.interaction.guildID });
-        const title = this.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+        const title = this.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
         const embeds = this.books.map((book, index) => {
             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -100,7 +100,7 @@ export class BookmarkPaginator {
             return new Utils.RichEmbed()
                 .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**${index + 1}**. **[\`${book.id}\`](https://nhentai.net/g/${book.id})** - **\`${book.title.pretty}\`**`))
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                 .setTitle(this.client.translate("main.bookmark.title", { user: this.user.username }))
                 .setThumbnail(this.api.getImageURL(book.cover))

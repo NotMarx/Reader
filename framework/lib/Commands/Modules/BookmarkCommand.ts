@@ -48,7 +48,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
         const books: Book[] = [];
 
         for (let i = 0; i < bookmarked.length; i++) {
-            const title = await api.getBook(parseInt(bookmarked[i])).then((book) => `${i + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+            const title = await api.getBook(parseInt(bookmarked[i])).then((book) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}`  : `${i + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
             const book = await api.getBook(parseInt(bookmarked[i]));
 
             books.push(book);

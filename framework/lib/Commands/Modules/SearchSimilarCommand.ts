@@ -49,11 +49,11 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             });
         }
 
-        const title = search.books.map((book, index) => `${index + 1}. [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translate("main.search.titles", { titles: `\u2063 ${title.join("\n")}` }))
+            .setDescription(client.translate("main.search.titles", { titles: title.join("\n") }))
             .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.pages }));
 
         const component: ActionRow = {
