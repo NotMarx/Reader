@@ -4,8 +4,7 @@ import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
-import { GuildModel, UserModel } from "../Models";
-import moment from "moment";
+import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 
 export class SearchPaginator {
@@ -81,7 +80,6 @@ export class SearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const guildData = await GuildModel.findOne({ id: this.interaction.guildID });
         const title = this.search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
         const embeds = this.search.books.map((book, index) => {
             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
@@ -163,7 +161,6 @@ export class SearchPaginator {
 
         const embed = new Utils.RichEmbed(interaction.message ? interaction.message.embeds[0] : undefined);
         const userData = await UserModel.findOne({ id: interaction.member.id });
-        const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
         const hideComponent: ActionRow[] = [
             {

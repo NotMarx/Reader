@@ -4,8 +4,7 @@ import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
-import { GuildModel, UserModel } from "../Models";
-import moment from "moment";
+import { UserModel } from "../Models";
 
 export class ReadSearchPaginator {
 
@@ -154,7 +153,6 @@ export class ReadSearchPaginator {
     public async onRead(interaction: ComponentInteraction<TextableChannel>) {
         if (interaction.member.bot) return;
 
-        const guildData = await GuildModel.findOne({ id: interaction.guildID });
         const userData = await UserModel.findOne({ id: interaction.member.id });
         const artistTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
         const characterTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);

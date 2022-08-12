@@ -6,7 +6,6 @@ import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { Utils } from "givies-framework";
-import moment from "moment";
 import { setTimeout } from "node:timers/promises";
 
 export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
