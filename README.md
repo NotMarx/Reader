@@ -6,6 +6,8 @@
 
 A Discord bot.
 
+- You may invite Official [NReader](https://discord.com/api/oauth2/authorize?client_id=746948584150270014&permissions=339008&scope=bot%20applications.commands) to your Discord server!
+
 ## Task List
 
 - [x] Configuration
