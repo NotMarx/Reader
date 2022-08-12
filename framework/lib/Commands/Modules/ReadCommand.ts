@@ -32,7 +32,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
         const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
         const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-        const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+        const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
         const tags = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name);
 
         if (Utils.Util.findCommonElement(tags, ["lolicon", "oppai loli", "shotacon"]) && !guildData.settings.whitelisted) {
@@ -51,7 +51,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
             .setColor(client.config.BOT.COLOUR)
             .addField(client.translate("main.title"), `\`${book.title.pretty}\``)
             .addField(client.translate("main.pages"), `\`${book.pages.length}\``)
-            .addField(client.translate("main.released"), `\`${client.translate("main.date", { date: uploadedAt })}\``)
+            .addField(client.translate("main.released"), uploadedAt)
             .addField(languageTags.length > 1 ? client.translate("main.languages") : client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : client.translate("main.none")}\``)
             .addField(artistTags.length > 1 ? client.translate("main.artists") : client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : client.translate("main.none")}\``)
             .addField(characterTags.length > 1 ? client.translate("main.characters") : client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : client.translate("main.original")}\``)
