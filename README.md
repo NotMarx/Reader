@@ -6,6 +6,8 @@
 
 A Discord bot.
 
+- You may invite Official [NReader](https://discord.com/api/oauth2/authorize?client_id=746948584150270014&permissions=339008&scope=bot%20applications.commands) to your Discord server!
+
 ## Task List
 
 - [x] Configuration
@@ -21,6 +23,6 @@ A Discord bot.
 
 ## Support Guide
 
-The source code is provided so everyone are able to see how this bot functions. If you need help with **NReader** itself, please join our [Discord Server](https://discord.gg/b7AW2Zkcsw)
+The source code is provided so everyone are able to see how this bot functions. If you need help with **NReader** itself, please join our [Discord Server](https://discord.gg/b7AW2Zkcsw).
 
 We don't provide guide or allowed for anyone to self-host this project. If you encounter issues from any modifications you made, you're on your own.
