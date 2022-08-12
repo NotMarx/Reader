@@ -89,7 +89,7 @@ export class SearchPaginator {
             const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
             const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
             const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-            const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
             return new Utils.RichEmbed()
                 .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
@@ -100,7 +100,7 @@ export class SearchPaginator {
                 .setThumbnail(this.api.getImageURL(book.cover))
                 .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                 .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                .addField(this.client.translate("main.released"), `\`${this.client.translate("main.date", { date: uploadedAt })}\``)
+                .addField(this.client.translate("main.released"), uploadedAt)
                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
                 .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
@@ -430,7 +430,7 @@ export class SearchPaginator {
                             const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
                             const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
                             const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
                                 .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
@@ -441,7 +441,7 @@ export class SearchPaginator {
                                 .setThumbnail(this.api.getImageURL(book.cover))
                                 .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                                 .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                                .addField(this.client.translate("main.released"), `\`${this.client.translate("main.date", { date: uploadedAt })}\``)
+                                .addField(this.client.translate("main.released"), uploadedAt)
                                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
@@ -468,7 +468,7 @@ export class SearchPaginator {
                             const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
                             const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
                             const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
                                 .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
@@ -479,7 +479,7 @@ export class SearchPaginator {
                                 .setThumbnail(this.api.getImageURL(book.cover))
                                 .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                                 .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                                .addField(this.client.translate("main.released"), `\`${this.client.translate("main.date", { date: uploadedAt })}\``)
+                                .addField(this.client.translate("main.released"), uploadedAt)
                                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
@@ -505,7 +505,7 @@ export class SearchPaginator {
                         const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
                         const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
                         const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                        const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+                        const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                         return new Utils.RichEmbed()
                             .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
@@ -516,7 +516,7 @@ export class SearchPaginator {
                             .setThumbnail(this.api.getImageURL(book.cover))
                             .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                             .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                            .addField(this.client.translate("main.released"), `\`${this.client.translate("main.date", { date: uploadedAt })}\``)
+                            .addField(this.client.translate("main.released"), uploadedAt)
                             .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                             .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
                             .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
@@ -539,7 +539,7 @@ export class SearchPaginator {
                         const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
                         const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
                         const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                        const uploadedAt = moment(book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+                        const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                         return new Utils.RichEmbed()
                             .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
@@ -550,7 +550,7 @@ export class SearchPaginator {
                             .setThumbnail(this.api.getImageURL(book.cover))
                             .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
                             .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                            .addField(this.client.translate("main.released"), `\`${this.client.translate("main.date", { date: uploadedAt })}\``)
+                            .addField(this.client.translate("main.released"), uploadedAt)
                             .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                             .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
                             .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
