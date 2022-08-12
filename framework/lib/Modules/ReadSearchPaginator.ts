@@ -4,8 +4,7 @@ import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
-import { GuildModel, UserModel } from "../Models";
-import moment from "moment";
+import { UserModel } from "../Models";
 
 export class ReadSearchPaginator {
 
@@ -154,21 +153,20 @@ export class ReadSearchPaginator {
     public async onRead(interaction: ComponentInteraction<TextableChannel>) {
         if (interaction.member.bot) return;
 
-        const guildData = await GuildModel.findOne({ id: interaction.guildID });
         const userData = await UserModel.findOne({ id: interaction.member.id });
         const artistTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
         const characterTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
         const contentTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
         const languageTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
         const parodyTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-        const uploadedAt = moment(this.book.uploaded).locale(guildData.settings.locale).format("dddd, MMMM Do, YYYY h:mm A");
+        const uploadedAt = `<t:${this.book.uploaded.getTime() / 1000}:F>`;
 
         const resultEmbed = new Utils.RichEmbed()
             .setAuthor(this.book.id.toString(), `https://nhentai.net/g/${this.book.id.toString()}`)
             .setColor(this.client.config.BOT.COLOUR)
             .addField(this.client.translate("main.title"), `\`${this.book.title.pretty}\``)
             .addField(this.client.translate("main.pages"), `\`${this.book.pages.length}\``)
-            .addField(this.client.translate("main.released"), `\`${this.client.translate("main.date", { date: uploadedAt })}\``)
+            .addField(this.client.translate("main.released"), uploadedAt)
             .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
             .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
             .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
