@@ -96,9 +96,17 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         if (err.message === "Request failed with status code 404") {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.read.none", { id: args.id } ));
+                .setDescription(client.translate("main.read.none", { id: args.id }));
 
             return interaction.createMessage({
+                embeds: [embed],
+            });
+        } else {
+            const embed = new Utils.RichEmbed()
+                .setColor(client.config.BOT.COLOUR)
+                .setDescription(client.translate("main.error"));
+
+            interaction.createMessage({
                 embeds: [embed],
             });
         }

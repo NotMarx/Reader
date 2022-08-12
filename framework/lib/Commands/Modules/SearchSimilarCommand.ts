@@ -88,6 +88,14 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             return interaction.createMessage({
                 embeds: [embed],
             });
+        } else {
+            const embed = new Utils.RichEmbed()
+                .setColor(client.config.BOT.COLOUR)
+                .setDescription(client.translate("main.error"));
+
+            interaction.createMessage({
+                embeds: [embed],
+            });
         }
 
         return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::SearchALike", title: "API" });
