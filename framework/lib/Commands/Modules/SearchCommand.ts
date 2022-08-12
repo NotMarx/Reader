@@ -79,7 +79,17 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
             components: [component],
             embeds: [embed]
         });
-    }).catch((err: string) => {
-        return client.logger.error({ message: err, subTitle: "NHentaiAPI::Search", title: "API" });
+    }).catch((err: Error) => {
+        if (err) {
+            const embed = new Utils.RichEmbed()
+                .setColor(client.config.BOT.COLOUR)
+                .setDescription(client.translate("main.error"));
+
+            interaction.createMessage({
+                embeds: [embed],
+            });
+        }
+
+        return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::Search", title: "API" });
     });
 }
