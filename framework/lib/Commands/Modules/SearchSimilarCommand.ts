@@ -53,7 +53,7 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translate("main.search.titles", { titles: title.join("\n") }))
+            .setDescription(title.join("\n"))
             .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.pages }));
 
         const component: ActionRow = {
