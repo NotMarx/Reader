@@ -53,7 +53,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translate("main.search.titles", { titles: title.join("\n") }))
+            .setDescription(title.join("\n"))
             .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.pages.toLocaleString() }));
 
         const component: ActionRow = {
