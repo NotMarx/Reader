@@ -271,6 +271,17 @@ export class BookmarkPaginator {
 
                     UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
                 } else {
+                    if (userData.bookmark.length === 25) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.bookmark.maxed"))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
                     interaction.createMessage({
                         embeds: [
                             new Utils.RichEmbed()
