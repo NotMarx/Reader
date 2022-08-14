@@ -1,5 +1,6 @@
 export interface IConfigAPI {
     COOKIE: string;
+    RESTRICTED_TAGS: string[];
 }
 
 export interface IConfigBot {
