@@ -1,6 +1,7 @@
 {
     "API": {
-        "COOKIE": ""
+        "COOKIE": "",
+        "RESTRICTED_TAGS": []
     },
     "BOT": {
         "ADMIN": [],
