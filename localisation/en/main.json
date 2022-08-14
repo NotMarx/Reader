@@ -2,6 +2,7 @@
     "main.artist": "Artist",
     "main.artists": "Artists",
     "main.bookmark": "Bookmark",
+    "main.bookmark.maxed": "Your bookmark has reached the maximum limit of 25! Please consider to remove some of them",
     "main.bookmark.none": "{user}'s bookmark is empty",
     "main.bookmark.removed": "Successfully removed {id} from your bookmark",
     "main.bookmark.saved": "Successfully added {id} to your bookmark",
