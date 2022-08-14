@@ -24,7 +24,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
 
     const queryArgs = args.query.split(" ");
 
-    if (Utils.Util.findCommonElement(queryArgs, ["lolicon", "loli", "shotacon"]) && !guildData.settings.whitelisted) {
+    if (Utils.Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
