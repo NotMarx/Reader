@@ -2,6 +2,7 @@
     "main.artist": "作者",
     "main.artists": "作者",
     "main.bookmark": "书签",
+    "main.bookmark.maxed": "您的书签已达到最大上限25！请考虑删除其中的一些书签",
     "main.bookmark.none": "{user}的书签为空",
     "main.bookmark.removed": "成功从您的书签中删除 {id}",
     "main.bookmark.saved": "成功至您的书签中添加 {id}",
