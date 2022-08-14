@@ -426,6 +426,112 @@ export class SearchPaginator {
                 }
 
                 break;
+            case `jumpto_page_${this.interaction.id}`:
+                interaction.createMessage({
+                    embeds: [
+                        new Utils.RichEmbed()
+                            .setColor(this.client.config.BOT.COLOUR)
+                            .setDescription(this.client.translate("main.page.enter.hint"))
+                    ],
+                    flags: Constants.MessageFlags.EPHEMERAL
+                });
+
+                /* eslint-disable-next-line */
+                const pageFilter = (m: Message<TextableChannel>) => {
+                    if (m.author.bot) return;
+                    if (m.author.id !== interaction.member.id) return;
+
+                    if (isNaN(parseInt(m.content))) {
+                        m.delete();
+                        interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.page.enter.invalid"))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+
+                        return false;
+                    }
+
+                    if (parseInt(m.content) > this.embeds.length) {
+                        m.delete();
+                        interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: m.content }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+
+                        return false;
+                    }
+
+                    if (parseInt(m.content) <= 0) {
+                        m.delete();
+                        interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: m.content }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+
+                        return false;
+                    } else return true;
+                };
+
+                /* eslint-disable-next-line */
+                const pageResponse = await this.client.awaitChannelMessages(interaction.channel, { count: 1, filter: pageFilter, timeout: 30000 });
+
+                if (pageResponse.message) {
+                    pageResponse.message.delete();
+                    this.api.search(this.search.query, parseInt(pageResponse.message.content)).then((search) => {
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                        const embeds = search.books.map((book, index) => {
+                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
+                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
+                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+
+                            return new Utils.RichEmbed()
+                                .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                                .setColor(this.client.config.BOT.COLOUR)
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                                .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
+                                .setThumbnail(this.api.getImageURL(book.cover))
+                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
+                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                .addField(this.client.translate("main.released"), uploadedAt)
+                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
+                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
+                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
+                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
+                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                        });
+
+                        this.embeds = embeds;
+                        this.embed = 1;
+                        this.updatePaginator();
+                    });
+                } else {
+                    return interaction.createMessage({
+                        embeds: [
+                            new Utils.RichEmbed()
+                                .setColor(this.client.config.BOT.COLOUR)
+                                .setDescription(this.client.translate("main.timeout"))
+                        ],
+                        flags: Constants.MessageFlags.EPHEMERAL
+                    });
+                }
+
+                break;
             case `next_result_page_${this.interaction.id}`:
                 interaction.acknowledge();
 
