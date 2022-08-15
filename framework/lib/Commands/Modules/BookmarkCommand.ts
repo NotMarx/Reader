@@ -1,21 +1,12 @@
 import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
-import { API, Book } from "nhentai-api";
-import { CookieJar } from "tough-cookie";
-import { HttpsCookieAgent } from "http-cookie-agent/http";
+import { Book } from "nhentai-api";
 import { Utils } from "givies-framework";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 import { setTimeout } from "node:timers/promises";
 
 export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    const jar = new CookieJar();
-    jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
-
-    const agent = new HttpsCookieAgent({ cookies: { jar } });
-    // @ts-ignore
-    const api = new API({ agent });
-
     const args: { user?: string } = {};
 
     if (interaction.data.options) {
@@ -48,8 +39,8 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
         const books: Book[] = [];
 
         for (let i = 0; i < bookmarked.length; i++) {
-            const title = await api.getBook(parseInt(bookmarked[i])).then((book) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}`  : `${i + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
-            const book = await api.getBook(parseInt(bookmarked[i]));
+            const title = await client.api.getBook(parseInt(bookmarked[i])).then((book) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}`  : `${i + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+            const book = await client.api.getBook(parseInt(bookmarked[i]));
 
             books.push(book);
             bookmarkedTitle.push(title);
