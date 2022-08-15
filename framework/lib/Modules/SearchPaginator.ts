@@ -132,7 +132,7 @@ export class SearchPaginator {
                 {
                     components: [
                         { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                        { custom_id: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                        { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
@@ -185,7 +185,7 @@ export class SearchPaginator {
             {
                 components: [
                     { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                    { custom_id: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                    { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                 ],
                 type: 1
             },
@@ -222,7 +222,7 @@ export class SearchPaginator {
             {
                 components: [
                     { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                    { custom_id: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                    { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                 ],
                 type: 1
             },
@@ -426,7 +426,7 @@ export class SearchPaginator {
                 }
 
                 break;
-            case `jumpto_page_${this.interaction.id}`:
+            case `jumpto_result_page_${this.interaction.id}`:
                 interaction.createMessage({
                     embeds: [
                         new Utils.RichEmbed()
@@ -709,7 +709,7 @@ export class SearchPaginator {
                 {
                     components: [
                         { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                        { custom_id: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                        { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
