@@ -1,23 +1,14 @@
-import { API } from "nhentai-api";
 import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
-import { CookieJar } from "tough-cookie";
-import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 
 export async function searchSimilarCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    const jar = new CookieJar();
-    jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
-
-    const agent = new HttpsCookieAgent({ cookies: { jar } });
-    // @ts-ignore
-    const api = new API({ agent });
     const args: { id?: number } = {};
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
-    const book = (await api.getBook(args.id));
+    const book = (await client.api.getBook(args.id));
     const tags = book.tags.filter((tag) => tag.url.startsWith("/tags")).map((tag) => tag.name);
 
     for (const option of interaction.data.options) {
@@ -38,7 +29,7 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
     await interaction.defer();
     await setTimeout(2000);
 
-    api.searchAlike(args.id).then(async (search) => {
+    client.api.searchAlike(args.id).then(async (search) => {
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
