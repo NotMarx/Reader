@@ -1,5 +1,8 @@
+import { API } from "nhentai-api";
+import { CookieJar } from "tough-cookie";
 import { Client, ClientEvents, TextableChannel } from "eris";
 import { Collection } from "./Utils";
+import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { ICommand, IConfig, IEvent, IGuildSchemaSettings } from "./Interfaces";
 import { TLocale } from "./Types";
 import { Utils } from "givies-framework";
@@ -35,6 +38,21 @@ export class NReaderClient extends Client {
      * Logger
      */
     public logger = new Utils.Logger();
+
+    /**
+     * NHentai API
+     */
+    public get api() {
+        const jar = new CookieJar();
+        jar.setCookie(this.config.API.COOKIE, "https://nhentai.net");
+
+        const agent = new HttpsCookieAgent({ cookies: { jar } });
+
+        /* @ts-ignore */
+        const api = new API({ agent });
+
+        return api;
+    }
 
     /**
      * Collect messages in a channel

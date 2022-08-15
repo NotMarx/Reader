@@ -1,20 +1,11 @@
 import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
-import { API } from "nhentai-api";
-import { CookieJar } from "tough-cookie";
-import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { Utils } from "givies-framework";
 import { setTimeout } from "node:timers/promises";
 
 export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    const jar = new CookieJar();
-    jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
-
-    const agent = new HttpsCookieAgent({ cookies: { jar } });
-    // @ts-ignore
-    const api = new API({ agent });
     const args: { id?: number } = {};
 
     for (const option of interaction.data.options) {
@@ -24,7 +15,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
     await interaction.defer();
     await setTimeout(2000);
 
-    api.getBook(args.id).then(async (book) => {
+    client.api.getBook(args.id).then(async (book) => {
         const guildData = await GuildModel.findOne({ id: interaction.guildID });
         const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
         const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -57,7 +48,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
             .addField(parodyTags.length > 1 ? client.translate("main.parodies") : client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${client.translate("main.original")}`) : client.translate("main.none")}\``)
             .addField(contentTags.length > 1 ? client.translate("main.tags") : client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : client.translate("main.none")}\``)
             .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-            .setThumbnail(api.getImageURL(book.cover));
+            .setThumbnail(client.api.getImageURL(book.cover));
 
         const component: ActionRow = {
             components: [
