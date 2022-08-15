@@ -1,7 +1,5 @@
 import { API, Book } from "nhentai-api";
 import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, TextableChannel } from "eris";
-import { CookieJar } from "tough-cookie";
-import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { UserModel } from "../Models";
@@ -55,12 +53,7 @@ export class ReadSearchPaginator {
      * @param interaction Eris command interaction
      */
     constructor(client: NReaderClient, book: Book, interaction: CommandInteraction<TextableChannel>) {
-        const jar = new CookieJar();
-        jar.setCookie(client.config.API.COOKIE, "https://nhentai.net/");
-        const agent = new HttpsCookieAgent({ cookies: { jar } });
-
-        // @ts-ignore
-        this.api = new API({ agent });
+        this.api = client.api;
         this.book = book;
         this.client = client;
         this.embed = 1;
