@@ -20,11 +20,6 @@ const userSchema = new Schema<IUserSchema>({
             default: false,
             required: true,
             type: Schema.Types.Boolean
-        },
-        readState: {
-            default: "current",
-            required: true,
-            type: Schema.Types.String
         }
     }
 });

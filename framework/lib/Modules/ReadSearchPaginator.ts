@@ -75,7 +75,6 @@ export class ReadSearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const userData = await UserModel.findOne({ id: this.interaction.member.id });
         const messageContent: AdvancedMessageContent = {
             components: [
                 {
@@ -100,14 +99,7 @@ export class ReadSearchPaginator {
             embeds: [this.embeds[this.embed - 1]]
         };
 
-        switch (userData.settings.readState) {
-            case "current":
-                this.message = await this.interaction.editOriginalMessage(messageContent);
-                break;
-            case "new":
-                this.message = await this.client.createMessage(this.interaction.channel.id, messageContent);
-                break;
-        }
+        this.message = await this.interaction.editOriginalMessage(messageContent);
     }
 
     /**
