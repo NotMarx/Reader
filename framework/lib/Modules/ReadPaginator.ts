@@ -75,7 +75,6 @@ export class ReadPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const userData = await UserModel.findOne({ id: this.interaction.member.id });
         const messageContent: AdvancedMessageContent = {
             components: [
                 {
@@ -100,14 +99,7 @@ export class ReadPaginator {
             embeds: [this.embeds[this.embed - 1]]
         };
 
-        switch (userData.settings.readState) {
-            case "current":
-                this.message = await this.interaction.editOriginalMessage(messageContent);
-                break;
-            case "new":
-                this.message = await this.client.createMessage(this.interaction.channel.id, messageContent);
-                break;
-        }
+        this.message = await this.interaction.editOriginalMessage(messageContent);
     }
 
     /**
@@ -301,7 +293,7 @@ export class ReadPaginator {
                 });
 
                 /* eslint-disable-next-line */
-                    const filter = (m: Message<TextableChannel>) => {
+                const filter = (m: Message<TextableChannel>) => {
                     if (m.author.bot) return;
                     if (m.author.id !== interaction.member.id) return;
 
@@ -349,7 +341,7 @@ export class ReadPaginator {
                 };
 
                 /* eslint-disable-next-line */
-                    const response = await this.client.awaitChannelMessages(interaction.channel, { count: 1, filter, timeout: 30000 });
+                const response = await this.client.awaitChannelMessages(interaction.channel, { count: 1, filter, timeout: 30000 });
 
                 if (response.message) {
                     response.message.delete();
