@@ -33,7 +33,6 @@ export async function interactionCreateEvent(client: NReaderClient, interaction:
             id: interaction.member.id,
             settings: {
                 premium: false,
-                readState: "current"
             }
         });
 
