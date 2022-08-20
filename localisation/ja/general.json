@@ -4,6 +4,8 @@
     "general.stats.cpu": "CPU使用率",
     "general.stats.memory": "メモリ使用",
     "general.stats.platform": "プラットフォーム",
+    "general.stats.server": "サーバー",
     "general.stats.title": "{bot}の統計",
-    "general.stats.uptime": "アップタイム"
+    "general.stats.uptime": "アップタイム",
+    "general.stats.user": "ユーザー"
 }
