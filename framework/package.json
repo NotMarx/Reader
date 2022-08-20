@@ -2,7 +2,7 @@
   "name": "nreader-framework",
   "version": "0.1.1",
   "description": "Read Something",
-  "main": "src/index.js",
+  "main": "src/lib/index.js",
   "engines": {
     "node": ">=16.10.0"
   },
