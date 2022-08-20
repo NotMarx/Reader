@@ -4,6 +4,8 @@
     "general.stats.cpu": "CPU Usage",
     "general.stats.memory": "Memory Usage",
     "general.stats.platform": "Platform",
+    "general.stats.server": "Servers",
     "general.stats.title": "{bot}'s Statistics",
-    "general.stats.uptime": "Uptime"
+    "general.stats.uptime": "Uptime",
+    "general.stats.user": "Users"
 }
