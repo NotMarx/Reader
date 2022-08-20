@@ -4,6 +4,8 @@
     "general.stats.cpu": "CPU 使用",
     "general.stats.memory": "内存使用情况",
     "general.stats.platform": "平台",
+    "general.stats.server": "服务器",
     "general.stats.title": "{bot}的统计",
-    "general.stats.uptime": "开机时间"
+    "general.stats.uptime": "开机时间",
+    "general.stats.user": "用户"
 }
