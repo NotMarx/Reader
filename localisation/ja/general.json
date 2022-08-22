@@ -1,4 +1,11 @@
 {
+    "general.help.description": "こんにちは、**{user}**! 初めてこのボットを使用しましたか？詳細については、更に読んでください！ \n\n > **このボットは18以上のものです**",
+    "general.help.nsfw": "このコマンドはNSFW単語を含んでいます。NSFWチャンネルで実行してください！",
+    "general.help.search.name": "タグや同人を検索する方法",
+    "general.help.search.value": "`/search query:*` スラッシュコマンドを使用すると、ほとんどの 同人を表示することができます (制限されたタグを含む同人は表示されません)。 特定のタグに精通しておらず、詳細を知りたい場合は、 {doujin} をご覧ください。",
+    "general.help.title": "ヘルプメニュー",
+    "general.help.usage.name": "使い方",
+    "general.help.usage.value": "**{bot}** は、広告や制限なしで {doujin} を簡単に読むことができる Discord ボットです。 このボットを使用するには、6 桁の数字である {doujin} の ID (「233905」、「390492」など) が必要です。 すべての同人IDに6桁の数字があるわけではありません。 順次同人誌にアップされていますが、最近は6桁の数字がほとんどです。 \n\n ID を取得するだけでなく、特定のタグを検索してそれらを調べることができます。",
     "general.ping": "ポン！{latency}ms",
     "general.register": "データベースに登録されました。続行するにはもう一度コマンドを実行してください。",
     "general.stats.cpu": "CPU使用率",
