@@ -37,6 +37,14 @@ export class NReaderCommand {
     }
 
     /**
+     * Executes a `help` command
+     * @returns {Promise<void>}
+     */
+    public helpCommand() {
+        return CommandModules.helpCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `ping` command
      * @returns  {Promise<void>}
      */
