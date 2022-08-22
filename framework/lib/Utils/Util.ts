@@ -76,14 +76,14 @@ export class Util {
         let output: string;
 
         switch (locale) {
-            case "cn":
-                output = "中文";
-                break;
             case "en":
                 output = "English";
                 break;
             case "ja":
                 output = "日本語";
+                break;
+            case "zh":
+                output = "中文";
                 break;
             default:
                 output = "Unknown";

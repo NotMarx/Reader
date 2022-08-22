@@ -20,7 +20,7 @@ export const command: NReaderInterface.ICommand = {
                     choices: [
                         {
                             name: "Chinese",
-                            value: "cn"
+                            value: "zh"
                         },
                         {
                             name: "English",
