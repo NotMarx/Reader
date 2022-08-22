@@ -12,9 +12,9 @@ import { join } from "path";
 import { readdirSync } from "fs";
 import { t, TFunction, use } from "i18next";
 import i18NextICU from "i18next-icu";
-import localeCN from "./Locales/cn.json";
 import localeEN from "./Locales/en.json";
 import localeJA from "./Locales/ja.json";
+import localeZH from "./Locales/zh.json";
 import { MessageCollector, MessageCollectorOptions } from "./Modules/MessageCollector";
 
 export class NReaderClient extends Client {
@@ -142,14 +142,14 @@ export class NReaderClient extends Client {
             fallbackLng: "en",
             lng: locale,
             resources: {
-                cn: {
-                    translation: localeCN
-                },
                 en: {
                     translation: localeEN
                 },
                 ja: {
                     translation: localeJA
+                },
+                zh: {
+                    translation: localeZH
                 }
             }
         });
