@@ -39,8 +39,21 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
         const books: Book[] = [];
 
         for (let i = 0; i < bookmarked.length; i++) {
-            const title = await client.api.getBook(parseInt(bookmarked[i])).then((book) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}`  : `${i + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
-            const book = await client.api.getBook(parseInt(bookmarked[i]));
+            let title: string;
+            let book: Book;
+
+            try {
+                title = await client.api.getBook(parseInt(bookmarked[i])).then((book) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}` : `${i + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                book = await client.api.getBook(parseInt(bookmarked[i]));
+            } catch (err) {
+                const embed = new Utils.RichEmbed()
+                    .setColor(client.config.BOT.COLOUR)
+                    .setDescription(client.translate("main.error"));
+
+                return interaction.createMessage({
+                    embeds: [embed],
+                });
+            }
 
             books.push(book);
             bookmarkedTitle.push(title);
