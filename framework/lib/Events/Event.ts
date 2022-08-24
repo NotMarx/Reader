@@ -66,6 +66,14 @@ export class NReaderEvent<F, S, T, L> {
     }
 
     /**
+     * Fires a `guildDelete` event
+     * @returns {void}
+     */
+    public guildDeleteEvent(): void {
+        return EventModules.guildDeleteEvent(this.client, this.firstParam);
+    }
+
+    /**
      * Fires a `interactionCreate` event
      * @returns {Promise<void>}
      */
