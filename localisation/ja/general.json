@@ -1,5 +1,5 @@
 {
-    "general.help.description": "こんにちは、**{user}**! 初めてこのボットを使用しましたか？詳細については、更に読んでください！ \n\n > **このボットは18以上のものです**",
+    "general.help.description": "こんにちは、**{user}**! 初めてこのボットを使用しましたか？詳細については、更に読んでください！[NReader Discord サーバー]({server})に参加する \n\n > **このボットは18以上のものです**",
     "general.help.nsfw": "このコマンドはNSFW単語を含んでいます。NSFWチャンネルで実行してください！",
     "general.help.search.name": "タグや同人を検索する方法",
     "general.help.search.value": "`/search query:*` スラッシュコマンドを使用すると、ほとんどの 同人を表示することができます (制限されたタグを含む同人は表示されません)。 特定のタグに精通しておらず、詳細を知りたい場合は、 {doujin} をご覧ください。",
