@@ -6,7 +6,7 @@ export function helpCommand(client: NReaderClient, interaction: CommandInteracti
     if ((interaction.channel as TextChannel).nsfw) {
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translate("general.help.description", { user: interaction.member.username }))
+            .setDescription(client.translate("general.help.description", { server: "https://discord.gg/b7AW2Zkcsw", user: interaction.member.username }))
             .addField(client.translate("general.help.usage.name"), client.translate("general.help.usage.value", { bot: client.user.username, doujin: "[nhentai.net](https://nhentai.net)" }))
             .addField(client.translate("general.help.search.name"), client.translate("general.help.search.value", { doujin: "[nhentai.net](https://nhentai.net/tags/)" }))
             .setTitle(client.translate("general.help.title"));
