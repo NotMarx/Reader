@@ -1,5 +1,5 @@
 {
-    "general.help.description": "Hey there, **{user}**! First time using this bot? Please read further for more information! \n\n > **This bot is only for 18+**",
+    "general.help.description": "Hey there, **{user}**! First time using this bot? Please read further for more information! Need help? Join [NReader Discord Server]({server}) \n\n > **This bot is only for 18+**",
     "general.help.nsfw": "This command contains NSFW words, please run this on a NSFW channel!",
     "general.help.search.name": "How to Search for Tags and Doujins",
     "general.help.search.value": "By using the `/search query:*` slash command, you are able to view most doujins (doujins that contain restricted tags will not be displayed). If you are not familiar with specific tags but wish to know more, you can visit {doujin} for more.",
