@@ -26,3 +26,10 @@ A Discord bot.
 The source code is provided so everyone are able to see how this bot functions. If you need help with **NReader** itself, please join our [Discord Server](https://discord.gg/b7AW2Zkcsw).
 
 We don't provide guide or allowed for anyone to self-host this project. If you encounter issues from any modifications you made, you're on your own.
+
+## Listed Website
+
+The Official **NReader** is listed on these websites!
+
+[![Discord Bots](https://top.gg/api/widget/746948584150270014.svg)](https://top.gg/bot/746948584150270014)
+[![BH Botlist](https://bhbotlist.tech/bot/746948584150270014/embed)](https://bhbotlist.tech/bot/746948584150270014)
