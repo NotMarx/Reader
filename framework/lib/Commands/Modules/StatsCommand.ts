@@ -6,9 +6,13 @@ import { Util } from "../../Utils";
 import osUtils from "os-utils";
 import os from "os";
 import packageJson from "../../../package.json";
+import { setTimeout } from "node:timers/promises";
 
 export async function statsCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const memory: number = process.memoryUsage().rss;
+
+    await interaction.defer();
+    await setTimeout(2000);
 
     const totalMemory = `${Util.bytesToSize(memory).value}${Util.bytesToSize(memory).unit} / ${Util.bytesToSize(os.totalmem()).value}${Util.bytesToSize(os.totalmem()).unit}`;
     const totalMem = Util.bytesToSize(os.totalmem()).value * 1000 ;
@@ -29,8 +33,8 @@ export async function statsCommand(client: NReaderClient, interaction: CommandIn
             .addField("NodeJS", `${process.versions.node}`, true)
             .addField("Eris", `${VERSION}`, true)
             .addField("API", packageJson.dependencies["nhentai-api"].replace("^", ""), true)
-            .addField(client.translate("general.stats.server"), guildData.length.toLocaleString(), true)
-            .addField(client.translate("general.stats.user"), userData.length.toLocaleString(), true)
+            .addField(client.translate("general.stats.server"), `${guildData.length.toLocaleString()} (${client.guilds.size.toLocaleString()})`, true)
+            .addField(client.translate("general.stats.user"), `${userData.length.toLocaleString()} (${client.users.size.toLocaleString()})`, true)
             .addField(client.translate("general.stats.platform"), `${process.platform.charAt(0).toUpperCase() + process.platform.slice(1)}`, true);
 
         return interaction.createMessage({
