@@ -32,4 +32,4 @@ We don't provide guide or allowed for anyone to self-host this project. If you e
 The Official **NReader** is listed on these websites!
 
 [![Discord Bots](https://top.gg/api/widget/746948584150270014.svg)](https://top.gg/bot/746948584150270014)
-[![BH Botlist](https://bhbotlist.tech/bot/746948584150270014/embed)](https://bhbotlist.tech/bot/746948584150270014)
+<a href="https://bhbotlist.tech/bot/746948584150270014" target="_blank"><img src="https://bhbotlist.tech/bot/746948584150270014/embed" style="height: 150px; width: 300px;"></a>
