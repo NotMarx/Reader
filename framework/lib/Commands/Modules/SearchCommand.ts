@@ -4,6 +4,7 @@ import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
+import { NReaderConstant } from "../../Constant";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const args: { page?: number, query?: string } = {};
@@ -40,7 +41,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
             });
         }
 
-        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)

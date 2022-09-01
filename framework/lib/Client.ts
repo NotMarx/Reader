@@ -16,6 +16,7 @@ import localeEN from "./Locales/en.json";
 import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
 import { MessageCollector, MessageCollectorOptions } from "./Modules/MessageCollector";
+import { NReaderConstant } from "./Constant";
 
 export class NReaderClient extends Client {
 
@@ -44,7 +45,7 @@ export class NReaderClient extends Client {
      */
     public get api() {
         const jar = new CookieJar();
-        jar.setCookie(this.config.API.COOKIE, "https://nhentai.net");
+        jar.setCookie(this.config.API.COOKIE, NReaderConstant.Source.BASE);
 
         const agent = new HttpsCookieAgent({ cookies: { jar } });
 

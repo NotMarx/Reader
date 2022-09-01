@@ -4,6 +4,7 @@ import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
+import { NReaderConstant } from "../Constant";
 
 export class BookmarkPaginator {
 
@@ -79,7 +80,7 @@ export class BookmarkPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+        const title = this.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
         const embeds = this.books.map((book, index) => {
             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -89,9 +90,9 @@ export class BookmarkPaginator {
             const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
             return new Utils.RichEmbed()
-                .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                 .setTitle(this.client.translate("main.bookmark.title", { user: this.user.username }))
                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -257,7 +258,7 @@ export class BookmarkPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](https://nhentai.net/g/${embed.author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
@@ -279,7 +280,7 @@ export class BookmarkPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](https://nhentai.net/g/${embed.author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
