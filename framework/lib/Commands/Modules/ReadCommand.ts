@@ -4,6 +4,7 @@ import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { Utils } from "givies-framework";
 import { setTimeout } from "node:timers/promises";
+import { NReaderConstant } from "../../Constant";
 
 export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const args: { id?: number } = {};
@@ -37,7 +38,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         }
 
         const embed = new Utils.RichEmbed()
-            .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id.toString()}`)
+            .setAuthor(book.id.toString(), NReaderConstant.Source.ID(book.id.toString()))
             .setColor(client.config.BOT.COLOUR)
             .addField(client.translate("main.title"), `\`${book.title.pretty}\``)
             .addField(client.translate("main.pages"), `\`${book.pages.length}\``)

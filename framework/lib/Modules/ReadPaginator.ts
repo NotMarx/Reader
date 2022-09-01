@@ -3,6 +3,7 @@ import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInterac
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { UserModel } from "../Models";
+import { NReaderConstant } from "../Constant";
 
 export class ReadPaginator {
 
@@ -64,7 +65,7 @@ export class ReadPaginator {
                 .setFooter(client.translate("main.page", { firstIndex: index + 1, lastIndex: book.pages.length }))
                 .setImage(this.api.getImageURL(page))
                 .setTitle(book.title.pretty)
-                .setURL(`https://nhentai.net/g/${book.id.toString()}`);
+                .setURL(NReaderConstant.Source.ID(book.id.toString()));
         });
         this.interaction = interaction;
         this.onRead = this.onRead.bind(this);
@@ -118,7 +119,7 @@ export class ReadPaginator {
         const uploadedAt = `<t:${this.book.uploaded.getTime() / 1000}:F>`;
 
         const resultEmbed = new Utils.RichEmbed()
-            .setAuthor(this.book.id.toString(), `https://nhentai.net/g/${this.book.id.toString()}`)
+            .setAuthor(this.book.id.toString(), NReaderConstant.Source.ID(this.book.id.toString()))
             .setColor(this.client.config.BOT.COLOUR)
             .addField(this.client.translate("main.title"), `\`${this.book.title.pretty}\``)
             .addField(this.client.translate("main.pages"), `\`${this.book.pages.length}\``)
@@ -221,7 +222,7 @@ export class ReadPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](https://nhentai.net/g/${this.embeds[0].author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
@@ -243,7 +244,7 @@ export class ReadPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](https://nhentai.net/g/${this.embeds[0].author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
