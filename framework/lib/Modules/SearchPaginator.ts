@@ -4,6 +4,7 @@ import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
+import { NReaderConstant } from "../Constant";
 
 export class SearchPaginator {
 
@@ -73,7 +74,7 @@ export class SearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+        const title = this.search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
         const embeds = this.search.books.map((book, index) => {
             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -83,9 +84,9 @@ export class SearchPaginator {
             const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
             return new Utils.RichEmbed()
-                .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                 .setTitle(this.client.translate("main.page", { firstIndex: this.search.page.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -281,7 +282,7 @@ export class SearchPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](https://nhentai.net/g/${embed.author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
@@ -303,7 +304,7 @@ export class SearchPaginator {
                         embeds: [
                             new Utils.RichEmbed()
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](https://nhentai.net/g/${embed.author.name})` }))
+                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
                         ],
                         flags: Constants.MessageFlags.EPHEMERAL
                     });
@@ -483,7 +484,7 @@ export class SearchPaginator {
                 if (pageResponse.message) {
                     pageResponse.message.delete();
                     this.api.search(this.search.query, parseInt(pageResponse.message.content)).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
                         const embeds = search.books.map((book, index) => {
                             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -493,9 +494,9 @@ export class SearchPaginator {
                             const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                                 .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -530,7 +531,7 @@ export class SearchPaginator {
 
                 if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.pages) {
                     this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
                         const embeds = search.books.map((book, index) => {
                             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -540,9 +541,9 @@ export class SearchPaginator {
                             const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                                 .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -568,7 +569,7 @@ export class SearchPaginator {
 
                 if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
                     this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
                         const embeds = search.books.map((book, index) => {
                             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -578,9 +579,9 @@ export class SearchPaginator {
                             const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                                 .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -605,7 +606,7 @@ export class SearchPaginator {
                 interaction.acknowledge();
 
                 this.api.search(this.search.query, 1).then((search) => {
-                    const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                    const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
                     const embeds = search.books.map((book, index) => {
                         const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                         const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -615,9 +616,9 @@ export class SearchPaginator {
                         const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                         return new Utils.RichEmbed()
-                            .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                            .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                             .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                            .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                             .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                             .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                             .setThumbnail(this.api.getImageURL(book.cover))
@@ -639,7 +640,7 @@ export class SearchPaginator {
                 break;
             case `last_result_page_${this.interaction.id}`:
                 this.api.search(this.search.query, this.search.pages).then((search) => {
-                    const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``);
+                    const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
                     const embeds = search.books.map((book, index) => {
                         const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                         const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -649,9 +650,9 @@ export class SearchPaginator {
                         const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
                         return new Utils.RichEmbed()
-                            .setAuthor(book.id.toString(), `https://nhentai.net/g/${book.id}`)
+                            .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                             .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty}\`**`))
+                            .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                             .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                             .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                             .setThumbnail(this.api.getImageURL(book.cover))
