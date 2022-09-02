@@ -5,9 +5,10 @@ import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 import { NReaderConstant } from "../../Constant";
+import { SearchSortMode } from "nhentai-api/types/search";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    const args: { page?: number, query?: string } = {};
+    const args: { page?: number, query?: string, sort?: SearchSortMode } = {};
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
     for (const option of interaction.data.options) {
@@ -30,7 +31,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1).then(async (search) => {
+    client.api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1, args.sort || "").then(async (search) => {
         if (search.books.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
