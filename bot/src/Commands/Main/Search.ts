@@ -9,14 +9,36 @@ export const command: NReaderInterface.ICommand = {
             name: "query",
             description: "The title query of the doujin",
             type: 3,
-            channel_types: 0,
             required: true
         },
         {
             name: "page",
             description: "Page of the results",
             type: 4,
-            channel_types: 0
+        },
+        {
+            name: "sort",
+            description: "Sort results based on the sort mode",
+            type: 3,
+            /* @ts-ignore */
+            choices: [
+                {
+                    name: "Popular All Time",
+                    value: "popular"
+                },
+                {
+                    name: "Popular Today",
+                    value: "popular-today"
+                },
+                {
+                    name: "Popular This Week",
+                    value: "popular-week"
+                },
+                {
+                    name: "Popular This Month",
+                    value: "popular-month"
+                }
+            ]
         }
     ],
     type: 1,
