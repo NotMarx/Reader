@@ -8,6 +8,8 @@ export async function guildCreateEvent(client: NReaderClient, guild: Guild) {
     const guildData = await GuildModel.findOne({ id: guild.id });
 
     if (guild) {
+        client.apiStats.postStats("bhbotlist.tech", client.config.LIST.BHBOTLIST.AUTH);
+
         client.logger.info({ message: `Guild ${guild.name} (${guild.id}) Has Joined`, subTitle: "NReaderFramework::Events::GuildCreate", title: "GUILDS" });
 
         if (!guildData) {
