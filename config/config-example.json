@@ -9,5 +9,13 @@
         "DEBUG": false,
         "MONGODB": "",
         "TOKEN": ""
+    },
+    "LIST": {
+        "BHBOTLIST": {
+            "AUTH": ""
+        },
+        "TOPGG": {
+            "AUTH": ""
+        }
     }
 }
