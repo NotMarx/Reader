@@ -11,7 +11,17 @@ export interface IConfigBot {
     TOKEN: string;
 }
 
+export interface IConfigListAuth {
+    AUTH: string;
+}
+
+export interface IConfigList {
+    BHBOTLIST: IConfigListAuth;
+    TOPGG: IConfigListAuth;
+}
+
 export interface IConfig {
     API: IConfigAPI;
     BOT: IConfigBot;
+    LIST: IConfigList;
 }
