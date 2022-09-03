@@ -13,6 +13,7 @@ import { readdirSync } from "fs";
 import { t, TFunction, use } from "i18next";
 import i18NextICU from "i18next-icu";
 import localeEN from "./Locales/en.json";
+import localeID from "./Locales/id.json";
 import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
 import { MessageCollector, MessageCollectorOptions } from "./Modules/MessageCollector";
@@ -145,6 +146,9 @@ export class NReaderClient extends Client {
             resources: {
                 en: {
                     translation: localeEN
+                },
+                id: {
+                    translation: localeID
                 },
                 ja: {
                     translation: localeJA
