@@ -1,1 +1,1 @@
-export type TLocale = "en" | "ja" | "zh";
+export type TLocale = "en" | "id" | "ja" | "zh";
