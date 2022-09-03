@@ -79,6 +79,9 @@ export class Util {
             case "en":
                 output = "English";
                 break;
+            case "id":
+                output = "Bahasa Indonesia";
+                break;
             case "ja":
                 output = "日本語";
                 break;
