@@ -11,7 +11,15 @@ const Source = {
     TAGS: "https://nhentai.net/tags/",
 };
 
+const TopGG = {
+    API: "https://top.gg/api",
+    BASE: "https://top.gg",
+    STATS: (id: string) => `${TopGG.API}/bots/${id}/stats`,
+    VOTE: (id: string) => `${TopGG.BASE}/bot/${id}/vote`,
+};
+
 export const NReaderConstant = {
     BHBotList,
-    Source
+    Source,
+    TopGG
 };
