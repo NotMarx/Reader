@@ -1,4 +1,5 @@
 import { API } from "nhentai-api";
+import { APIStats } from "./Utils/APIStats";
 import { CookieJar } from "tough-cookie";
 import { Client, ClientEvents, TextableChannel } from "eris";
 import { Collection } from "./Utils";
@@ -20,6 +21,11 @@ import { MessageCollector, MessageCollectorOptions } from "./Modules/MessageColl
 import { NReaderConstant } from "./Constant";
 
 export class NReaderClient extends Client {
+
+    /**
+     * BotList API Stats
+     */
+    public apiStats = new APIStats(this);
 
     /**
      * Collection of the bot's commands
