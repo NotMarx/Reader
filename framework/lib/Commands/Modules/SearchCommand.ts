@@ -42,7 +42,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
             });
         }
 
-        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
+        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
