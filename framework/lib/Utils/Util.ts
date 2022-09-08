@@ -1,5 +1,5 @@
 import { TLocale } from "../Types";
-import { CommandInteraction, Constants, TextChannel } from "eris";
+import { CommandInteraction, Constants, ModalSubmitInteraction, TextableChannel, TextChannel } from "eris";
 import { NReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
 import { Utils } from "givies-framework";
@@ -95,6 +95,10 @@ export class Util {
         }
 
         return output;
+    }
+
+    public static getModalID(interaction: ModalSubmitInteraction<TextableChannel>, customID: string): string {
+        return interaction.data.components.find((component) => component.components[0].custom_id === customID).components[0].value;
     }
 
     /**
