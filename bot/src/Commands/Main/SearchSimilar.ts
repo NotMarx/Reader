@@ -10,7 +10,6 @@ export const command: NReaderInterface.ICommand = {
             description: "The ID of the NHentai doujin",
             type: 4,
             required: true,
-            channel_types: 0
         }
     ],
     type: 1,

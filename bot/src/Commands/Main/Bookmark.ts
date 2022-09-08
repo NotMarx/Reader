@@ -10,9 +10,7 @@ export const command: NReaderInterface.ICommand = {
             name: "user",
             description: "The user to check",
             type: 6,
-            required: false,
-            /* @ts-ignore */
-            channel_types: 0
+            required: false
         }
     ],
     run: async (payload) => {
