@@ -36,7 +36,7 @@
   "dependencies": {
     "byte-size": "^8.1.0",
     "chalk": "^4.1.2",
-    "eris": "^0.17.1",
+    "eris": "github:DonovanDMC/eris#f6d0bbf669ca5bbe1577a107c0570c149674cd8e",
     "givies-framework": "^2022.706.0",
     "http-cookie-agent": "^4.0.1",
     "i18next": "^21.8.13",
