@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
-import Eris from "eris";
+import Eris, { TextableChannel } from "eris";
+import { NReaderClient } from "../Client";
 
 export interface MessageCollectorOptions {
     count?: number;
@@ -22,6 +23,11 @@ export class MessageCollector extends EventEmitter {
      * The channel to collect messages
      */
     public channel: Eris.TextableChannel;
+
+    /**
+     * NReader client
+     */
+    public client: NReaderClient;
 
     /**
      * The timeout for the message collector
@@ -58,14 +64,15 @@ export class MessageCollector extends EventEmitter {
    * @param channel The channel to collect messages
    * @param options Options to enhance the collecting system
    */
-    constructor(channel: Eris.TextableChannel, options: MessageCollectorOptions) {
+    constructor(client: NReaderClient, channel: Eris.TextableChannel, options: MessageCollectorOptions) {
         super();
         const opt = Object.assign(MessageCollectorDefaults, options);
+        this.client = client;
         this.channel = channel;
         this.timeout = opt.timeout;
         this.count = opt.count;
         this.filter = opt.filter;
-        this.collected = new Eris.Collection(Eris.Message);
+        this.collected = new Eris.Collection(Eris.Message<TextableChannel>);
         this.running = false;
 
         this._onMessageCreate = this._onMessageCreate.bind(this);
@@ -105,10 +112,10 @@ export class MessageCollector extends EventEmitter {
     public run(): Promise<MessageCollector> {
         this.running = true;
         return new Promise((res) => {
-            this.channel.client.setMaxListeners(this.getMaxListeners() + 1);
-            this.channel.client.on("messageCreate", this._onMessageCreate);
-            this.channel.client.on("messageUpdate", this._onMessageUpdate);
-            this.channel.client.on("messageDelete", this._onMessageDelete);
+            this.client.setMaxListeners(this.getMaxListeners() + 1);
+            this.client.on("messageCreate", this._onMessageCreate);
+            this.client.on("messageUpdate", this._onMessageUpdate);
+            this.client.on("messageDelete", this._onMessageDelete);
 
             this.setMaxListeners(this.getMaxListeners() + 1);
             this.on("collect", this.onCollect);
@@ -126,10 +133,10 @@ export class MessageCollector extends EventEmitter {
      */
     public stop(): MessageCollector {
         this.running = false;
-        this.channel.client.setMaxListeners(this.getMaxListeners() - 1);
-        this.channel.client.off("messageCreate", this._onMessageCreate);
-        this.channel.client.off("messageUpdate", this._onMessageUpdate);
-        this.channel.client.off("messageDelete", this._onMessageDelete);
+        this.client.setMaxListeners(this.getMaxListeners() - 1);
+        this.client.off("messageCreate", this._onMessageCreate);
+        this.client.off("messageUpdate", this._onMessageUpdate);
+        this.client.off("messageDelete", this._onMessageDelete);
 
         this.setMaxListeners(this.getMaxListeners() - 1);
         this.off("collect", this.onCollect);
