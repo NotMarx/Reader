@@ -66,7 +66,8 @@ export class NReaderClient extends Client {
      * Collect messages in a channel
      */
     public awaitChannelMessages(channel: TextableChannel, options: MessageCollectorOptions) {
-        return new MessageCollector(channel, options).run();
+        /* @ts-ignore */
+        return new MessageCollector(this, channel, options).run();
     }
 
     /**
