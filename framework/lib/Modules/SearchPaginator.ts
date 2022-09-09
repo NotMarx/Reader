@@ -1,10 +1,11 @@
 import { API, Search } from "nhentai-api";
-import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, TextableChannel } from "eris";
+import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, ModalSubmitInteraction, TextableChannel } from "eris";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 import { NReaderConstant } from "../Constant";
+import { Util } from "../Utils";
 
 export class SearchPaginator {
 
@@ -74,7 +75,7 @@ export class SearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+        const title = this.search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
         const embeds = this.search.books.map((book, index) => {
             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -86,7 +87,7 @@ export class SearchPaginator {
             return new Utils.RichEmbed()
                 .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))
                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                 .setTitle(this.client.translate("main.page", { firstIndex: this.search.page.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -150,10 +151,10 @@ export class SearchPaginator {
      * Start searching
      * @param interaction Eris component interaction
      */
-    public async onSearch(interaction: ComponentInteraction<TextableChannel>) {
+    public async onSearch(interaction: ComponentInteraction<TextableChannel> | ModalSubmitInteraction<TextableChannel>) {
         if (interaction.member.bot) return;
 
-        const embed = new Utils.RichEmbed(interaction.message ? interaction.message.embeds[0] : undefined);
+        const embed = new Utils.RichEmbed((interaction as ComponentInteraction<TextableChannel>).message ? (interaction as ComponentInteraction<TextableChannel>).message.embeds[0] : undefined);
         const userData = await UserModel.findOne({ id: interaction.member.id });
 
         const hideComponent: ActionRow[] = [
@@ -230,261 +231,249 @@ export class SearchPaginator {
             }
         ];
 
-        switch (interaction.data.custom_id) {
-            case `read_result_${this.interaction.id}`:
-                interaction.acknowledge();
+        if (interaction instanceof ComponentInteraction) {
+            switch (interaction.data.custom_id) {
+                case `read_result_${this.interaction.id}`:
+                    interaction.acknowledge();
 
-                this.api.getBook(parseInt(embed.author.name)).then(async (book) => {
-                    this.paginationEmbed = new ReadSearchPaginator(this.client, book, this.interaction);
-                    await this.paginationEmbed.initialisePaginator();
-                    this.paginationEmbed.runPaginator();
-                });
+                    this.api.getBook(parseInt(embed.author.name)).then(async (book) => {
+                        this.paginationEmbed = new ReadSearchPaginator(this.client, book, this.interaction);
+                        await this.paginationEmbed.initialisePaginator();
+                        this.paginationEmbed.runPaginator();
+                    });
 
-                break;
-            case `see_more_${this.interaction.id}`:
-                interaction.acknowledge();
-                this.initialisePaginator();
-                break;
-            case `show_cover_${this.interaction.id}`:
-                embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(embed.author.name))).cover));
-                this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
-                interaction.acknowledge();
-                break;
-            case `hide_cover_${this.interaction.id}`:
-                embed.setImage("");
-                this.interaction.editOriginalMessage({ components: showComponent, embeds: [embed] });
-                interaction.acknowledge();
-                break;
-            case `home_result_${this.interaction.id}`:
-                this.interaction.editOriginalMessage({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
-                this.paginationEmbed.stopPaginator();
-                interaction.acknowledge();
-                break;
-            case `stop_result_${this.interaction.id}`:
-                interaction.message.delete();
-                interaction.acknowledge();
-                this.stopPaginator();
-
-                try {
+                    break;
+                case `see_more_${this.interaction.id}`:
+                    interaction.acknowledge();
+                    this.initialisePaginator();
+                    break;
+                case `show_cover_${this.interaction.id}`:
+                    embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(embed.author.name))).cover));
+                    this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
+                    interaction.acknowledge();
+                    break;
+                case `hide_cover_${this.interaction.id}`:
+                    embed.setImage("");
+                    this.interaction.editOriginalMessage({ components: showComponent, embeds: [embed] });
+                    interaction.acknowledge();
+                    break;
+                case `home_result_${this.interaction.id}`:
+                    this.interaction.editOriginalMessage({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
                     this.paginationEmbed.stopPaginator();
-                } catch (err) {
-                    return;
-                }
+                    interaction.acknowledge();
+                    break;
+                case `stop_result_${this.interaction.id}`:
+                    interaction.message.delete();
+                    interaction.acknowledge();
+                    this.stopPaginator();
 
-                break;
-            case `bookmark_${this.interaction.id}`:
-                if (this.paginationEmbed && this.paginationEmbed.running) {
-                    return;
-                }
+                    try {
+                        this.paginationEmbed.stopPaginator();
+                    } catch (err) {
+                        return;
+                    }
 
-                if (userData.bookmark.includes(embed.author.name)) {
-                    interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
+                    break;
+                case `bookmark_${this.interaction.id}`:
+                    if (this.paginationEmbed && this.paginationEmbed.running) {
+                        return;
+                    }
+
+                    if (userData.bookmark.includes(embed.author.name)) {
+                        interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+
+                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
+                    } else {
+                        if (userData.bookmark.length === 25) {
+                            return interaction.createMessage({
+                                embeds: [
+                                    new Utils.RichEmbed()
+                                        .setColor(this.client.config.BOT.COLOUR)
+                                        .setDescription(this.client.translate("main.bookmark.maxed"))
+                                ],
+                                flags: Constants.MessageFlags.EPHEMERAL
+                            });
+                        }
+
+                        interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+
+                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": embed.author.name } }).exec();
+                    }
+
+                    break;
+                case `next_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    if (this.embed < this.embeds.length) {
+                        this.embed++;
+                        this.updatePaginator();
+                    }
+
+                    break;
+                case `previous_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    if (this.embed > 1) {
+                        this.embed--;
+                        this.updatePaginator();
+                    }
+
+                    break;
+                case `first_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    this.embed = 1;
+                    this.updatePaginator();
+                    break;
+                case `last_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    this.embed = this.embeds.length;
+                    this.updatePaginator();
+                    break;
+                case `jumpto_result_${this.interaction.id}`:
+                    this.client.createInteractionResponse(interaction.id, interaction.token, {
+                        data: ({
+                            components: [
+                                {
+                                    components: [
+                                        {
+                                            custom_id: "result_number",
+                                            label: this.client.translate("main.result.enter"),
+                                            placeholder: "10",
+                                            required: true,
+                                            style: 1,
+                                            type: 4
+                                        }
+                                    ],
+                                    type: 1
+                                }
+                            ],
+                            custom_id: `jumpto_result_modal_${this.interaction.id}`,
+                            title: this.client.translate("main.result.enter")
+                        } as any),
+                        type: Constants.InteractionResponseTypes.MODAL as any
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
-                } else {
-                    if (userData.bookmark.length === 25) {
-                        return interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.maxed"))
+                    break;
+                case `jumpto_result_page_${this.interaction.id}`:
+                    this.client.createInteractionResponse(interaction.id, interaction.token, {
+                        data: ({
+                            components: [
+                                {
+                                    components: [
+                                        {
+                                            custom_id: "result_page_number",
+                                            label: this.client.translate("main.page.enter"),
+                                            placeholder: "5",
+                                            required: true,
+                                            style: 1,
+                                            type: 4
+                                        }
+                                    ],
+                                    type: 1
+                                }
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
-                    }
-
-                    interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
+                            custom_id: `jumpto_result_page_modal_${this.interaction.id}`,
+                            title: this.client.translate("main.page.enter")
+                        } as any),
+                        type: Constants.InteractionResponseTypes.MODAL as any
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": embed.author.name } }).exec();
-                }
+                    break;
+                case `next_result_page_${this.interaction.id}`:
+                    interaction.acknowledge();
 
-                break;
-            case `next_result_${this.interaction.id}`:
-                interaction.acknowledge();
+                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.pages) {
+                        this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
+                            const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+                            const embeds = search.books.map((book, index) => {
+                                const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+                                const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
+                                const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                                const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                                const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
+                                const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
 
-                if (this.embed < this.embeds.length) {
-                    this.embed++;
-                    this.updatePaginator();
-                }
-
-                break;
-            case `previous_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                if (this.embed > 1) {
-                    this.embed--;
-                    this.updatePaginator();
-                }
-
-                break;
-            case `first_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                this.embed = 1;
-                this.updatePaginator();
-                break;
-            case `last_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                this.embed = this.embeds.length;
-                this.updatePaginator();
-                break;
-            case `jumpto_result_${this.interaction.id}`:
-                interaction.createMessage({
-                    embeds: [
-                        new Utils.RichEmbed()
-                            .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(this.client.translate("main.result.enter.hint"))
-                    ],
-                    flags: Constants.MessageFlags.EPHEMERAL
-                });
-
-                /* eslint-disable-next-line */
-                const filter = (m: Message<TextableChannel>) => {
-                    if (m.author.bot) return;
-                    if (m.author.id !== interaction.member.id) return;
-
-                    if (isNaN(parseInt(m.content))) {
-                        m.delete();
-                        interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
+                                return new Utils.RichEmbed()
+                                    .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.invalid"))
-                            ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
+                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
+                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
+                                    .setThumbnail(this.api.getImageURL(book.cover))
+                                    .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
+                                    .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                    .addField(this.client.translate("main.released"), uploadedAt)
+                                    .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
+                                    .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
+                                    .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
+                                    .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
+                                    .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                            });
 
-                        return false;
+                            this.embeds = embeds;
+                            this.embed = 1;
+                            this.updatePaginator();
+                        });
                     }
 
-                    if (parseInt(m.content) > this.embeds.length) {
-                        m.delete();
-                        interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: m.content }))
-                            ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
+                    break;
+                case `previous_result_page_${this.interaction.id}`:
+                    interaction.acknowledge();
 
-                        return false;
+                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
+                        this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
+                            const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+                            const embeds = search.books.map((book, index) => {
+                                const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+                                const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
+                                const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                                const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                                const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
+                                const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+
+                                return new Utils.RichEmbed()
+                                    .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
+                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
+                                    .setThumbnail(this.api.getImageURL(book.cover))
+                                    .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
+                                    .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                    .addField(this.client.translate("main.released"), uploadedAt)
+                                    .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
+                                    .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
+                                    .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
+                                    .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
+                                    .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                            });
+
+                            this.embeds = embeds;
+                            this.embed = 1;
+                            this.updatePaginator();
+                        });
                     }
 
-                    if (parseInt(m.content) <= 0) {
-                        m.delete();
-                        interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: m.content }))
-                            ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
+                    break;
+                case `first_result_page_${this.interaction.id}`:
+                    interaction.acknowledge();
 
-                        return false;
-                    } else return true;
-                };
-
-                /* eslint-disable-next-line */
-                const response = await this.client.awaitChannelMessages(interaction.channel, { count: 1, filter, timeout: 30000 });
-
-                if (response.message) {
-                    response.message.delete();
-                    this.embed = parseInt(response.message.content);
-                    this.updatePaginator();
-                } else {
-                    return interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.timeout"))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
-                    });
-                }
-
-                break;
-            case `jumpto_result_page_${this.interaction.id}`:
-                interaction.createMessage({
-                    embeds: [
-                        new Utils.RichEmbed()
-                            .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(this.client.translate("main.page.enter.hint"))
-                    ],
-                    flags: Constants.MessageFlags.EPHEMERAL
-                });
-
-                /* eslint-disable-next-line */
-                const pageFilter = (m: Message<TextableChannel>) => {
-                    if (m.author.bot) return;
-                    if (m.author.id !== interaction.member.id) return;
-
-                    if (isNaN(parseInt(m.content))) {
-                        m.delete();
-                        interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.invalid"))
-                            ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
-
-                        return false;
-                    }
-
-                    if (parseInt(m.content) > this.embeds.length) {
-                        m.delete();
-                        interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: m.content }))
-                            ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
-
-                        return false;
-                    }
-
-                    if (parseInt(m.content) <= 0) {
-                        m.delete();
-                        interaction.createMessage({
-                            embeds: [
-                                new Utils.RichEmbed()
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: m.content }))
-                            ],
-                            flags: Constants.MessageFlags.EPHEMERAL
-                        });
-
-                        return false;
-                    } else return true;
-                };
-
-                /* eslint-disable-next-line */
-                const pageResponse = await this.client.awaitChannelMessages(interaction.channel, { count: 1, filter: pageFilter, timeout: 30000 });
-
-                if (pageResponse.message) {
-                    pageResponse.message.delete();
-                    this.api.search(this.search.query, parseInt(pageResponse.message.content)).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+                    this.api.search(this.search.query, 1).then((search) => {
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
                         const embeds = search.books.map((book, index) => {
                             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
                             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -496,7 +485,153 @@ export class SearchPaginator {
                             return new Utils.RichEmbed()
                                 .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
+                                .setThumbnail(this.api.getImageURL(book.cover))
+                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
+                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                .addField(this.client.translate("main.released"), uploadedAt)
+                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
+                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
+                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
+                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
+                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                        });
+
+                        this.embeds = embeds;
+                        this.embed = 1;
+                        this.updatePaginator();
+                    });
+
+                    break;
+                case `last_result_page_${this.interaction.id}`:
+                    this.api.search(this.search.query, this.search.pages).then((search) => {
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+                        const embeds = search.books.map((book, index) => {
+                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
+                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
+                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+
+                            return new Utils.RichEmbed()
+                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                .setColor(this.client.config.BOT.COLOUR)
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
+                                .setThumbnail(this.api.getImageURL(book.cover))
+                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
+                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                .addField(this.client.translate("main.released"), uploadedAt)
+                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
+                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
+                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
+                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
+                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                        });
+
+                        this.embeds = embeds;
+                        this.embed = 1;
+                        this.updatePaginator();
+                    });
+
+                    break;
+            }
+        } else {
+            switch (interaction.data.custom_id) {
+                case `jumpto_result_modal_${this.interaction.id}`:
+                    /* eslint-disable-next-line */
+                    const pageResult = parseInt(Util.getModalID(interaction, "result_number"));
+
+                    if (isNaN(pageResult)) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.result.enter.invalid"))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
+                    if (pageResult > this.embeds.length) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
+                    if (pageResult <= 0 ) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
+                    this.embed = pageResult;
+                    this.updatePaginator();
+                    interaction.acknowledge();
+                    break;
+                case `jumpto_result_page_modal_${this.interaction.id}`:
+                    /* eslint-disable-next-line */
+                    const page = parseInt(Util.getModalID(interaction, "result_page_number"));
+
+                    if (isNaN(page)) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.page.enter.invalid"))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
+                    if (page > this.search.pages) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
+                    if (page <= 0 ) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+                    }
+
+                    this.api.search(this.search.query, page).then((search) => {
+                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+                        const embeds = search.books.map((book, index) => {
+                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
+                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
+                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
+                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+
+                            return new Utils.RichEmbed()
+                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                .setColor(this.client.config.BOT.COLOUR)
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))
                                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                                 .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
                                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -514,160 +649,10 @@ export class SearchPaginator {
                         this.embed = 1;
                         this.updatePaginator();
                     });
-                } else {
-                    return interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.timeout"))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
-                    });
-                }
 
-                break;
-            case `next_result_page_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.pages) {
-                    this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                        const embeds = search.books.map((book, index) => {
-                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
-
-                            return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))                                .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                .setThumbnail(this.api.getImageURL(book.cover))
-                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                                .addField(this.client.translate("main.released"), uploadedAt)
-                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
-                        });
-
-                        this.embeds = embeds;
-                        this.embed = 1;
-                        this.updatePaginator();
-                    });
-                }
-
-                break;
-            case `previous_result_page_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
-                    this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                        const embeds = search.books.map((book, index) => {
-                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
-
-                            return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))                                .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                .setThumbnail(this.api.getImageURL(book.cover))
-                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                                .addField(this.client.translate("main.released"), uploadedAt)
-                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
-                        });
-
-                        this.embeds = embeds;
-                        this.embed = 1;
-                        this.updatePaginator();
-                    });
-                }
-
-                break;
-            case `first_result_page_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                this.api.search(this.search.query, 1).then((search) => {
-                    const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                    const embeds = search.books.map((book, index) => {
-                        const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                        const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                        const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                        const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                        const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                        const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
-
-                        return new Utils.RichEmbed()
-                            .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
-                            .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))                            .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                            .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                            .setThumbnail(this.api.getImageURL(book.cover))
-                            .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                            .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                            .addField(this.client.translate("main.released"), uploadedAt)
-                            .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                            .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                            .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                            .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                            .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
-                    });
-
-                    this.embeds = embeds;
-                    this.embed = 1;
-                    this.updatePaginator();
-                });
-
-                break;
-            case `last_result_page_${this.interaction.id}`:
-                this.api.search(this.search.query, this.search.pages).then((search) => {
-                    const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                    const embeds = search.books.map((book, index) => {
-                        const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                        const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                        const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                        const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                        const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                        const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
-
-                        return new Utils.RichEmbed()
-                            .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
-                            .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))                            .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                            .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                            .setThumbnail(this.api.getImageURL(book.cover))
-                            .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                            .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
-                            .addField(this.client.translate("main.released"), uploadedAt)
-                            .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                            .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                            .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                            .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                            .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
-                    });
-
-                    this.embeds = embeds;
-                    this.embed = 1;
-                    this.updatePaginator();
-                });
-
-                break;
+                    interaction.acknowledge();
+                    break;
+            }
         }
     }
 
