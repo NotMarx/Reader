@@ -5,8 +5,6 @@ const client = new NReaderClient(Config.BOT.TOKEN, {
     defaultImageFormat: "png",
     intents: [
         "guilds",
-        "guildMessages",
-        "guildMembers"
     ],
     maxShards: "auto"
 });
