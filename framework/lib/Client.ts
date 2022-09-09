@@ -17,7 +17,6 @@ import localeEN from "./Locales/en.json";
 import localeID from "./Locales/id.json";
 import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
-import { MessageCollector, MessageCollectorOptions } from "./Modules/MessageCollector";
 import { NReaderConstant } from "./Constant";
 
 export class NReaderClient extends Client {
@@ -60,13 +59,6 @@ export class NReaderClient extends Client {
         const api = new API({ agent });
 
         return api;
-    }
-
-    /**
-     * Collect messages in a channel
-     */
-    public awaitChannelMessages(channel: TextableChannel, options: MessageCollectorOptions) {
-        return new MessageCollector(channel, options).run();
     }
 
     /**

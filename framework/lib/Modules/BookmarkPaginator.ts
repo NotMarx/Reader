@@ -1,10 +1,11 @@
 import { API, Book } from "nhentai-api";
-import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Member, Message, TextableChannel } from "eris";
+import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Member, Message, ModalSubmitInteraction, TextableChannel } from "eris";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 import { NReaderConstant } from "../Constant";
+import { Util } from "../Utils";
 
 export class BookmarkPaginator {
 
@@ -80,7 +81,7 @@ export class BookmarkPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
+        const title = this.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
         const embeds = this.books.map((book, index) => {
             const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
             const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
@@ -92,7 +93,7 @@ export class BookmarkPaginator {
             return new Utils.RichEmbed()
                 .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
                 .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
                 .setTitle(this.client.translate("main.bookmark.title", { user: this.user.username }))
                 .setThumbnail(this.api.getImageURL(book.cover))
@@ -146,10 +147,10 @@ export class BookmarkPaginator {
      * Start searching
      * @param interaction Eris component interaction
      */
-    public async onSearch(interaction: ComponentInteraction<TextableChannel>) {
+    public async onSearch(interaction: ComponentInteraction<TextableChannel> | ModalSubmitInteraction<TextableChannel>) {
         if (interaction.member.bot) return;
 
-        const embed = new Utils.RichEmbed(interaction.message ? interaction.message.embeds[0] : undefined);
+        const embed = new Utils.RichEmbed((interaction as ComponentInteraction).message ? (interaction as ComponentInteraction).message.embeds[0] : undefined);
         const userData = await UserModel.findOne({ id: interaction.member.id });
 
         const hideComponent: ActionRow[] = [
@@ -206,137 +207,154 @@ export class BookmarkPaginator {
             }
         ];
 
-        switch (interaction.data.custom_id) {
-            case `read_result_${this.interaction.id}`:
-                interaction.acknowledge();
+        if (interaction instanceof ComponentInteraction) {
+            switch (interaction.data.custom_id) {
+                case `read_result_${this.interaction.id}`:
+                    interaction.acknowledge();
 
-                this.api.getBook(parseInt(embed.author.name)).then(async (book) => {
-                    this.paginationEmbed = new ReadSearchPaginator(this.client, book, this.interaction);
-                    await this.paginationEmbed.initialisePaginator();
-                    this.paginationEmbed.runPaginator();
-                });
-
-                break;
-            case `see_more_${this.interaction.id}`:
-                interaction.acknowledge();
-                this.initialisePaginator();
-                break;
-            case `show_cover_${this.interaction.id}`:
-                embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(embed.author.name))).cover));
-                this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
-                interaction.acknowledge();
-                break;
-            case `hide_cover_${this.interaction.id}`:
-                embed.setImage("");
-                this.interaction.editOriginalMessage({ components: showComponent, embeds: [embed] });
-                interaction.acknowledge();
-                break;
-            case `home_result_${this.interaction.id}`:
-                this.interaction.editOriginalMessage({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
-                this.paginationEmbed.stopPaginator();
-                interaction.acknowledge();
-                break;
-            case `stop_result_${this.interaction.id}`:
-                interaction.message.delete();
-                interaction.acknowledge();
-                this.stopPaginator();
-
-                try {
-                    this.paginationEmbed.stopPaginator();
-                } catch (err) {
-                    return;
-                }
-
-                break;
-            case `bookmark_${this.interaction.id}`:
-                if (this.paginationEmbed && this.paginationEmbed.running) {
-                    return;
-                }
-
-                if (userData.bookmark.includes(embed.author.name)) {
-                    interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
+                    this.api.getBook(parseInt(embed.author.name)).then(async (book) => {
+                        this.paginationEmbed = new ReadSearchPaginator(this.client, book, this.interaction);
+                        await this.paginationEmbed.initialisePaginator();
+                        this.paginationEmbed.runPaginator();
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
-                } else {
-                    if (userData.bookmark.length === 25) {
-                        return interaction.createMessage({
+                    break;
+                case `see_more_${this.interaction.id}`:
+                    interaction.acknowledge();
+                    this.initialisePaginator();
+                    break;
+                case `show_cover_${this.interaction.id}`:
+                    embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(embed.author.name))).cover));
+                    this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
+                    interaction.acknowledge();
+                    break;
+                case `hide_cover_${this.interaction.id}`:
+                    embed.setImage("");
+                    this.interaction.editOriginalMessage({ components: showComponent, embeds: [embed] });
+                    interaction.acknowledge();
+                    break;
+                case `home_result_${this.interaction.id}`:
+                    this.interaction.editOriginalMessage({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
+                    this.paginationEmbed.stopPaginator();
+                    interaction.acknowledge();
+                    break;
+                case `stop_result_${this.interaction.id}`:
+                    interaction.message.delete();
+                    interaction.acknowledge();
+                    this.stopPaginator();
+
+                    try {
+                        this.paginationEmbed.stopPaginator();
+                    } catch (err) {
+                        return;
+                    }
+
+                    break;
+                case `bookmark_${this.interaction.id}`:
+                    if (this.paginationEmbed && this.paginationEmbed.running) {
+                        return;
+                    }
+
+                    if (userData.bookmark.includes(embed.author.name)) {
+                        interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.maxed"))
+                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
+
+                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
+                    } else {
+                        if (userData.bookmark.length === 25) {
+                            return interaction.createMessage({
+                                embeds: [
+                                    new Utils.RichEmbed()
+                                        .setColor(this.client.config.BOT.COLOUR)
+                                        .setDescription(this.client.translate("main.bookmark.maxed"))
+                                ],
+                                flags: Constants.MessageFlags.EPHEMERAL
+                            });
+                        }
+
+                        interaction.createMessage({
+                            embeds: [
+                                new Utils.RichEmbed()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL
+                        });
+
+                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": embed.author.name } }).exec();
                     }
 
-                    interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
+                    break;
+                case `next_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    if (this.embed < this.embeds.length) {
+                        this.embed++;
+                        this.updatePaginator();
+                    }
+
+                    break;
+                case `previous_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    if (this.embed > 1) {
+                        this.embed--;
+                        this.updatePaginator();
+                    }
+
+                    break;
+                case `first_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    this.embed = 1;
+                    this.updatePaginator();
+                    break;
+                case `last_result_${this.interaction.id}`:
+                    interaction.acknowledge();
+
+                    this.embed = this.embeds.length;
+                    this.updatePaginator();
+                    break;
+                case `jumpto_result_${this.interaction.id}`:
+                    this.client.createInteractionResponse(interaction.id, interaction.token, {
+                        data: ({
+                            components: [
+                                {
+                                    components: [
+                                        {
+                                            custom_id: "result_number",
+                                            label: this.client.translate("main.result.enter"),
+                                            placeholder: "10",
+                                            required: true,
+                                            style: 1,
+                                            type: 4
+                                        }
+                                    ],
+                                    type: 1
+                                }
+                            ],
+                            custom_id: `jumpto_result_modal_${this.interaction.id}`,
+                            title: this.client.translate("main.result.enter")
+                        } as any),
+                        type: Constants.InteractionResponseTypes.MODAL as any
                     });
 
-                    UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": embed.author.name } }).exec();
-                }
+                    break;
+            }
+        } else {
+            switch (interaction.data.custom_id) {
+                case `jumpto_result_modal_${this.interaction.id}`:
+                    /* eslint-disable-next-line */
+                    const page = parseInt(Util.getModalID(interaction, "result_number"));
 
-                break;
-            case `next_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                if (this.embed < this.embeds.length) {
-                    this.embed++;
-                    this.updatePaginator();
-                }
-
-                break;
-            case `previous_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                if (this.embed > 1) {
-                    this.embed--;
-                    this.updatePaginator();
-                }
-
-                break;
-            case `first_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                this.embed = 1;
-                this.updatePaginator();
-                break;
-            case `last_result_${this.interaction.id}`:
-                interaction.acknowledge();
-
-                this.embed = this.embeds.length;
-                this.updatePaginator();
-                break;
-            case `jumpto_result_${this.interaction.id}`:
-                interaction.createMessage({
-                    embeds: [
-                        new Utils.RichEmbed()
-                            .setColor(this.client.config.BOT.COLOUR)
-                            .setDescription(this.client.translate("main.result.enter.hint"))
-                    ],
-                    flags: Constants.MessageFlags.EPHEMERAL
-                });
-
-                /* eslint-disable-next-line */
-                const filter = (m: Message<TextableChannel>) => {
-                    if (m.author.bot) return;
-                    if (m.author.id !== interaction.member.id) return;
-
-                    if (isNaN(parseInt(m.content))) {
-                        m.delete();
-                        interaction.createMessage({
+                    if (isNaN(page)) {
+                        return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
@@ -344,58 +362,35 @@ export class BookmarkPaginator {
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
-
-                        return false;
                     }
 
-                    if (parseInt(m.content) > this.embeds.length) {
-                        m.delete();
-                        interaction.createMessage({
+                    if (page > this.embeds.length) {
+                        return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: m.content }))
+                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: page.toLocaleString() }))
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
-
-                        return false;
                     }
 
-                    if (parseInt(m.content) <= 0) {
-                        m.delete();
-                        interaction.createMessage({
+                    if (page <= 0 ) {
+                        return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: m.content }))
+                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: page.toLocaleString() }))
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
+                    }
 
-                        return false;
-                    } else return true;
-                };
-
-                /* eslint-disable-next-line */
-                const response = await this.client.awaitChannelMessages(interaction.channel, { count: 1, filter, timeout: 30000 });
-
-                if (response.message) {
-                    response.message.delete();
-                    this.embed = parseInt(response.message.content);
+                    this.embed = page;
                     this.updatePaginator();
-                } else {
-                    return interaction.createMessage({
-                        embeds: [
-                            new Utils.RichEmbed()
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(this.client.translate("main.timeout"))
-                        ],
-                        flags: Constants.MessageFlags.EPHEMERAL
-                    });
-                }
-
-                break;
+                    interaction.acknowledge();
+                    break;
+            }
         }
     }
 
