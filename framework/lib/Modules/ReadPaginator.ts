@@ -308,6 +308,8 @@ export class ReadPaginator {
                         } as any),
                         type: Constants.InteractionResponseTypes.MODAL as any
                     });
+
+                    break;
             }
         } else {
             switch (interaction.data.custom_id) {
