@@ -1,4 +1,4 @@
-import {  NReaderCommand, NReaderInterface } from "nreader-framework";
+import {  NReaderCommand, NReaderInterface } from "nreader-framework/lib";
 
 export const command: NReaderInterface.ICommand = {
     name: "config",
