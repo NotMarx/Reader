@@ -1,14 +1,12 @@
-import { API } from "nhentai-api";
 import { APIStats } from "./Utils/APIStats";
-import { CookieJar } from "tough-cookie";
-import { Client, ClientEvents, TextableChannel } from "eris";
+import { Client, ClientEvents } from "eris";
 import { Collection } from "./Utils";
-import { HttpsCookieAgent } from "http-cookie-agent/http";
 import { ICommand, IConfig, IEvent, IGuildSchemaSettings } from "./Interfaces";
 import { TLocale } from "./Types";
 import { Utils } from "givies-framework";
 import { connect } from "mongoose";
 import { GuildModel } from "./Models";
+import { RequestHandler } from "./API";
 import { join } from "path";
 import { readdirSync } from "fs";
 import { t, TFunction, use } from "i18next";
@@ -17,7 +15,6 @@ import localeEN from "./Locales/en.json";
 import localeID from "./Locales/id.json";
 import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
-import { NReaderConstant } from "./Constant";
 
 export class NReaderClient extends Client {
 
@@ -50,15 +47,9 @@ export class NReaderClient extends Client {
      * NHentai API
      */
     public get api() {
-        const jar = new CookieJar();
-        jar.setCookie(this.config.API.COOKIE, NReaderConstant.Source.BASE);
+        const handler = new RequestHandler();
 
-        const agent = new HttpsCookieAgent({ cookies: { jar } });
-
-        /* @ts-ignore */
-        const api = new API({ agent });
-
-        return api;
+        return handler;
     }
 
     /**

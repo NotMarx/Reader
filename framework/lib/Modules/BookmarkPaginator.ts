@@ -1,4 +1,4 @@
-import { API, Book } from "nhentai-api";
+import { RequestHandler, Gallery } from "../API";
 import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Member, Message, ModalSubmitInteraction, TextableChannel } from "eris";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
@@ -8,16 +8,10 @@ import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
 
 export class BookmarkPaginator {
-
     /**
      * NHentai API
      */
-    api: API;
-
-    /**
-     * Bookmarked doujin
-     */
-    books: Book[];
+    api: RequestHandler;
 
     /**
      * NReader client
@@ -33,6 +27,11 @@ export class BookmarkPaginator {
      * An array of embed pages
      */
     embeds: EmbedOptions[];
+
+    /**
+     * Bookmarked doujin
+     */
+    galleries: Gallery[];
 
     /**
      * Eris command interaction
@@ -62,15 +61,15 @@ export class BookmarkPaginator {
     /**
      * Creates a read paginator
      * @param client NReader client
-     * @param book Current book
+     * @param galleries Current galleries
      * @param interaction Eris command interaction
      */
-    constructor(client: NReaderClient, books: Book[], interaction: CommandInteraction<TextableChannel>, user: Member) {
+    constructor(client: NReaderClient, galleries: Gallery[], interaction: CommandInteraction<TextableChannel>, user: Member) {
         this.api = client.api;
-        this.books = books;
         this.client = client;
         this.embed = 1;
         this.embeds = [];
+        this.galleries = galleries;
         this.interaction = interaction;
         this.onSearch = this.onSearch.bind(this);
         this.running = false;
@@ -81,24 +80,24 @@ export class BookmarkPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``);
-        const embeds = this.books.map((book, index) => {
-            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+        const title = this.galleries.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty}\``);
+        const embeds = this.galleries.map((gallery, index) => {
+            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
             return new Utils.RichEmbed()
-                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                .setAuthor(gallery.id, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty}\`**`))
-                .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty}\`**`))
+                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
                 .setTitle(this.client.translate("main.bookmark.title", { user: this.user.username }))
-                .setThumbnail(this.api.getImageURL(book.cover))
-                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                .setThumbnail(gallery.cover.url)
+                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                 .addField(this.client.translate("main.released"), uploadedAt)
                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
@@ -212,8 +211,8 @@ export class BookmarkPaginator {
                 case `read_result_${this.interaction.id}`:
                     interaction.acknowledge();
 
-                    this.api.getBook(parseInt(embed.author.name)).then(async (book) => {
-                        this.paginationEmbed = new ReadSearchPaginator(this.client, book, this.interaction);
+                    this.api.getGallery(embed.author.name).then(async (gallery) => {
+                        this.paginationEmbed = new ReadSearchPaginator(this.client, gallery, this.interaction);
                         await this.paginationEmbed.initialisePaginator();
                         this.paginationEmbed.runPaginator();
                     });
@@ -224,7 +223,7 @@ export class BookmarkPaginator {
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(embed.author.name))).cover));
+                    embed.setImage((await this.api.getGallery(embed.author.name)).cover.url);
                     this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
                     interaction.acknowledge();
                     break;
@@ -375,7 +374,7 @@ export class BookmarkPaginator {
                         });
                     }
 
-                    if (page <= 0 ) {
+                    if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
@@ -446,8 +445,8 @@ export class BookmarkPaginator {
     }
 }
 
-export async function createBookmarkPaginator(client: NReaderClient, books: Book[], interaction: CommandInteraction<TextableChannel>, user: Member) {
-    const paginator = new BookmarkPaginator(client, books, interaction, user);
+export async function createBookmarkPaginator(client: NReaderClient, galleries: Gallery[], interaction: CommandInteraction<TextableChannel>, user: Member) {
+    const paginator = new BookmarkPaginator(client, galleries, interaction, user);
 
     paginator.runPaginator();
 
