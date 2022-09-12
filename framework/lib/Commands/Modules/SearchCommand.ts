@@ -1,14 +1,13 @@
+import { Constant } from "../../API";
 import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
 import { Utils } from "givies-framework";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
-import { NReaderConstant } from "../../Constant";
-import { SearchSortMode } from "nhentai-api/types/search";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    const args: { page?: number, query?: string, sort?: SearchSortMode } = {};
+    const args: { page?: number, query?: string, sort?: Constant.TSearchSort } = {};
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
     for (const option of interaction.data.options) {
@@ -31,8 +30,8 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.search(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1, args.sort || "").then(async (search) => {
-        if (search.books.length === 0) {
+    client.api.searchGalleries(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1, args.sort || "").then(async (search) => {
+        if (search.result.length === 0) {
             const embed = new Utils.RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.search.none", { query: args.query }));
@@ -42,12 +41,12 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
             });
         }
 
-        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
+        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
 
         const embed = new Utils.RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(title.join("\n"))
-            .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.pages.toLocaleString() }));
+            .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.numPages.toLocaleString() }));
 
         const component: ActionRow = {
             components: [

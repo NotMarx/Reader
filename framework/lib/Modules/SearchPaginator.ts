@@ -1,4 +1,4 @@
-import { API, Search } from "nhentai-api";
+import { RequestHandler, Search } from "../API";
 import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, ModalSubmitInteraction, TextableChannel } from "eris";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
@@ -12,7 +12,7 @@ export class SearchPaginator {
     /**
      * NHentai API
      */
-    api: API;
+    api: RequestHandler;
 
     /**
      * NReader client
@@ -55,9 +55,9 @@ export class SearchPaginator {
     search: Search;
 
     /**
-     * Creates a read paginator
+     * Creates a search paginator
      * @param client NReader client
-     * @param book Current book
+     * @param search The search result
      * @param interaction Eris command interaction
      */
     constructor(client: NReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
@@ -75,24 +75,24 @@ export class SearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-        const embeds = this.search.books.map((book, index) => {
-            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+        const title = this.search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+        const embeds = this.search.result.map((gallery, index) => {
+            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
             return new Utils.RichEmbed()
-                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                .setAuthor(gallery.id, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))
-                .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                .setTitle(this.client.translate("main.page", { firstIndex: this.search.page.toLocaleString(), lastIndex: this.search.pages.toLocaleString() }))
-                .setThumbnail(this.api.getImageURL(book.cover))
-                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                .setTitle(this.client.translate("main.page", { firstIndex: this.search.page.toLocaleString(), lastIndex: this.search.numPages.toLocaleString() }))
+                .setThumbnail(gallery.cover.url)
+                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                 .addField(this.client.translate("main.released"), uploadedAt)
                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
@@ -236,8 +236,8 @@ export class SearchPaginator {
                 case `read_result_${this.interaction.id}`:
                     interaction.acknowledge();
 
-                    this.api.getBook(parseInt(embed.author.name)).then(async (book) => {
-                        this.paginationEmbed = new ReadSearchPaginator(this.client, book, this.interaction);
+                    this.api.getGallery(embed.author.name).then(async (gallery) => {
+                        this.paginationEmbed = new ReadSearchPaginator(this.client, gallery, this.interaction);
                         await this.paginationEmbed.initialisePaginator();
                         this.paginationEmbed.runPaginator();
                     });
@@ -248,7 +248,7 @@ export class SearchPaginator {
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    embed.setImage(this.api.getImageURL((await this.api.getBook(parseInt(embed.author.name))).cover));
+                    embed.setImage((await this.api.getGallery(embed.author.name)).cover.url);
                     this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
                     interaction.acknowledge();
                     break;
@@ -398,25 +398,25 @@ export class SearchPaginator {
                 case `next_result_page_${this.interaction.id}`:
                     interaction.acknowledge();
 
-                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.pages) {
-                        this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
-                            const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                            const embeds = search.books.map((book, index) => {
-                                const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                                const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                                const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                                const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                                const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                                const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.numPages) {
+                        this.api.searchGalleries(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
+                            const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                            const embeds = search.result.map((gallery, index) => {
+                                const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+                                const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+                                const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                                const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                                const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                                const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                                 return new Utils.RichEmbed()
-                                    .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                    .setAuthor(gallery.id, gallery.url)
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                    .setThumbnail(this.api.getImageURL(book.cover))
-                                    .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                    .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`)).setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                    .setThumbnail(gallery.cover.url)
+                                    .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                                    .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                                     .addField(this.client.translate("main.released"), uploadedAt)
                                     .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                     .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
@@ -436,24 +436,25 @@ export class SearchPaginator {
                     interaction.acknowledge();
 
                     if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
-                        this.api.search(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
-                            const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                            const embeds = search.books.map((book, index) => {
-                                const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                                const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                                const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                                const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                                const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                                const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+                        this.api.searchGalleries(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
+                            const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                            const embeds = search.result.map((gallery, index) => {
+                                const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+                                const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+                                const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                                const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                                const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                                const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                                 return new Utils.RichEmbed()
-                                    .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                    .setAuthor(gallery.id, gallery.url)
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                    .setThumbnail(this.api.getImageURL(book.cover))
-                                    .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                    .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                                    .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                    .setThumbnail(gallery.cover.url)
+                                    .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                                    .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                                     .addField(this.client.translate("main.released"), uploadedAt)
                                     .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                     .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
@@ -472,24 +473,25 @@ export class SearchPaginator {
                 case `first_result_page_${this.interaction.id}`:
                     interaction.acknowledge();
 
-                    this.api.search(this.search.query, 1).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                        const embeds = search.books.map((book, index) => {
-                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+                    this.api.searchGalleries(this.search.query, 1).then((search) => {
+                        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                        const embeds = search.result.map((gallery, index) => {
+                            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+                            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+                            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                .setThumbnail(this.api.getImageURL(book.cover))
-                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                .setThumbnail(gallery.cover.url)
+                                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                                 .addField(this.client.translate("main.released"), uploadedAt)
                                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
@@ -505,24 +507,25 @@ export class SearchPaginator {
 
                     break;
                 case `last_result_page_${this.interaction.id}`:
-                    this.api.search(this.search.query, this.search.pages).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                        const embeds = search.books.map((book, index) => {
-                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+                    this.api.searchGalleries(this.search.query, this.search.numPages).then((search) => {
+                        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                        const embeds = search.result.map((gallery, index) => {
+                            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+                            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+                            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`)).setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                .setThumbnail(this.api.getImageURL(book.cover))
-                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                .setThumbnail(gallery.cover.url)
+                                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                                 .addField(this.client.translate("main.released"), uploadedAt)
                                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
@@ -566,7 +569,7 @@ export class SearchPaginator {
                         });
                     }
 
-                    if (pageResult <= 0 ) {
+                    if (pageResult <= 0) {
                         return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
@@ -596,7 +599,7 @@ export class SearchPaginator {
                         });
                     }
 
-                    if (page > this.search.pages) {
+                    if (page > this.search.numPages) {
                         return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
@@ -607,7 +610,7 @@ export class SearchPaginator {
                         });
                     }
 
-                    if (page <= 0 ) {
+                    if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
                                 new Utils.RichEmbed()
@@ -618,25 +621,25 @@ export class SearchPaginator {
                         });
                     }
 
-                    this.api.search(this.search.query, page).then((search) => {
-                        const title = search.books.map((book, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                        const embeds = search.books.map((book, index) => {
-                            const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-                            const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-                            const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-                            const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
+                    this.api.searchGalleries(this.search.query, page).then((search) => {
+                        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                        const embeds = search.result.map((gallery, index) => {
+                            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+                            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+                            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+                            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+                            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                             return new Utils.RichEmbed()
-                                .setAuthor(book.id.toString(), `${NReaderConstant.Source.ID(book.id.toString())}`)
+                                .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${book.id}\`](${NReaderConstant.Source.ID(book.id.toString())}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\`**`))
-                                .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.pages.toLocaleString() }))
-                                .setThumbnail(this.api.getImageURL(book.cover))
-                                .addField(this.client.translate("main.title"), `\`${book.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${book.pages.length}\``)
+                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                .setThumbnail(gallery.cover.url)
+                                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
+                                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
                                 .addField(this.client.translate("main.released"), uploadedAt)
                                 .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
                                 .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)

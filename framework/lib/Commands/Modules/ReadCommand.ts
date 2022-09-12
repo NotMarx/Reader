@@ -4,7 +4,6 @@ import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { Utils } from "givies-framework";
 import { setTimeout } from "node:timers/promises";
-import { NReaderConstant } from "../../Constant";
 
 export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
     const args: { id?: number } = {};
@@ -16,15 +15,15 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.getBook(args.id).then(async (book) => {
+    client.api.getGallery(args.id.toString()).then(async (gallery) => {
         const guildData = await GuildModel.findOne({ id: interaction.guildID });
-        const artistTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-        const characterTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-        const contentTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-        const languageTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-        const parodyTags: string[] = book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-        const uploadedAt = `<t:${book.uploaded.getTime() / 1000}:F>`;
-        const tags = book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => tag.name);
+        const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
+        const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
+        const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+        const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+        const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+        const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+        const tags = gallery.tags.tags.map((tag) => tag.name);
 
         if (Utils.Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
             const embed = new Utils.RichEmbed()
@@ -38,18 +37,18 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         }
 
         const embed = new Utils.RichEmbed()
-            .setAuthor(book.id.toString(), NReaderConstant.Source.ID(book.id.toString()))
+            .setAuthor(gallery.id, gallery.url)
             .setColor(client.config.BOT.COLOUR)
-            .addField(client.translate("main.title"), `\`${book.title.pretty}\``)
-            .addField(client.translate("main.pages"), `\`${book.pages.length}\``)
+            .addField(client.translate("main.title"), `\`${gallery.title.pretty}\``)
+            .addField(client.translate("main.pages"), `\`${gallery.pages.length}\``)
             .addField(client.translate("main.released"), uploadedAt)
             .addField(languageTags.length > 1 ? client.translate("main.languages") : client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : client.translate("main.none")}\``)
             .addField(artistTags.length > 1 ? client.translate("main.artists") : client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : client.translate("main.none")}\``)
             .addField(characterTags.length > 1 ? client.translate("main.characters") : client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : client.translate("main.original")}\``)
             .addField(parodyTags.length > 1 ? client.translate("main.parodies") : client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${client.translate("main.original")}`) : client.translate("main.none")}\``)
             .addField(contentTags.length > 1 ? client.translate("main.tags") : client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : client.translate("main.none")}\``)
-            .setFooter(`⭐ ${book.favorites.toLocaleString()}`)
-            .setThumbnail(client.api.getImageURL(book.cover));
+            .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+            .setThumbnail(gallery.cover.url);
 
         const component: ActionRow = {
             components: [
@@ -82,7 +81,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         };
 
         interaction.createMessage({ components: [component], embeds: [embed] });
-        createReadPaginator(client, book, interaction);
+        createReadPaginator(client, gallery, interaction);
     }).catch((err: Error) => {
         if (err.message === "Request failed with status code 404") {
             const embed = new Utils.RichEmbed()
