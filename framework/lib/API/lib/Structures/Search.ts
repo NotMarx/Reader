@@ -34,8 +34,8 @@ export class Search {
     readonly sort: TSearchSort | null;
 
     constructor(data: IRawGallerySearch, param?: IRawGallerySearchParam) {
-        this.numPages = data.num_pages;
-        this.perPage = data.per_page;
+        this.numPages = data.num_pages || 1;
+        this.perPage = data.per_page || 5;
         this.result = data.result.map((gallery) => new Gallery(gallery));
 
         if (param) {
