@@ -1,6 +1,6 @@
 import { NReaderClient } from "../../Client";
 import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
-import { Book } from "nhentai-api";
+import { Gallery } from "../../API";
 import { Utils } from "givies-framework";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
@@ -36,15 +36,15 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
         await setTimeout(2000);
 
         const bookmarkedTitle: string[] = [];
-        const books: Book[] = [];
+        const galleries: Gallery[] = [];
 
         for (let i = 0; i < bookmarked.length; i++) {
             let title: string;
-            let book: Book;
+            let gallery: Gallery;
 
             try {
-                title = await client.api.getBook(parseInt(bookmarked[i])).then((book) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}` : `${i + 1} `}\` - [\`${book.id}\`](https://nhentai.net/g/${book.id}) - \`${book.title.pretty.length >= 30 ? `${book.title.pretty.slice(0, 30)}...` : book.title.pretty}\``);
-                book = await client.api.getBook(parseInt(bookmarked[i]));
+                title = await client.api.getGallery(bookmarked[i]).then((gallery) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}` : `${i + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                gallery = await client.api.getGallery(bookmarked[i]);
             } catch (err) {
                 const embed = new Utils.RichEmbed()
                     .setColor(client.config.BOT.COLOUR)
@@ -55,7 +55,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
                 });
             }
 
-            books.push(book);
+            galleries.push(gallery);
             bookmarkedTitle.push(title);
         }
 
@@ -82,7 +82,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
             .setDescription(bookmarkedTitle.join("\n"))
             .setTitle(client.translate("main.bookmark.title", { user: user.username }));
 
-        createBookmarkPaginator(client, books, interaction, user);
+        createBookmarkPaginator(client, galleries, interaction, user);
         return interaction.createMessage({
             components: [component],
             embeds: [embed],

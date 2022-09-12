@@ -1,4 +1,4 @@
-import { API, Book } from "nhentai-api";
+import { Gallery } from "../API";
 import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, ModalSubmitInteraction, TextableChannel } from "eris";
 import { NReaderClient } from "../Client";
 import { Utils } from "givies-framework";
@@ -7,16 +7,6 @@ import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
 
 export class ReadPaginator {
-
-    /**
-     * NHentai API
-     */
-    api: API;
-
-    /**
-     * Current book
-     */
-    book: Book;
 
     /**
      * NReader client
@@ -32,6 +22,11 @@ export class ReadPaginator {
      * An array of embed pages
      */
     embeds: EmbedOptions[];
+
+    /**
+     * Current NHentai gallery
+     */
+    gallery: Gallery;
 
     /**
      * Eris command interaction
@@ -54,20 +49,19 @@ export class ReadPaginator {
      * @param book Current book
      * @param interaction Eris command interaction
      */
-    constructor(client: NReaderClient, book: Book, interaction: CommandInteraction<TextableChannel>) {
-        this.api = client.api;
-        this.book = book;
+    constructor(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextableChannel>) {
         this.client = client;
         this.embed = 1;
-        this.embeds = book.pages.map((page, index) => {
+        this.embeds = gallery.pages.map((page, index) => {
             return new Utils.RichEmbed()
-                .setAuthor(book.id.toString(), this.api.getImageURL(page))
+                .setAuthor(gallery.id, page.url)
                 .setColor(client.config.BOT.COLOUR)
-                .setFooter(client.translate("main.page", { firstIndex: index + 1, lastIndex: book.pages.length }))
-                .setImage(this.api.getImageURL(page))
-                .setTitle(book.title.pretty)
-                .setURL(NReaderConstant.Source.ID(book.id.toString()));
+                .setFooter(client.translate("main.page", { firstIndex: index + 1, lastIndex: gallery.pages.length }))
+                .setImage(page.url)
+                .setTitle(gallery.title.pretty)
+                .setURL(gallery.url);
         });
+        this.gallery = gallery;
         this.interaction = interaction;
         this.onRead = this.onRead.bind(this);
         this.running = false;
@@ -112,26 +106,26 @@ export class ReadPaginator {
         if (interaction.member.bot) return;
 
         const userData = await UserModel.findOne({ id: interaction.member.id });
-        const artistTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/artist")).map((tag) => tag.name);
-        const characterTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/character")).map((tag) => tag.name);
-        const contentTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/tag")).map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-        const languageTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/language")).map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-        const parodyTags: string[] = this.book.tags.filter((tag) => tag.url.startsWith("/parody")).map((tag) => tag.name);
-        const uploadedAt = `<t:${this.book.uploaded.getTime() / 1000}:F>`;
+        const artistTags: string[] = this.gallery.tags.artists.map((tag) => tag.name);
+        const characterTags: string[] = this.gallery.tags.characters.map((tag) => tag.name);
+        const contentTags: string[] = this.gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
+        const languageTags: string[] = this.gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+        const parodyTags: string[] = this.gallery.tags.parodies.map((tag) => tag.name);
+        const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
 
         const resultEmbed = new Utils.RichEmbed()
-            .setAuthor(this.book.id.toString(), NReaderConstant.Source.ID(this.book.id.toString()))
+            .setAuthor(this.gallery.id, this.gallery.url)
             .setColor(this.client.config.BOT.COLOUR)
-            .addField(this.client.translate("main.title"), `\`${this.book.title.pretty}\``)
-            .addField(this.client.translate("main.pages"), `\`${this.book.pages.length}\``)
+            .addField(this.client.translate("main.title"), `\`${this.gallery.title.pretty}\``)
+            .addField(this.client.translate("main.pages"), `\`${this.gallery.pages.length}\``)
             .addField(this.client.translate("main.released"), uploadedAt)
             .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
             .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
             .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
             .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
             .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``)
-            .setFooter(`⭐ ${this.book.favorites.toLocaleString()}`)
-            .setThumbnail(this.api.getImageURL(this.book.cover));
+            .setFooter(`⭐ ${this.gallery.favourites.toLocaleString()}`)
+            .setThumbnail(this.gallery.cover.url);
 
         const hideComponent: ActionRow = {
             components: [
@@ -200,7 +194,7 @@ export class ReadPaginator {
                     interaction.acknowledge();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    resultEmbed.setImage(this.api.getImageURL(this.book.cover));
+                    resultEmbed.setImage(this.gallery.cover.url);
                     this.interaction.editOriginalMessage({ components: [hideComponent], embeds: [resultEmbed] });
                     interaction.acknowledge();
                     break;
@@ -404,8 +398,8 @@ export class ReadPaginator {
     }
 }
 
-export async function createReadPaginator(client: NReaderClient, book: Book, interaction: CommandInteraction<TextableChannel>) {
-    const paginator = new ReadPaginator(client, book, interaction);
+export async function createReadPaginator(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextableChannel>) {
+    const paginator = new ReadPaginator(client, gallery, interaction);
 
     paginator.runPaginator();
 
