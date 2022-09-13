@@ -1,5 +1,5 @@
 import { CommandInteraction, TextableChannel } from "eris";
-import { NReaderEvent, NReaderInterface } from "nreader-framework";
+import { NReaderEvent, NReaderInterface } from "nreader-framework/lib";
 
 export const event: NReaderInterface.IEvent = {
     name: "interactionCreate",

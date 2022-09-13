@@ -1,4 +1,4 @@
-import { NReaderEvent, NReaderInterface } from "nreader-framework";
+import { NReaderEvent, NReaderInterface } from "nreader-framework/lib";
 
 export const event: NReaderInterface.IEvent = {
     name: "error",
