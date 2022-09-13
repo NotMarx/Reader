@@ -98,8 +98,8 @@ export class NReaderClient extends Client {
             type: 0
         });
 
-        const commandPath = join(__dirname, "..", "..", "..", "bot", "src", "Commands");
-        const eventPath = join(__dirname, "..", "..", "..", "bot", "src", "Events");
+        const commandPath = join(__dirname, "..", "..", "bot", "src", "Commands");
+        const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");
 
         readdirSync(commandPath).forEach(async (dir) => {
             const commands = readdirSync(`${commandPath}/${dir}`).filter((file) => file.endsWith(".ts"));
