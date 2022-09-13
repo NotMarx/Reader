@@ -1,5 +1,4 @@
 export interface IConfigAPI {
-    COOKIE: string;
     RESTRICTED_TAGS: string[];
 }
 
@@ -16,6 +15,7 @@ export interface IConfigListAuth {
 }
 
 export interface IConfigList {
+    ENABLED: boolean;
     BHBOTLIST: IConfigListAuth;
     TOPGG: IConfigListAuth;
 }
