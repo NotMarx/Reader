@@ -1,6 +1,5 @@
 {
     "API": {
-        "COOKIE": "",
         "RESTRICTED_TAGS": []
     },
     "BOT": {
@@ -11,6 +10,7 @@
         "TOKEN": ""
     },
     "LIST": {
+        "ENABLED": false,
         "BHBOTLIST": {
             "AUTH": ""
         },
