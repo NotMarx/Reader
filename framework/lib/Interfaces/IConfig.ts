@@ -15,6 +15,7 @@ export interface IConfigListAuth {
 }
 
 export interface IConfigList {
+    ENABLED: boolean;
     BHBOTLIST: IConfigListAuth;
     TOPGG: IConfigListAuth;
 }
