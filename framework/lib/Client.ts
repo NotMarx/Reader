@@ -64,15 +64,13 @@ export class NReaderClient extends Client {
             const commands = this.commands.map((command) => command);
 
             if (commands) {
-                commands.forEach(async (command) => {
-                    for (let i = 0; i < guilds.length; i++) {
-                        this.createGuildCommand(guilds[i], {
-                            description: command.description,
-                            name: command.name,
-                            options: command.options,
-                            type: command.type
-                        }).catch(() => { });
-                    }
+                commands.forEach((command) => {
+                    this.createCommand({
+                        description: command.description,
+                        name: command.name,
+                        options: command.options,
+                        type: command.type
+                    }).catch(() => { });
                 });
 
                 for (let i = 0; i < guilds.length; i++) {
