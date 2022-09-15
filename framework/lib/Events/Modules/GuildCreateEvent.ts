@@ -4,7 +4,6 @@ import { GuildModel } from "../../Models";
 import { IGuildSchemaSettings } from "../../Interfaces";
 
 export async function guildCreateEvent(client: NReaderClient, guild: Guild) {
-    const commands = client.commands.map((command) => command);
     const guildData = await GuildModel.findOne({ id: guild.id });
 
     if (guild) {
@@ -26,14 +25,5 @@ export async function guildCreateEvent(client: NReaderClient, guild: Guild) {
                 } as IGuildSchemaSettings)
             });
         }
-
-        commands.forEach((command) => {
-            client.createGuildCommand(guild.id, {
-                description: command.description,
-                name: command.name,
-                options: command.options,
-                type: command.type
-            }).catch(() => { });
-        });
     }
 }
