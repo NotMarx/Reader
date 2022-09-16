@@ -31,13 +31,13 @@ export async function statsCommand(client: NReaderClient, interaction: CommandIn
             .addField(client.translate("general.stats.cpu"), `${Util.round(percentage, 2)}%`, true)
             .addField(client.translate("general.stats.uptime"), `${Util.time(client.uptime)}`, true)
             .addField("NodeJS", `${process.versions.node}`, true)
-            .addField("Eris", `${VERSION}`, true)
+            .addField("Oceanic", `${VERSION}`, true)
             .addField("API", API_VERSION, true)
             .addField(client.translate("general.stats.server"), `${guildData.length.toLocaleString()} (${client.guilds.size.toLocaleString()})`, true)
             .addField(client.translate("general.stats.user"), `${userData.length.toLocaleString()} (${client.users.size.toLocaleString()})`, true)
             .addField(client.translate("general.stats.platform"), `${process.platform.charAt(0).toUpperCase() + process.platform.slice(1)}`, true);
 
-        return interaction.createMessage({
+        return interaction.createFollowup({
             embeds: [embed.data]
         });
     });
