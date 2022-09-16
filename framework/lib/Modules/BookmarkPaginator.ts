@@ -1,5 +1,5 @@
 import { RequestHandler, Gallery } from "../API";
-import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, Member, MessageActionRow, Message, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalSubmitInteraction, TextChannel, User } from "oceanic.js";
 import { NReaderClient } from "../Client";
 import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
@@ -56,7 +56,7 @@ export class BookmarkPaginator {
     /**
      * The user who owned the bookmark
      */
-    user: Member;
+    user: User;
 
     /**
      * Creates a read paginator
@@ -64,7 +64,7 @@ export class BookmarkPaginator {
      * @param galleries Current galleries
      * @param interaction Oceanic command interaction
      */
-    constructor(client: NReaderClient, galleries: Gallery[], interaction: CommandInteraction<TextChannel>, user: Member) {
+    constructor(client: NReaderClient, galleries: Gallery[], interaction: CommandInteraction<TextChannel>, user: User) {
         this.api = client.api;
         this.client = client;
         this.embed = 1;
@@ -442,7 +442,7 @@ export class BookmarkPaginator {
     }
 }
 
-export async function createBookmarkPaginator(client: NReaderClient, galleries: Gallery[], interaction: CommandInteraction<TextChannel>, user: Member) {
+export async function createBookmarkPaginator(client: NReaderClient, galleries: Gallery[], interaction: CommandInteraction<TextChannel>, user: User) {
     const paginator = new BookmarkPaginator(client, galleries, interaction, user);
 
     paginator.runPaginator();
