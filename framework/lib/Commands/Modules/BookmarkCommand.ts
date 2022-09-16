@@ -1,16 +1,16 @@
 import { NReaderClient } from "../../Client";
-import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
+import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { RichEmbed } from "../../Utils/RichEmbed";
 import { Gallery } from "../../API";
-import { Utils } from "givies-framework";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 import { setTimeout } from "node:timers/promises";
 
-export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     const args: { user?: string } = {};
 
     if (interaction.data.options) {
-        for (const option of interaction.data.options) {
+        for (const option of interaction.data.options.raw) {
             args[option.name] = (option as any).value;
         }
     }
@@ -21,13 +21,13 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
 
     if (user) {
         if (!bookmarked || bookmarked.length === 0) {
-            const embed = new Utils.RichEmbed()
+            const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.bookmark.none", { user: user.username }))
                 .setTitle(client.translate("main.bookmark.title", { user: user.username }));
 
             return interaction.createMessage({
-                embeds: [embed],
+                embeds: [embed.data],
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
@@ -46,12 +46,12 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
                 title = await client.api.getGallery(bookmarked[i]).then((gallery) => `\`⬛ ${(i + 1).toString().length > 1 ? `${i + 1}` : `${i + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
                 gallery = await client.api.getGallery(bookmarked[i]);
             } catch (err) {
-                const embed = new Utils.RichEmbed()
+                const embed = new RichEmbed()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(client.translate("main.error"));
 
                 return interaction.createMessage({
-                    embeds: [embed],
+                    embeds: [embed.data],
                 });
             }
 
@@ -59,16 +59,16 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
             bookmarkedTitle.push(title);
         }
 
-        const component: ActionRow = {
+        const component: MessageActionRow = {
             components: [
                 {
-                    custom_id: `see_more_${interaction.id}`,
+                    customID: `see_more_${interaction.id}`,
                     label: client.translate("main.detail"),
                     style: 1,
                     type: 2
                 },
                 {
-                    custom_id: `stop_result_${interaction.id}`,
+                    customID: `stop_result_${interaction.id}`,
                     label: client.translate("main.stop"),
                     style: 4,
                     type: 2
@@ -77,23 +77,23 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
             type: 1
         };
 
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(bookmarkedTitle.join("\n"))
             .setTitle(client.translate("main.bookmark.title", { user: user.username }));
 
         createBookmarkPaginator(client, galleries, interaction, user);
-        return interaction.createMessage({
+        return interaction.createFollowup({
             components: [component],
-            embeds: [embed],
+            embeds: [embed.data],
         });
     } else {
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.error"));
 
         return interaction.createMessage({
-            embeds: [embed],
+            embeds: [embed.data],
         });
     }
 }

@@ -1,14 +1,14 @@
 import { NReaderClient } from "../../Client";
-import { CommandInteraction, TextableChannel, VERSION } from "eris";
+import { CommandInteraction, TextChannel, VERSION } from "oceanic.js";
 import { GuildModel, UserModel } from "../../Models";
-import { Utils } from "givies-framework";
+import { RichEmbed } from "../../Utils/RichEmbed";
 import { Util } from "../../Utils";
 import osUtils from "os-utils";
 import os from "os";
 import { setTimeout } from "node:timers/promises";
 import { API_VERSION } from "../../API";
 
-export async function statsCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function statsCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     const memory: number = process.memoryUsage().rss;
 
     await interaction.defer();
@@ -21,10 +21,10 @@ export async function statsCommand(client: NReaderClient, interaction: CommandIn
     const userData = await UserModel.find({});
 
     osUtils.cpuUsage((percentage) => {
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setFooter(client.user.username, client.user.avatarURL)
-            .setThumbnail(client.user.avatarURL)
+            .setFooter(client.user.username, client.user.avatarURL("png"))
+            .setThumbnail(client.user.avatarURL("png"))
             .setTimestamp()
             .setTitle(client.translate("general.stats.title").replace("{bot}", client.user.username))
             .addField(client.translate("general.stats.memory"), `${totalMemory} \n (${Math.round(used * 100) / 100}%)`, true)
@@ -38,7 +38,7 @@ export async function statsCommand(client: NReaderClient, interaction: CommandIn
             .addField(client.translate("general.stats.platform"), `${process.platform.charAt(0).toUpperCase() + process.platform.slice(1)}`, true);
 
         return interaction.createMessage({
-            embeds: [embed]
+            embeds: [embed.data]
         });
     });
 }

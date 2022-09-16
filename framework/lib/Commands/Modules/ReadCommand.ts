@@ -1,14 +1,15 @@
 import { NReaderClient } from "../../Client";
-import { ActionRow, CommandInteraction, Constants, TextableChannel } from "eris";
+import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { Util } from "../../Utils";
 import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
-import { Utils } from "givies-framework";
+import { RichEmbed } from "../../Utils/RichEmbed";
 import { setTimeout } from "node:timers/promises";
 
-export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
+export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     const args: { id?: number } = {};
 
-    for (const option of interaction.data.options) {
+    for (const option of interaction.data.options.raw) {
         args[option.name] = (option as any).value as string;
     }
 
@@ -25,18 +26,18 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
         const tags = gallery.tags.tags.map((tag) => tag.name);
 
-        if (Utils.Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
-            const embed = new Utils.RichEmbed()
+        if (Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
+            const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
 
             return interaction.createMessage({
-                embeds: [embed],
+                embeds: [embed.data],
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setAuthor(gallery.id, gallery.url)
             .setColor(client.config.BOT.COLOUR)
             .addField(client.translate("main.title"), `\`${gallery.title.pretty}\``)
@@ -50,28 +51,28 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
             .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
             .setThumbnail(gallery.cover.url);
 
-        const component: ActionRow = {
+        const component: MessageActionRow = {
             components: [
                 {
-                    custom_id: `read_${interaction.id}`,
+                    customID: `read_${interaction.id}`,
                     label: client.translate("main.read"),
                     style: 1,
                     type: 2
                 },
                 {
-                    custom_id: `stop_${interaction.id}`,
+                    customID: `stop_${interaction.id}`,
                     label: client.translate("main.stop"),
                     style: 4,
                     type: 2
                 },
                 {
-                    custom_id: `bookmark_${interaction.id}`,
+                    customID: `bookmark_${interaction.id}`,
                     label: client.translate("main.bookmark"),
                     style: 2,
                     type: 2
                 },
                 {
-                    custom_id: `show_cover_${interaction.id}`,
+                    customID: `show_cover_${interaction.id}`,
                     label: client.translate("main.cover.show"),
                     style: 1,
                     type: 2
@@ -80,24 +81,24 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
             type: 1
         };
 
-        interaction.createMessage({ components: [component], embeds: [embed] });
+        interaction.createFollowup({ components: [component], embeds: [embed.data] });
         createReadPaginator(client, gallery, interaction);
     }).catch((err: Error) => {
         if (err.message === "Request failed with status code 404") {
-            const embed = new Utils.RichEmbed()
+            const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.read.none", { id: args.id }));
 
             return interaction.createMessage({
-                embeds: [embed],
+                embeds: [embed.data],
             });
         } else {
-            const embed = new Utils.RichEmbed()
+            const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.error"));
 
             interaction.createMessage({
-                embeds: [embed],
+                embeds: [embed.data],
             });
         }
 

@@ -1,9 +1,9 @@
 import { TLocale } from "../Types";
-import { CommandInteraction, Constants, ModalSubmitInteraction, TextableChannel, TextChannel } from "eris";
+import { CommandInteraction, Constants, ModalSubmitInteraction, TextChannel } from "oceanic.js";
 import { NReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
-import { Utils } from "givies-framework";
 import byteSize from "byte-size";
+import { RichEmbed } from "../Utils/RichEmbed";
 
 interface IByteSize {
     value: number;
@@ -24,13 +24,13 @@ export class Util {
     /**
      * Check for slash commands member permission
      * @param client NReader client
-     * @param interaction Eris command interaction
+     * @param interaction Oceanic command interaction
      * @returns {Promise<void>}
      */
     public static checkCommandPerms(client: NReaderClient, interaction: CommandInteraction<TextChannel>): Promise<void> {
         const command = client.commands.get(interaction.data.name);
         const payload: ICommandRunPayload = { client, interaction };
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR);
 
         // Check if an owner-marked slash commands is run by random users
@@ -38,15 +38,15 @@ export class Util {
         // security safety
         if (command.adminOnly && !client.config.BOT.ADMIN.includes(interaction.member.id)) {
             return interaction.createMessage({
-                embeds: [embed.setDescription(client.translate("mod.noperms"))],
+                embeds: [embed.setDescription(client.translate("mod.noperms")).data],
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 
         // Check if user with no `manageGuild` perms runs the slash commands for guild mods
-        if (command.guildModOnly && !interaction.member.permissions.has("manageGuild")) {
+        if (command.guildModOnly && !interaction.member.permissions.has("MANAGE_GUILD")) {
             return interaction.createMessage({
-                embeds: [embed.setDescription(client.translate("mod.noperms"))],
+                embeds: [embed.setDescription(client.translate("mod.noperms")).data],
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
@@ -59,12 +59,21 @@ export class Util {
         // Check if an NSFW command is run outside channels marked as NSFW
         if (command.nsfwOnly && !interaction.channel.nsfw) {
             return interaction.createMessage({
-                embeds: [embed.setDescription(client.translate("main.noperms"))],
+                embeds: [embed.setDescription(client.translate("main.noperms")).data],
                 flags: Constants.MessageFlags.EPHEMERAL
             });
         }
 
         return command.run(payload);
+    }
+
+    /**
+    * Copies an object
+    * @param obj The object to clone
+    * @returns {Object}
+    */
+    public static cloneObject(obj): object {
+        return Object.assign(Object.create(obj), obj);
     }
 
     /**
@@ -97,8 +106,26 @@ export class Util {
         return output;
     }
 
-    public static getModalID(interaction: ModalSubmitInteraction<TextableChannel>, customID: string): string {
-        return interaction.data.components.find((component) => component.components[0].custom_id === customID).components[0].value;
+    /**
+     * Finds a common element from arrays.
+     * @param firstArray The first array to compare
+     * @param secondArray The second array to compare
+     * @returns {Boolean}
+     */
+    public static findCommonElement(firstArray: string[], secondArray: string[]): boolean {
+        for (let i = 0; i < firstArray.length; i++) {
+            for (let j = 0; j < secondArray.length; j++) {
+                if (firstArray[i] === secondArray[j]) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static getModalID(interaction: ModalSubmitInteraction<TextChannel>, customID: string): string {
+        return interaction.data.components.find((component) => component.components[0].customID === customID).components[0].value;
     }
 
     /**
@@ -142,5 +169,19 @@ export class Util {
             (mins > 0 ? pad(mins) + " mins and " : "") +
             (pad(secs) + " secs")
         );
+    }
+
+    /**
+    * Verifies the provided data is a string, otherwise throws provided error
+    * @param data The string to resolve
+    * @param error The error constructor. Default to `Error`
+    * @param errorMessage The error message to throw with
+    * @param allowEmpty Whether an empty string should be allowed
+    * @returns {String}
+    */
+    public static verifyString(data: string, error: any, errorMessage = `Expected typeof string, received ${data} instead`, allowEmpty = true): string {
+        if (typeof data !== "string") throw new error(errorMessage);
+        if (!allowEmpty && data.length === 0) throw new error(errorMessage);
+        return data;
     }
 }

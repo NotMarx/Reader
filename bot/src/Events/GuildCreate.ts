@@ -1,5 +1,5 @@
 import { NReaderEvent, NReaderInterface } from "nreader-framework/lib";
-import { Guild } from "eris";
+import { Guild } from "oceanic.js";
 
 export const event: NReaderInterface.IEvent = {
     name: "guildCreate",
