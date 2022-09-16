@@ -1,5 +1,5 @@
 import { NReaderClient } from "../../Client";
-import { CommandInteraction, Constants, InteractionOptionsString, InteractionOptionsSubCommand, TextChannel } from "oceanic.js";
+import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
 import { RichEmbed } from "../../Utils/RichEmbed";
 import { Util } from "../../Utils";
 import { TLocale } from "../../Types";
