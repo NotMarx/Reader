@@ -7,16 +7,12 @@ import { RichEmbed } from "../../Utils/RichEmbed";
 import { setTimeout } from "node:timers/promises";
 
 export async function readCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
-    const args: { id?: number } = {};
-
-    for (const option of interaction.data.options.raw) {
-        args[option.name] = (option as any).value as string;
-    }
+    const galleryID = interaction.data.options.getInteger("id").toString();
 
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.getGallery(args.id.toString()).then(async (gallery) => {
+    client.api.getGallery(galleryID).then(async (gallery) => {
         const guildData = await GuildModel.findOne({ id: interaction.guildID });
         const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
         const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
@@ -84,23 +80,13 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         interaction.createFollowup({ components: [component], embeds: [embed.data] });
         createReadPaginator(client, gallery, interaction);
     }).catch((err: Error) => {
-        if (err.message === "Request failed with status code 404") {
-            const embed = new RichEmbed()
-                .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.read.none", { id: args.id }));
+        const embed = new RichEmbed()
+            .setColor(client.config.BOT.COLOUR)
+            .setDescription(client.translate("main.error"));
 
-            return interaction.createMessage({
-                embeds: [embed.data],
-            });
-        } else {
-            const embed = new RichEmbed()
-                .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.error"));
-
-            interaction.createMessage({
-                embeds: [embed.data],
-            });
-        }
+        interaction.createFollowup({
+            embeds: [embed.data],
+        });
 
         return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::Book", title: "API" });
     });

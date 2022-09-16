@@ -7,15 +7,7 @@ import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 import { setTimeout } from "node:timers/promises";
 
 export async function bookmarkCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
-    const args: { user?: string } = {};
-
-    if (interaction.data.options) {
-        for (const option of interaction.data.options.raw) {
-            args[option.name] = (option as any).value;
-        }
-    }
-
-    const user = interaction.member.guild.members.get(args.user || interaction.member.id);
+    const user = interaction.data.options ? interaction.data.options.getUser("user") : interaction.member.user;
     const guildData = await UserModel.findOne({ id: user.id });
     const bookmarked = guildData.bookmark;
 

@@ -8,14 +8,12 @@ import { GuildModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
-    const args: { page?: number, query?: string, sort?: Constant.TSearchSort } = {};
+    const page = interaction.data.options.getInteger("page");
+    const query = interaction.data.options.getString("query");
+    const sort = interaction.data.options.getString<Constant.TSearchSort>("sort");
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
-    for (const option of interaction.data.options.raw) {
-        args[option.name] = (option as any).value as string;
-    }
-
-    const queryArgs = args.query.split(" ");
+    const queryArgs = query.split(" ");
 
     if (Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
         const embed = new RichEmbed()
@@ -31,11 +29,11 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.searchGalleries(encodeURIComponent(guildData.settings.whitelisted ? args.query : `${args.query} -lolicon -shotacon`), args.page || 1, args.sort || "").then(async (search) => {
+    client.api.searchGalleries(encodeURIComponent(guildData.settings.whitelisted ? query : `${query} -lolicon -shotacon`), page || 1, sort || "").then(async (search) => {
         if (search.result.length === 0) {
             const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.search.none", { query: args.query }));
+                .setDescription(client.translate("main.search.none", { query: query }));
 
             return interaction.createMessage({
                 embeds: [embed.data],

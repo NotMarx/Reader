@@ -7,14 +7,10 @@ import { GuildModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 
 export async function searchSimilarCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
-    const args: { id?: number } = {};
+    const galleryID = interaction.data.options.getInteger("id").toString();
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
 
-    for (const option of interaction.data.options.raw) {
-        args[option.name] = (option as any).value as string;
-    }
-
-    const gallery = await client.api.getGallery(args.id.toString());
+    const gallery = await client.api.getGallery(galleryID);
     const tags = gallery.tags.tags.map((tag) => tag.name);
 
     if (Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
@@ -31,7 +27,7 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.getGalleryRelated(args.id.toString()).then(async (search) => {
+    client.api.getGalleryRelated(galleryID).then(async (search) => {
         if (search.result.length === 0) {
             const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
@@ -73,23 +69,13 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             embeds: [embed.data]
         });
     }).catch((err: Error) => {
-        if (err.message === "Request failed with status code 404") {
-            const embed = new RichEmbed()
-                .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.read.none", { id: args.id }));
-
-            return interaction.createMessage({
-                embeds: [embed.data],
-            });
-        } else {
             const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.error"));
 
-            interaction.createMessage({
+            interaction.createFollowup({
                 embeds: [embed.data],
             });
-        }
 
         return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::SearchALike", title: "API" });
     });
