@@ -174,7 +174,7 @@ export class RichEmbed {
                 "Embed field descriptions cannot exceed 1024 characters"
             );
 
-        this.fields.push({ name, value, inline });
+        this.fields.push({ inline, name, value });
         return this;
     }
 
@@ -211,9 +211,9 @@ export class RichEmbed {
      */
     normalizeField(name: string, value: string, inline = false): EmbedField {
         return {
+            inline,
             name: Util.verifyString(name, RangeError, "EMBED_FIELD_NAME", false),
             value: Util.verifyString(value, RangeError, "EMBED_FIELD_VALUE", false),
-            inline,
         };
     }
 
