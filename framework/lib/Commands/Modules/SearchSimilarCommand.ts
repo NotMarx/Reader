@@ -69,13 +69,13 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             embeds: [embed.data]
         });
     }).catch((err: Error) => {
-            const embed = new RichEmbed()
-                .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.error"));
+        const embed = new RichEmbed()
+            .setColor(client.config.BOT.COLOUR)
+            .setDescription(client.translate("main.error"));
 
-            interaction.createFollowup({
-                embeds: [embed.data],
-            });
+        interaction.createFollowup({
+            embeds: [embed.data],
+        });
 
         return client.logger.error({ message: err.message, subTitle: "NHentaiAPI::SearchALike", title: "API" });
     });
