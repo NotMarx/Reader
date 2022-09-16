@@ -129,7 +129,7 @@ export class ReadSearchPaginator {
 
     /**
      * Start reading
-     * @param interaction Eris component interaction
+     * @param interaction Oceanic component interaction
      */
     public async onRead(interaction: ComponentInteraction<TextChannel> | ModalSubmitInteraction<TextChannel>) {
         if (interaction.member.bot) return;

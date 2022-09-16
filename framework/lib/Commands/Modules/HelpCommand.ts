@@ -4,7 +4,7 @@ import { RichEmbed } from "../../Utils/RichEmbed";
 import { NReaderConstant } from "../../Constant";
 
 export function helpCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
-    if ((interaction.channel as TextChannel).nsfw) {
+    if (interaction.channel.nsfw) {
         const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("general.help.description", { server: "https://discord.gg/b7AW2Zkcsw", user: interaction.member.username }))
