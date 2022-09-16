@@ -1,7 +1,7 @@
 import { Gallery } from "../API";
-import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, ModalSubmitInteraction, TextableChannel } from "eris";
+import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalSubmitInteraction, TextChannel } from "oceanic.js";
 import { NReaderClient } from "../Client";
-import { Utils } from "givies-framework";
+import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
 import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
@@ -29,14 +29,14 @@ export class ReadPaginator {
     gallery: Gallery;
 
     /**
-     * Eris command interaction
+     * Oceanic command interaction
      */
-    interaction: CommandInteraction<TextableChannel>;
+    interaction: CommandInteraction<TextChannel>;
 
     /**
      * The message for embed pages
      */
-    message: Message<TextableChannel>;
+    message: Message<TextChannel>;
 
     /**
      * Whether the paginator is running or not
@@ -47,19 +47,19 @@ export class ReadPaginator {
      * Creates a read paginator
      * @param client NReader client
      * @param book Current book
-     * @param interaction Eris command interaction
+     * @param interaction Oceanic command interaction
      */
-    constructor(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextableChannel>) {
+    constructor(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextChannel>) {
         this.client = client;
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
-            return new Utils.RichEmbed()
+            return new RichEmbed()
                 .setAuthor(gallery.id, page.url)
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(client.translate("main.page", { firstIndex: index + 1, lastIndex: gallery.pages.length }))
                 .setImage(page.url)
                 .setTitle(gallery.title.pretty)
-                .setURL(gallery.url);
+                .setURL(gallery.url).data;
         });
         this.gallery = gallery;
         this.interaction = interaction;
@@ -71,23 +71,23 @@ export class ReadPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const messageContent: AdvancedMessageContent = {
+        const messageContent: InteractionContent = {
             components: [
                 {
                     components: [
-                        { custom_id: `first_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { custom_id: `previous_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: `stop_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { custom_id: `next_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { custom_id: `last_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
+                        { customID: `first_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
+                        { customID: `previous_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
+                        { customID: `stop_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
+                        { customID: `next_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
+                        { customID: `last_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 },
-                        { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `home_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 }
+                        { customID: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 },
+                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
+                        { customID: `home_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 }
                     ],
                     type: 1
                 }
@@ -95,14 +95,14 @@ export class ReadPaginator {
             embeds: [this.embeds[this.embed - 1]]
         };
 
-        this.message = await this.interaction.editOriginalMessage(messageContent);
+        this.message = await this.interaction.editOriginal(messageContent);
     }
 
     /**
      * Start reading
      * @param interaction Eris component interaction
      */
-    public async onRead(interaction: ComponentInteraction<TextableChannel> | ModalSubmitInteraction<TextableChannel>) {
+    public async onRead(interaction: ComponentInteraction<TextChannel> | ModalSubmitInteraction<TextChannel>) {
         if (interaction.member.bot) return;
 
         const userData = await UserModel.findOne({ id: interaction.member.id });
@@ -113,7 +113,7 @@ export class ReadPaginator {
         const parodyTags: string[] = this.gallery.tags.parodies.map((tag) => tag.name);
         const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
 
-        const resultEmbed = new Utils.RichEmbed()
+        const resultEmbed = new RichEmbed()
             .setAuthor(this.gallery.id, this.gallery.url)
             .setColor(this.client.config.BOT.COLOUR)
             .addField(this.client.translate("main.title"), `\`${this.gallery.title.pretty}\``)
@@ -127,28 +127,28 @@ export class ReadPaginator {
             .setFooter(`⭐ ${this.gallery.favourites.toLocaleString()}`)
             .setThumbnail(this.gallery.cover.url);
 
-        const hideComponent: ActionRow = {
+        const hideComponent: MessageActionRow = {
             components: [
                 {
-                    custom_id: `read_${this.interaction.id}`,
+                    customID: `read_${this.interaction.id}`,
                     label: this.client.translate("main.read"),
                     style: 1,
                     type: 2
                 },
                 {
-                    custom_id: `stop_${this.interaction.id}`,
+                    customID: `stop_${this.interaction.id}`,
                     label: this.client.translate("main.stop"),
                     style: 4,
                     type: 2
                 },
                 {
-                    custom_id: `bookmark_${this.interaction.id}`,
+                    customID: `bookmark_${this.interaction.id}`,
                     label: this.client.translate("main.bookmark"),
                     style: 2,
                     type: 2
                 },
                 {
-                    custom_id: `hide_cover_${this.interaction.id}`,
+                    customID: `hide_cover_${this.interaction.id}`,
                     label: this.client.translate("main.cover.hide"),
                     style: 1,
                     type: 2
@@ -157,28 +157,28 @@ export class ReadPaginator {
             type: 1
         };
 
-        const showComponent: ActionRow = {
+        const showComponent: MessageActionRow = {
             components: [
                 {
-                    custom_id: `read_${this.interaction.id}`,
+                    customID: `read_${this.interaction.id}`,
                     label: this.client.translate("main.read"),
                     style: 1,
                     type: 2
                 },
                 {
-                    custom_id: `stop_${this.interaction.id}`,
+                    customID: `stop_${this.interaction.id}`,
                     label: this.client.translate("main.stop"),
                     style: 4,
                     type: 2
                 },
                 {
-                    custom_id: `bookmark_${this.interaction.id}`,
+                    customID: `bookmark_${this.interaction.id}`,
                     label: this.client.translate("main.bookmark"),
                     style: 2,
                     type: 2
                 },
                 {
-                    custom_id: `show_cover_${this.interaction.id}`,
+                    customID: `show_cover_${this.interaction.id}`,
                     label: this.client.translate("main.cover.show"),
                     style: 1,
                     type: 2
@@ -188,37 +188,37 @@ export class ReadPaginator {
         };
 
         if (interaction instanceof ComponentInteraction) {
-            switch (interaction.data.custom_id) {
+            switch (interaction.data.customID) {
                 case `read_${this.interaction.id}`:
                     this.initialisePaginator();
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     break;
                 case `show_cover_${this.interaction.id}`:
                     resultEmbed.setImage(this.gallery.cover.url);
-                    this.interaction.editOriginalMessage({ components: [hideComponent], embeds: [resultEmbed] });
-                    interaction.acknowledge();
+                    this.interaction.editOriginal({ components: [hideComponent], embeds: [resultEmbed.data] });
+                    interaction.deferUpdate();
                     break;
                 case `hide_cover_${this.interaction.id}`:
                     resultEmbed.setImage("");
-                    this.interaction.editOriginalMessage({ components: [showComponent], embeds: [resultEmbed] });
-                    interaction.acknowledge();
+                    this.interaction.editOriginal({ components: [showComponent], embeds: [resultEmbed.data] });
+                    interaction.deferUpdate();
                     break;
                 case `home_${this.interaction.id}`:
-                    this.interaction.editOriginalMessage({ components: [showComponent], embeds: [resultEmbed] });
-                    interaction.acknowledge();
+                    this.interaction.editOriginal({ components: [showComponent], embeds: [resultEmbed.data] });
+                    interaction.deferUpdate();
                     break;
                 case `stop_${this.interaction.id}`:
                     interaction.message.delete();
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     this.stopPaginator();
                     break;
                 case `bookmark_${this.interaction.id}`:
                     if (userData.bookmark.includes(this.embeds[0].author.name)) {
                         interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` }))
+                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -228,9 +228,9 @@ export class ReadPaginator {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
-                                    new Utils.RichEmbed()
+                                    new RichEmbed()
                                         .setColor(this.client.config.BOT.COLOUR)
-                                        .setDescription(this.client.translate("main.bookmark.maxed"))
+                                        .setDescription(this.client.translate("main.bookmark.maxed")).data
                                 ],
                                 flags: Constants.MessageFlags.EPHEMERAL
                             });
@@ -238,9 +238,9 @@ export class ReadPaginator {
 
                         interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` }))
+                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -250,7 +250,7 @@ export class ReadPaginator {
 
                     break;
                 case `next_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     if (this.embed < this.embeds.length) {
                         this.embed++;
@@ -259,7 +259,7 @@ export class ReadPaginator {
 
                     break;
                 case `previous_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     if (this.embed > 1) {
                         this.embed--;
@@ -268,45 +268,42 @@ export class ReadPaginator {
 
                     break;
                 case `first_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     this.embed = 1;
                     this.updatePaginator();
                     break;
                 case `last_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     this.embed = this.embeds.length;
                     this.updatePaginator();
                     break;
                 case `jumpto_page_${this.interaction.id}`:
-                    this.client.createInteractionResponse(interaction.id, interaction.token, {
-                        data: ({
-                            components: [
-                                {
-                                    components: [
-                                        {
-                                            custom_id: "page_number",
-                                            label: this.client.translate("main.page.enter"),
-                                            placeholder: "5",
-                                            required: true,
-                                            style: 1,
-                                            type: 4
-                                        }
-                                    ],
-                                    type: 1
-                                }
-                            ],
-                            custom_id: `jumpto_page_modal_${this.interaction.id}`,
-                            title: this.client.translate("main.page.enter")
-                        } as any),
-                        type: Constants.InteractionResponseTypes.MODAL as any
+                    interaction.createModal({
+                        components: [
+                            {
+                                components: [
+                                    {
+                                        customID: "page_number",
+                                        label: this.client.translate("main.page.enter"),
+                                        placeholder: "5",
+                                        required: true,
+                                        style: 1,
+                                        type: 4
+                                    }
+                                ],
+                                type: 1
+                            }
+                        ],
+                        customID: `jumpto_page_modal_${this.interaction.id}`,
+                        title: this.client.translate("main.page.enter")
                     });
 
                     break;
             }
         } else {
-            switch (interaction.data.custom_id) {
+            switch (interaction.data.customID) {
                 case `jumpto_page_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
                     const page = parseInt(Util.getModalID(interaction, "page_number"));
@@ -314,9 +311,9 @@ export class ReadPaginator {
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.invalid"))
+                                    .setDescription(this.client.translate("main.page.enter.invalid")).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -325,9 +322,9 @@ export class ReadPaginator {
                     if (page > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() }))
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -336,9 +333,9 @@ export class ReadPaginator {
                     if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() }))
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -346,7 +343,7 @@ export class ReadPaginator {
 
                     this.embed = page;
                     this.updatePaginator();
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     break;
             }
         }
@@ -360,19 +357,19 @@ export class ReadPaginator {
             components: [
                 {
                     components: [
-                        { custom_id: `first_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { custom_id: `previous_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: `stop_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { custom_id: `next_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { custom_id: `last_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
+                        { customID: `first_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
+                        { customID: `previous_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
+                        { customID: `stop_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
+                        { customID: `next_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
+                        { customID: `last_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 },
-                        { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `home_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 }
+                        { customID: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 },
+                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
+                        { customID: `home_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 }
                     ],
                     type: 1
                 }
@@ -398,7 +395,7 @@ export class ReadPaginator {
     }
 }
 
-export async function createReadPaginator(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextableChannel>) {
+export async function createReadPaginator(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextChannel>) {
     const paginator = new ReadPaginator(client, gallery, interaction);
 
     paginator.runPaginator();
