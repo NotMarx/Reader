@@ -502,7 +502,7 @@ export class SearchPaginator {
                     break;
                 case `last_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
-                    
+
                     this.api.searchGalleries(this.search.query, this.search.numPages).then((search) => {
                         const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
                         const embeds = search.result.map((gallery, index) => {

@@ -8,7 +8,7 @@ const client = new NReaderClient({
         maxShards: "auto"
     },
     defaultImageFormat: "png"
-})
+});
 
 client.config = Config;
 client.initialiseEverything();
