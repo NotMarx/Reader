@@ -1,5 +1,5 @@
 import { NReaderClient } from "../../Client";
-import { Guild } from "eris";
+import { Guild } from "oceanic.js";
 import { GuildModel } from "../../Models";
 import { IGuildSchemaSettings } from "../../Interfaces";
 

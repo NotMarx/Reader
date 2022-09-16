@@ -1,7 +1,7 @@
 import { RequestHandler, Search } from "../API";
-import { ActionRow, AdvancedMessageContent, CommandInteraction, ComponentInteraction, Constants, EmbedOptions, Message, ModalSubmitInteraction, TextableChannel } from "eris";
+import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalSubmitInteraction, TextChannel } from "oceanic.js";
 import { NReaderClient } from "../Client";
-import { Utils } from "givies-framework";
+import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 import { NReaderConstant } from "../Constant";
@@ -30,14 +30,14 @@ export class SearchPaginator {
     embeds: EmbedOptions[];
 
     /**
-     * Eris command interaction
+     * Oceanic command interaction
      */
-    interaction: CommandInteraction<TextableChannel>;
+    interaction: CommandInteraction<TextChannel>;
 
     /**
      * The message for embed pages
      */
-    message: Message<TextableChannel>;
+    message: Message<TextChannel>;
 
     /**
      * The read paginator
@@ -58,9 +58,9 @@ export class SearchPaginator {
      * Creates a search paginator
      * @param client NReader client
      * @param search The search result
-     * @param interaction Eris command interaction
+     * @param interaction Oceanic command interaction
      */
-    constructor(client: NReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
+    constructor(client: NReaderClient, search: Search, interaction: CommandInteraction<TextChannel>) {
         this.api = client.api;
         this.client = client;
         this.embed = 1;
@@ -84,7 +84,7 @@ export class SearchPaginator {
             const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-            return new Utils.RichEmbed()
+            return new RichEmbed()
                 .setAuthor(gallery.id, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
@@ -101,41 +101,41 @@ export class SearchPaginator {
                 .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
         });
 
-        this.embeds = embeds;
+        this.embeds = embeds.map((embed) => embed.data);
 
-        const messageContent: AdvancedMessageContent = {
+        const messageContent: InteractionContent = {
             components: [
                 {
                     components: [
-                        { custom_id: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                        { custom_id: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                        { custom_id: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { custom_id: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                        { custom_id: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
+                        { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
+                        { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
+                        { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
+                        { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
+                        { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
+                        { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
+                        { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
+                        { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
+                        { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                        { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                        { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
+                        { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                        { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
+                        { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
+                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
+                        { customID: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
                     ],
                     type: 1
                 }
@@ -143,98 +143,98 @@ export class SearchPaginator {
             embeds: [this.embeds[this.embed - 1]]
         };
 
-        this.message = await this.interaction.editOriginalMessage(messageContent);
+        this.message = await this.interaction.editOriginal(messageContent);
         this.updatePaginator();
     }
 
     /**
      * Start searching
-     * @param interaction Eris component interaction
+     * @param interaction Oceanic component interaction
      */
-    public async onSearch(interaction: ComponentInteraction<TextableChannel> | ModalSubmitInteraction<TextableChannel>) {
+    public async onSearch(interaction: ComponentInteraction<TextChannel> | ModalSubmitInteraction<TextChannel>) {
         if (interaction.member.bot) return;
 
-        const embed = new Utils.RichEmbed((interaction as ComponentInteraction<TextableChannel>).message ? (interaction as ComponentInteraction<TextableChannel>).message.embeds[0] : undefined);
+        const embed = new RichEmbed((interaction as ComponentInteraction<TextChannel>).message ? (interaction as ComponentInteraction<TextChannel>).message.embeds[0] : undefined);
         const userData = await UserModel.findOne({ id: interaction.member.id });
 
-        const hideComponent: ActionRow[] = [
+        const hideComponent: MessageActionRow[] = [
             {
                 components: [
-                    { custom_id: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                    { custom_id: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                    { custom_id: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                    { custom_id: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                    { custom_id: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
+                    { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
+                    { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
+                    { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
+                    { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
+                    { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
                 ],
                 type: 1
             },
             {
                 components: [
-                    { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                    { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                    { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                    { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
+                    { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
+                    { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
+                    { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
+                    { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                 ],
                 type: 1
             },
             {
                 components: [
-                    { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                    { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                    { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
+                    { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                 ],
                 type: 1
             },
             {
                 components: [
-                    { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                    { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                    { custom_id: `hide_cover_${this.interaction.id}`, label: this.client.translate("main.cover.hide"), style: 1, type: 2 }
+                    { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
+                    { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
+                    { customID: `hide_cover_${this.interaction.id}`, label: this.client.translate("main.cover.hide"), style: 1, type: 2 }
                 ],
                 type: 1
             }
         ];
 
-        const showComponent: ActionRow[] = [
+        const showComponent: MessageActionRow[] = [
             {
                 components: [
-                    { custom_id: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                    { custom_id: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                    { custom_id: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                    { custom_id: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                    { custom_id: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
+                    { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
+                    { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
+                    { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
+                    { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
+                    { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
                 ],
                 type: 1
             },
             {
                 components: [
-                    { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                    { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                    { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                    { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
+                    { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
+                    { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
+                    { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
+                    { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                 ],
                 type: 1
             },
             {
                 components: [
-                    { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                    { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                    { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
+                    { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                 ],
                 type: 1
             },
             {
                 components: [
-                    { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                    { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                    { custom_id: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
+                    { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
+                    { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
+                    { customID: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
                 ],
                 type: 1
             }
         ];
 
         if (interaction instanceof ComponentInteraction) {
-            switch (interaction.data.custom_id) {
+            switch (interaction.data.customID) {
                 case `read_result_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     this.api.getGallery(embed.author.name).then(async (gallery) => {
                         this.paginationEmbed = new ReadSearchPaginator(this.client, gallery, this.interaction);
@@ -244,27 +244,27 @@ export class SearchPaginator {
 
                     break;
                 case `see_more_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
                     embed.setImage((await this.api.getGallery(embed.author.name)).cover.url);
-                    this.interaction.editOriginalMessage({ components: hideComponent, embeds: [embed] });
-                    interaction.acknowledge();
+                    this.interaction.editOriginal({ components: hideComponent, embeds: [embed.data] });
+                    interaction.deferUpdate();
                     break;
                 case `hide_cover_${this.interaction.id}`:
                     embed.setImage("");
-                    this.interaction.editOriginalMessage({ components: showComponent, embeds: [embed] });
-                    interaction.acknowledge();
+                    this.interaction.editOriginal({ components: showComponent, embeds: [embed.data] });
+                    interaction.deferUpdate();
                     break;
                 case `home_result_${this.interaction.id}`:
-                    this.interaction.editOriginalMessage({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
+                    this.interaction.editOriginal({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
                     this.paginationEmbed.stopPaginator();
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     break;
                 case `stop_result_${this.interaction.id}`:
                     interaction.message.delete();
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     this.stopPaginator();
 
                     try {
@@ -282,9 +282,9 @@ export class SearchPaginator {
                     if (userData.bookmark.includes(embed.author.name)) {
                         interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
+                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -294,9 +294,9 @@ export class SearchPaginator {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
-                                    new Utils.RichEmbed()
+                                    new RichEmbed()
                                         .setColor(this.client.config.BOT.COLOUR)
-                                        .setDescription(this.client.translate("main.bookmark.maxed"))
+                                        .setDescription(this.client.translate("main.bookmark.maxed")).data
                                 ],
                                 flags: Constants.MessageFlags.EPHEMERAL
                             });
@@ -304,9 +304,9 @@ export class SearchPaginator {
 
                         interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` }))
+                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -316,7 +316,7 @@ export class SearchPaginator {
 
                     break;
                 case `next_result_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     if (this.embed < this.embeds.length) {
                         this.embed++;
@@ -325,7 +325,7 @@ export class SearchPaginator {
 
                     break;
                 case `previous_result_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     if (this.embed > 1) {
                         this.embed--;
@@ -334,69 +334,63 @@ export class SearchPaginator {
 
                     break;
                 case `first_result_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     this.embed = 1;
                     this.updatePaginator();
                     break;
                 case `last_result_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     this.embed = this.embeds.length;
                     this.updatePaginator();
                     break;
                 case `jumpto_result_${this.interaction.id}`:
-                    this.client.createInteractionResponse(interaction.id, interaction.token, {
-                        data: ({
-                            components: [
-                                {
-                                    components: [
-                                        {
-                                            custom_id: "result_number",
-                                            label: this.client.translate("main.result.enter"),
-                                            placeholder: "10",
-                                            required: true,
-                                            style: 1,
-                                            type: 4
-                                        }
-                                    ],
-                                    type: 1
-                                }
-                            ],
-                            custom_id: `jumpto_result_modal_${this.interaction.id}`,
-                            title: this.client.translate("main.result.enter")
-                        } as any),
-                        type: Constants.InteractionResponseTypes.MODAL as any
+                    interaction.createModal({
+                        components: [
+                            {
+                                components: [
+                                    {
+                                        customID: "result_number",
+                                        label: this.client.translate("main.result.enter"),
+                                        placeholder: "10",
+                                        required: true,
+                                        style: 1,
+                                        type: 4
+                                    }
+                                ],
+                                type: 1
+                            }
+                        ],
+                        customID: `jumpto_result_modal_${this.interaction.id}`,
+                        title: this.client.translate("main.result.enter")
                     });
 
                     break;
                 case `jumpto_result_page_${this.interaction.id}`:
-                    this.client.createInteractionResponse(interaction.id, interaction.token, {
-                        data: ({
-                            components: [
-                                {
-                                    components: [
-                                        {
-                                            custom_id: "result_page_number",
-                                            label: this.client.translate("main.page.enter"),
-                                            placeholder: "5",
-                                            required: true,
-                                            style: 1,
-                                            type: 4
-                                        }
-                                    ],
-                                    type: 1
-                                }
-                            ],
-                            custom_id: `jumpto_result_page_modal_${this.interaction.id}`,
-                            title: this.client.translate("main.page.enter")
-                        } as any),
-                        type: Constants.InteractionResponseTypes.MODAL as any
+                    interaction.createModal({
+                        components: [
+                            {
+                                components: [
+                                    {
+                                        customID: "result_page_number",
+                                        label: this.client.translate("main.page.enter"),
+                                        placeholder: "5",
+                                        required: true,
+                                        style: 1,
+                                        type: 4
+                                    }
+                                ],
+                                type: 1
+                            }
+                        ],
+                        customID: `jumpto_result_page_modal_${this.interaction.id}`,
+                        title: this.client.translate("main.page.enter")
                     });
 
                     break;
                 case `next_result_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.numPages) {
                         this.api.searchGalleries(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
@@ -409,7 +403,7 @@ export class SearchPaginator {
                                 const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
                                 const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-                                return new Utils.RichEmbed()
+                                return new RichEmbed()
                                     .setAuthor(gallery.id, gallery.url)
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`)).setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
@@ -425,7 +419,7 @@ export class SearchPaginator {
                                     .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
                             });
 
-                            this.embeds = embeds;
+                            this.embeds = embeds.map((embed) => embed.data);
                             this.embed = 1;
                             this.updatePaginator();
                         });
@@ -433,7 +427,7 @@ export class SearchPaginator {
 
                     break;
                 case `previous_result_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
                         this.api.searchGalleries(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
@@ -446,7 +440,7 @@ export class SearchPaginator {
                                 const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
                                 const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-                                return new Utils.RichEmbed()
+                                return new RichEmbed()
                                     .setAuthor(gallery.id, gallery.url)
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
@@ -463,7 +457,7 @@ export class SearchPaginator {
                                     .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
                             });
 
-                            this.embeds = embeds;
+                            this.embeds = embeds.map((embed) => embed.data);
                             this.embed = 1;
                             this.updatePaginator();
                         });
@@ -471,7 +465,7 @@ export class SearchPaginator {
 
                     break;
                 case `first_result_page_${this.interaction.id}`:
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
 
                     this.api.searchGalleries(this.search.query, 1).then((search) => {
                         const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
@@ -483,7 +477,7 @@ export class SearchPaginator {
                             const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
                             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-                            return new Utils.RichEmbed()
+                            return new RichEmbed()
                                 .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
                                 .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
@@ -500,13 +494,15 @@ export class SearchPaginator {
                                 .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
                         });
 
-                        this.embeds = embeds;
+                        this.embeds = embeds.map((embed) => embed.data);
                         this.embed = 1;
                         this.updatePaginator();
                     });
 
                     break;
                 case `last_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
                     this.api.searchGalleries(this.search.query, this.search.numPages).then((search) => {
                         const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
                         const embeds = search.result.map((gallery, index) => {
@@ -517,7 +513,7 @@ export class SearchPaginator {
                             const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
                             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-                            return new Utils.RichEmbed()
+                            return new RichEmbed()
                                 .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
                                 .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
@@ -534,7 +530,7 @@ export class SearchPaginator {
                                 .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
                         });
 
-                        this.embeds = embeds;
+                        this.embeds = embeds.map((embed) => embed.data);
                         this.embed = 1;
                         this.updatePaginator();
                     });
@@ -542,7 +538,7 @@ export class SearchPaginator {
                     break;
             }
         } else {
-            switch (interaction.data.custom_id) {
+            switch (interaction.data.customID) {
                 case `jumpto_result_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
                     const pageResult = parseInt(Util.getModalID(interaction, "result_number"));
@@ -550,9 +546,9 @@ export class SearchPaginator {
                     if (isNaN(pageResult)) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.invalid"))
+                                    .setDescription(this.client.translate("main.result.enter.invalid")).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -561,9 +557,9 @@ export class SearchPaginator {
                     if (pageResult > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() }))
+                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -572,9 +568,9 @@ export class SearchPaginator {
                     if (pageResult <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() }))
+                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -582,7 +578,7 @@ export class SearchPaginator {
 
                     this.embed = pageResult;
                     this.updatePaginator();
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     break;
                 case `jumpto_result_page_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
@@ -591,9 +587,9 @@ export class SearchPaginator {
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.invalid"))
+                                    .setDescription(this.client.translate("main.page.enter.invalid")).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -602,9 +598,9 @@ export class SearchPaginator {
                     if (page > this.search.numPages) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() }))
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -613,9 +609,9 @@ export class SearchPaginator {
                     if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new Utils.RichEmbed()
+                                new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() }))
+                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL
                         });
@@ -631,7 +627,7 @@ export class SearchPaginator {
                             const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
                             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-                            return new Utils.RichEmbed()
+                            return new RichEmbed()
                                 .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
                                 .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
@@ -648,12 +644,12 @@ export class SearchPaginator {
                                 .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
                         });
 
-                        this.embeds = embeds;
+                        this.embeds = embeds.map((embed) => embed.data);
                         this.embed = 1;
                         this.updatePaginator();
                     });
 
-                    interaction.acknowledge();
+                    interaction.deferUpdate();
                     break;
             }
         }
@@ -667,35 +663,35 @@ export class SearchPaginator {
             components: [
                 {
                     components: [
-                        { custom_id: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                        { custom_id: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                        { custom_id: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { custom_id: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                        { custom_id: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
+                        { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
+                        { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
+                        { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
+                        { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
+                        { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { custom_id: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { custom_id: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { custom_id: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
+                        { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
+                        { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
+                        { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
+                        { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                        { custom_id: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
+                        { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
+                        { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
                     ],
                     type: 1
                 },
                 {
                     components: [
-                        { custom_id: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                        { custom_id: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { custom_id: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
+                        { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
+                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
+                        { customID: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
                     ],
                     type: 1
                 }
@@ -721,7 +717,7 @@ export class SearchPaginator {
     }
 }
 
-export async function createSearchPaginator(client: NReaderClient, search: Search, interaction: CommandInteraction<TextableChannel>) {
+export async function createSearchPaginator(client: NReaderClient, search: Search, interaction: CommandInteraction<TextChannel>) {
     const paginator = new SearchPaginator(client, search, interaction);
 
     paginator.runPaginator();

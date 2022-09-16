@@ -1,4 +1,4 @@
-import { CommandInteraction, TextableChannel } from "eris";
+import { CommandInteraction, TextChannel } from "oceanic.js";
 import { NReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
 import * as CommandModules from "./Modules";
@@ -11,9 +11,9 @@ export class NReaderCommand {
     private client: NReaderClient;
 
     /**
-     * Eris command interaction
+     * Oceanic command interaction
      */
-    private interaction: CommandInteraction<TextableChannel>;
+    private interaction: CommandInteraction<TextChannel>;
 
     constructor(payload: ICommandRunPayload) {
         this.client = payload.client;

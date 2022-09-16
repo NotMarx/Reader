@@ -1,9 +1,9 @@
 import { NReaderClient } from "../../Client";
-import { CommandInteraction, Constants, TextChannel } from "eris";
+import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
 import { t } from "i18next";
 import { GuildModel, UserModel } from "../../Models";
-import { Utils } from "givies-framework";
 import { Util } from "../../Utils";
+import { RichEmbed } from "../../Utils/RichEmbed";
 
 export async function interactionCreateEvent(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     if (!interaction.guildID) return;
@@ -23,7 +23,7 @@ export async function interactionCreateEvent(client: NReaderClient, interaction:
     };
 
     if (!userData) {
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("general.register"));
 
@@ -37,7 +37,7 @@ export async function interactionCreateEvent(client: NReaderClient, interaction:
         });
 
         return interaction.createMessage({
-            embeds: [embed],
+            embeds: [embed.data],
             flags: Constants.MessageFlags.EPHEMERAL
         });
     }

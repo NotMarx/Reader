@@ -1,11 +1,11 @@
 import { APIStats } from "./Utils/APIStats";
-import { Client, ClientEvents } from "eris";
+import { Client, ClientEvents } from "oceanic.js";
 import { Collection } from "./Utils";
 import { ICommand, IConfig, IEvent, IGuildSchemaSettings } from "./Interfaces";
 import { TLocale } from "./Types";
-import { Utils } from "givies-framework";
 import { connect } from "mongoose";
 import { GuildModel } from "./Models";
+import { Logger } from "./Utils/Logger";
 import { RequestHandler } from "./API";
 import { join } from "path";
 import { readdirSync } from "fs";
@@ -41,7 +41,7 @@ export class NReaderClient extends Client {
     /**
      * Logger
      */
-    public logger = new Utils.Logger();
+    public logger = new Logger();
 
     /**
      * NHentai API
@@ -65,7 +65,7 @@ export class NReaderClient extends Client {
 
             if (commands) {
                 commands.forEach((command) => {
-                    this.createCommand({
+                    this.rest.applicationCommands.createGlobalCommand(this.user.id, {
                         description: command.description,
                         name: command.name,
                         options: command.options,
@@ -91,10 +91,10 @@ export class NReaderClient extends Client {
             }
         });
 
-        this.editStatus("dnd", {
+        this.editStatus("dnd", [{
             name: "Reading...",
             type: 0
-        });
+        }]);
 
         const commandPath = join(__dirname, "..", "..", "bot", "src", "Commands");
         const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");

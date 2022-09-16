@@ -17,9 +17,9 @@ It must be very difficult to understand the entire code base of **NReader**. How
 
 Again, if you are still confused, our [Discord Server](https://discord.gg/b7AW2Zkcsw) is available for developers!
 
-### Eris Discord Library
+### Oceanic Discord Library
 
-**NReader** is powered by the [Eris](https://github.com/abalabahaha/eris) Discord library. You need to have decent knowledge about this library if you want to make changes related to Discord mostly.
+**NReader** is powered by the [Oceanic](https://github.com/OceanicJS/Oceanic) Discord library. You need to have decent knowledge about this library if you want to make changes related to Discord mostly.
 
 ## Top Issues (Best to Get Started)
 

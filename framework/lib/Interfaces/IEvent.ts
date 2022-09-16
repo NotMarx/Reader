@@ -1,5 +1,5 @@
 import { NReaderClient } from "../Client";
-import { ClientEvents } from "eris";
+import { ClientEvents } from "oceanic.js";
 
 export interface IEventRun {
     (client: NReaderClient, ...args: any);
