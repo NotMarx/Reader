@@ -1,26 +1,22 @@
 import { NReaderClient } from "../../Client";
-import { CommandInteraction, Constants, InteractionDataOptionsString, InteractionDataOptionsSubCommand, TextableChannel } from "eris";
-import { Utils } from "givies-framework";
+import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { RichEmbed } from "../../Utils/RichEmbed";
 import { Util } from "../../Utils";
 import { TLocale } from "../../Types";
 import { GuildModel } from "../../Models";
 
-export function configCommand(client: NReaderClient, interaction: CommandInteraction<TextableChannel>) {
-    const args: { language?: TLocale } = {};
+export function configCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
+    const language = interaction.data.options.getString<TLocale>("language");
 
-    for (const option of (interaction.data.options[0] as InteractionDataOptionsSubCommand).options) {
-        args[(option as InteractionDataOptionsString).name] = (option as InteractionDataOptionsString).value;
-    }
+    if (language) {
+        GuildModel.findOneAndUpdate({ id: interaction.guildID }, { $set: { "settings.locale": language } }).exec();
 
-    if (args.language) {
-        GuildModel.findOneAndUpdate({ id: interaction.guildID }, { $set: { "settings.locale": args.language } }).exec();
-
-        const embed = new Utils.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translateLocale(args.language, "mod.language.set", { language: Util.convertLocale(args.language) }));
+            .setDescription(client.translateLocale(language, "mod.language.set", { language: Util.convertLocale(language) }));
 
         return interaction.createMessage({
-            embeds: [embed],
+            embeds: [embed.data],
             flags: Constants.MessageFlags.EPHEMERAL
         });
     }

@@ -1,8 +1,8 @@
 import { join } from "path";
 import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from "fs";
-import { Utils } from "givies-framework";
+import { Logger } from "../Utils/Logger";
 
-const logger = new Utils.Logger();
+const logger = new Logger();
 const folders = readdirSync(join(__dirname, "../../../localisation"));
 const compilingDate = new Date();
 
