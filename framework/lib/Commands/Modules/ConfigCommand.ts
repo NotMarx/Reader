@@ -6,18 +6,14 @@ import { TLocale } from "../../Types";
 import { GuildModel } from "../../Models";
 
 export function configCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
-    const args: { language?: TLocale } = {};
+    const language = interaction.data.options.getString<TLocale>("language");
 
-    for (const option of (interaction.data.options[0] as InteractionOptionsSubCommand).options) {
-        args[(option as InteractionOptionsString).name] = (option as InteractionOptionsString).value;
-    }
-
-    if (args.language) {
-        GuildModel.findOneAndUpdate({ id: interaction.guildID }, { $set: { "settings.locale": args.language } }).exec();
+    if (language) {
+        GuildModel.findOneAndUpdate({ id: interaction.guildID }, { $set: { "settings.locale": language } }).exec();
 
         const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translateLocale(args.language, "mod.language.set", { language: Util.convertLocale(args.language) }));
+            .setDescription(client.translateLocale(language, "mod.language.set", { language: Util.convertLocale(language) }));
 
         return interaction.createMessage({
             embeds: [embed.data],
