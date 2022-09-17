@@ -61,40 +61,23 @@ export class NReaderClient extends Client {
             this.logger.info({ message: "Database Connected", subTitle: "NReaderFramework::MongoDB", title: "DATABASE" });
 
             const guilds = this.guilds.map((guild) => guild.id);
-            const commands = this.commands.map((command) => command);
 
-            if (commands) {
-                commands.forEach((command) => {
-                    this.rest.applicationCommands.createGlobalCommand(this.user.id, {
-                        description: command.description,
-                        name: command.name,
-                        options: command.options,
-                        type: command.type
-                    }).catch(() => { });
-                });
+            for (let i = 0; i < guilds.length; i++) {
+                const guildData = await GuildModel.findOne({ id: guilds[i] });
 
-                for (let i = 0; i < guilds.length; i++) {
-                    const guildData = await GuildModel.findOne({ id: guilds[i] });
-
-                    if (!guildData) {
-                        GuildModel.create({
-                            createdAt: new Date(),
-                            id: guilds[i],
-                            settings: ({
-                                blacklisted: false,
-                                locale: "en",
-                                whitelisted: false
-                            } as IGuildSchemaSettings)
-                        });
-                    }
+                if (!guildData) {
+                    GuildModel.create({
+                        createdAt: new Date(),
+                        id: guilds[i],
+                        settings: ({
+                            blacklisted: false,
+                            locale: "en",
+                            whitelisted: false
+                        } as IGuildSchemaSettings)
+                    });
                 }
             }
         });
-
-        this.editStatus("dnd", [{
-            name: "Reading...",
-            type: 0
-        }]);
 
         const commandPath = join(__dirname, "..", "..", "bot", "src", "Commands");
         const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");

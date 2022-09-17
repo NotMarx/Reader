@@ -76,7 +76,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.error"));
 
-            interaction.createMessage({
+            interaction.createFollowup({
                 embeds: [embed.data],
             });
         }

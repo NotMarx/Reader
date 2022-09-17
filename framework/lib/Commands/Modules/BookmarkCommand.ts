@@ -84,7 +84,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.error"));
 
-        return interaction.createMessage({
+        return interaction.createFollowup({
             embeds: [embed.data],
         });
     }
