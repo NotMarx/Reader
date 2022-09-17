@@ -1,7 +1,7 @@
 import { NReaderClient } from "../../Client";
 import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oceanic.js";
 import { Util } from "../../Utils";
-import { GuildModel } from "../../Models";
+import { GuildModel, UserModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { RichEmbed } from "../../Utils/RichEmbed";
 import { setTimeout } from "node:timers/promises";
@@ -14,6 +14,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
 
     client.api.getGallery(galleryID).then(async (gallery) => {
         const guildData = await GuildModel.findOne({ id: interaction.guildID });
+        const userData = await UserModel.findOne({ id: interaction.user.id });
         const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
         const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
         const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
@@ -22,7 +23,7 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
         const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
         const tags = gallery.tags.tags.map((tag) => tag.name);
 
-        if (Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
+        if (Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && (!guildData.settings.whitelisted && !userData.settings.premium)) {
             const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));

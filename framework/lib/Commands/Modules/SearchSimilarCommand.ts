@@ -3,22 +3,23 @@ import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oc
 import { RichEmbed } from "../../Utils/RichEmbed";
 import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
-import { GuildModel } from "../../Models";
+import { GuildModel, UserModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 
 export async function searchSimilarCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     const galleryID = interaction.data.options.getInteger("id").toString();
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
+    const userData = await UserModel.findOne({ id: interaction.user.id })
 
     const gallery = await client.api.getGallery(galleryID);
     const tags = gallery.tags.tags.map((tag) => tag.name);
 
-    if (Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && !guildData.settings.whitelisted) {
+    if (Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) && (!guildData.settings.whitelisted && !userData.settings.premium)) {
         const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
 
-        return interaction.createFollowup({
+        return interaction.createMessage({
             embeds: [embed.data],
             flags: Constants.MessageFlags.EPHEMERAL
         });
