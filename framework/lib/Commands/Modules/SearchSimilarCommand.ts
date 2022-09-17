@@ -18,7 +18,7 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.tags.restricted", { channel: "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)", server: "https://discord.gg/b7AW2Zkcsw" }));
 
-        return interaction.createMessage({
+        return interaction.createFollowup({
             embeds: [embed.data],
             flags: Constants.MessageFlags.EPHEMERAL
         });
@@ -33,7 +33,7 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.search.empty"));
 
-            return interaction.createMessage({
+            return interaction.createFollowup({
                 embeds: [embed.data],
             });
         }
