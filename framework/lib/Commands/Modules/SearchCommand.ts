@@ -35,7 +35,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.search.none", { query: query }));
 
-            return interaction.createMessage({
+            return interaction.createFollowup({
                 embeds: [embed.data],
             });
         }
