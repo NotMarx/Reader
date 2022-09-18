@@ -124,6 +124,12 @@ export class Util {
         return false;
     }
 
+    /**
+     * Get a value of an interaction modal by its ID
+     * @param interaction The interaction
+     * @param customID The custom ID of the modal
+     * @returns {string}
+     */
     public static getModalID(interaction: ModalSubmitInteraction<TextChannel>, customID: string): string {
         return interaction.data.components.find((component) => component.components[0].customID === customID).components[0].value;
     }
@@ -140,6 +146,11 @@ export class Util {
         return Math.round(value * multiplier) / multiplier;
     }
 
+    /**
+     * Convert seconds to a readable time
+     * @param s The seconds
+     * @returns {string}
+     */
     public static time(s: number): string {
         const pad = (n: number, z = 2) => {
             return ("00" + n).slice(-z);
