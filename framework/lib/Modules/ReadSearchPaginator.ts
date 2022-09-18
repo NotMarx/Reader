@@ -1,5 +1,6 @@
 import { Gallery } from "../API";
-import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalActionRow, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { NReaderClient } from "../Client";
 import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
@@ -71,27 +72,52 @@ export class ReadSearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `home_result_${this.interaction.id}`,
+                this.client.translate("main.home")
+            )
+            .toJSON();
+
         const messageContent: InteractionContent = {
-            components: [
-                {
-                    components: [
-                        { customID: `first_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { customID: `previous_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { customID: `next_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { customID: `last_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 },
-                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { customID: `home_result_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                }
-            ],
+            components,
             embeds: [this.embeds[this.embed - 1]]
         };
 
@@ -102,27 +128,52 @@ export class ReadSearchPaginator {
      * Update the paginator class
      */
     public updatePaginator() {
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `home_result_${this.interaction.id}`,
+                this.client.translate("main.home")
+            )
+            .toJSON();
+
         this.message.edit({
-            components: [
-                {
-                    components: [
-                        { customID: `first_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { customID: `previous_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { customID: `next_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { customID: `last_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `jumpto_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 },
-                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { customID: `home_result_${this.interaction.id}`, label: this.client.translate("main.home"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                }
-            ],
+            components,
             embeds: [this.embeds[this.embed - 1]]
         });
     }
@@ -135,101 +186,11 @@ export class ReadSearchPaginator {
         if (interaction.member.bot) return;
 
         const userData = await UserModel.findOne({ id: interaction.member.id });
-        const artistTags: string[] = this.gallery.tags.artists.map((tag) => tag.name);
-        const characterTags: string[] = this.gallery.tags.characters.map((tag) => tag.name);
-        const contentTags: string[] = this.gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-        const languageTags: string[] = this.gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-        const parodyTags: string[] = this.gallery.tags.parodies.map((tag) => tag.name);
-        const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
-
-        const resultEmbed = new RichEmbed()
-            .setAuthor(this.gallery.id, this.gallery.url)
-            .setColor(this.client.config.BOT.COLOUR)
-            .addField(this.client.translate("main.title"), `\`${this.gallery.title.pretty}\``)
-            .addField(this.client.translate("main.pages"), `\`${this.gallery.pages.length}\``)
-            .addField(this.client.translate("main.released"), uploadedAt)
-            .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-            .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-            .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-            .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-            .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``)
-            .setFooter(`⭐ ${this.gallery.favourites.toLocaleString()}`)
-            .setThumbnail(this.gallery.cover.url);
-
-        const hideComponent: MessageActionRow = {
-            components: [
-                {
-                    customID: `read_${this.interaction.id}`,
-                    label: this.client.translate("main.read"),
-                    style: 1,
-                    type: 2
-                },
-                {
-                    customID: `stop_${this.interaction.id}`,
-                    label: this.client.translate("main.stop"),
-                    style: 4,
-                    type: 2
-                },
-                {
-                    customID: `bookmark_${this.interaction.id}`,
-                    label: this.client.translate("main.bookmark"),
-                    style: 2,
-                    type: 2
-                },
-                {
-                    customID: `hide_cover_${this.interaction.id}`,
-                    label: this.client.translate("main.cover.hide"),
-                    style: 1,
-                    type: 2
-                }
-            ],
-            type: 1
-        };
-
-        const showComponent: MessageActionRow = {
-            components: [
-                {
-                    customID: `read_${this.interaction.id}`,
-                    label: this.client.translate("main.read"),
-                    style: 1,
-                    type: 2
-                },
-                {
-                    customID: `stop_${this.interaction.id}`,
-                    label: this.client.translate("main.stop"),
-                    style: 4,
-                    type: 2
-                },
-                {
-                    customID: `bookmark_${this.interaction.id}`,
-                    label: this.client.translate("main.bookmark"),
-                    style: 2,
-                    type: 2
-                },
-                {
-                    customID: `show_cover_${this.interaction.id}`,
-                    label: this.client.translate("main.cover.show"),
-                    style: 1,
-                    type: 2
-                }
-            ],
-            type: 1
-        };
 
         if (interaction instanceof ComponentInteraction) {
             switch (interaction.data.customID) {
                 case `read_${this.interaction.id}`:
                     this.initialisePaginator();
-                    interaction.deferUpdate();
-                    break;
-                case `show_cover_${this.interaction.id}`:
-                    resultEmbed.setImage(this.gallery.cover.url);
-                    this.interaction.editOriginal({ components: [hideComponent], embeds: [resultEmbed.data] });
-                    interaction.deferUpdate();
-                    break;
-                case `hide_cover_${this.interaction.id}`:
-                    resultEmbed.setImage("");
-                    this.interaction.editOriginal({ components: [showComponent], embeds: [resultEmbed.data] });
                     interaction.deferUpdate();
                     break;
                 case `bookmark_${this.interaction.id}`:
@@ -301,21 +262,14 @@ export class ReadSearchPaginator {
                     break;
                 case `jumpto_page_${this.interaction.id}`:
                     interaction.createModal({
-                        components: [
-                            {
-                                components: [
-                                    {
-                                        customID: "page_number",
-                                        label: this.client.translate("main.page.enter"),
-                                        placeholder: "5",
-                                        required: true,
-                                        style: 1,
-                                        type: 4
-                                    }
-                                ],
-                                type: 1
-                            }
-                        ],
+                        components: new ComponentBuilder<ModalActionRow>()
+                            .addTextInput(
+                                Constants.TextInputStyles.SHORT,
+                                this.client.translate("main.page.enter"),
+                                "page_number",
+                                "5"
+                            )
+                            .toJSON(),
                         customID: `jumpto_page_modal_${this.interaction.id}`,
                         title: this.client.translate("main.page.enter")
                     });
