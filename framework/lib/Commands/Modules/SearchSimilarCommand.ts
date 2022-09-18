@@ -1,5 +1,6 @@
 import { NReaderClient } from "../../Client";
 import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { RichEmbed } from "../../Utils/RichEmbed";
 import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
@@ -39,34 +40,29 @@ export async function searchSimilarCommand(client: NReaderClient, interaction: C
             });
         }
 
-        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty}\``);
+        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}`  : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
 
         const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(title.join("\n"))
             .setTitle(client.translate("main.page", { firstIndex: search.page, lastIndex: search.numPages.toLocaleString() }));
 
-        const component: MessageActionRow = {
-            components: [
-                {
-                    customID: `see_more_${interaction.id}`,
-                    label: client.translate("main.detail"),
-                    style: 1,
-                    type: 2
-                },
-                {
-                    customID: `stop_result_${interaction.id}`,
-                    label: client.translate("main.stop"),
-                    style: 4,
-                    type: 2
-                }
-            ],
-            type: 1
-        };
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `see_more_${interaction.id}`,
+                client.translate("main.detail")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${interaction.id}`,
+                client.translate("main.stop")
+            )
+            .toJSON();
 
         createSearchPaginator(client, search, interaction);
         interaction.createFollowup({
-            components: [component],
+            components,
             embeds: [embed.data]
         });
     }).catch((err: Error) => {
