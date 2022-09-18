@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import { Gallery } from "../Structures/Gallery";
 import { IRawGallerySearch, IRawGallery, TSearchSort } from "../../Constant";
 import { Search } from "../Structures/Search";
+import { APIError } from "./APIError";
 
 export class RequestHandler {
     constructor() {}
@@ -14,7 +15,9 @@ export class RequestHandler {
      */
     private request<T>(url: string): Promise<T> {
         return fetch(url).then((res) => res.json()).then((json) => {
-            return json;
+            if (json.error) {
+                throw new APIError(json, url);
+            } else return json;
         });
     }
 
