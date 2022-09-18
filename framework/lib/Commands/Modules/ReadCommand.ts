@@ -1,5 +1,6 @@
 import { NReaderClient } from "../../Client";
 import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { Util } from "../../Utils";
 import { GuildModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
@@ -47,37 +48,30 @@ export async function readCommand(client: NReaderClient, interaction: CommandInt
             .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
             .setThumbnail(gallery.cover.url);
 
-        const component: MessageActionRow = {
-            components: [
-                {
-                    customID: `read_${interaction.id}`,
-                    label: client.translate("main.read"),
-                    style: 1,
-                    type: 2
-                },
-                {
-                    customID: `stop_${interaction.id}`,
-                    label: client.translate("main.stop"),
-                    style: 4,
-                    type: 2
-                },
-                {
-                    customID: `bookmark_${interaction.id}`,
-                    label: client.translate("main.bookmark"),
-                    style: 2,
-                    type: 2
-                },
-                {
-                    customID: `show_cover_${interaction.id}`,
-                    label: client.translate("main.cover.show"),
-                    style: 1,
-                    type: 2
-                }
-            ],
-            type: 1
-        };
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `read_${interaction.id}`,
+                client.translate("main.read")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_${interaction.id}`,
+                client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${interaction.id}`,
+                client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `show_cover_${interaction.id}`,
+                client.translate("main.cover.show")
+            )
+            .toJSON();
 
-        interaction.createFollowup({ components: [component], embeds: [embed.data] });
+        interaction.createFollowup({ components, embeds: [embed.data] });
         createReadPaginator(client, gallery, interaction);
     }).catch((err: Error) => {
         const embed = new RichEmbed()
