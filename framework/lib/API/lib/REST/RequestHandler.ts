@@ -39,6 +39,13 @@ export class RequestHandler {
         return this.request<IRawGallery>(Endpoints.GALLERY(id)).then((gallery) => new Gallery(gallery));
     }
 
+    /**
+     * Search for galleries
+     * @param query The query to search for
+     * @param page The page of the search results
+     * @param sort Sort results by popularity
+     * @returns {Promise<Search>}
+     */
     public searchGalleries(query: string, page?: number, sort?: TSearchSort): Promise<Search> {
         return this.request<IRawGallerySearch>(Endpoints.GALLERIES_SEARCH(query, page, sort)).then((galleries) => new Search(galleries, { page, query, sort }));
     }
