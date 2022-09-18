@@ -14,11 +14,13 @@ export class APIStats {
         switch (botList) {
             case "bhbotlist.tech":
                 fetch(NReaderConstant.BHBotList.STATS(), {
+                    body: JSON.stringify({
+                        ServerCount: this.client.guilds.size,
+                        ShardCount: this.client.shards.size
+                    }),
                     headers: {
                         "Authorization": authToken,
                         "Content-Type": "application/json",
-                        "ServerCount": this.client.guilds.size,
-                        "ShardCount": this.client.shards.size
                     },
                     method: "POST"
                 });
