@@ -105,7 +105,7 @@ export class ReadPaginator {
     public async onRead(interaction: ComponentInteraction<TextChannel> | ModalSubmitInteraction<TextChannel>) {
         if (interaction.member.bot) return;
 
-        const userData = await UserModel.findOne({ id: interaction.user.id })
+        const userData = await UserModel.findOne({ id: interaction.user.id });
         const artistTags: string[] = this.gallery.tags.artists.map((tag) => tag.name);
         const characterTags: string[] = this.gallery.tags.characters.map((tag) => tag.name);
         const contentTags: string[] = this.gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
