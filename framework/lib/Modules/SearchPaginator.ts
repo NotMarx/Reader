@@ -1,5 +1,6 @@
 import { RequestHandler, Search } from "../API";
-import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalActionRow, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { NReaderClient } from "../Client";
 import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
@@ -103,43 +104,84 @@ export class SearchPaginator {
 
         this.embeds = embeds.map((embed) => embed.data);
 
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_${this.interaction.id}`,
+                this.client.translate("main.result.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_${this.interaction.id}`,
+                this.client.translate("main.result.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_${this.interaction.id}`,
+                this.client.translate("main.result.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_${this.interaction.id}`,
+                this.client.translate("main.result.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_${this.interaction.id}`,
+                this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.SUCCESS,
+                `read_result_${this.interaction.id}`,
+                this.client.translate("main.read")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `show_cover_${this.interaction.id}`,
+                this.client.translate("main.cover.show")
+            )
+            .toJSON();
+
         const messageContent: InteractionContent = {
-            components: [
-                {
-                    components: [
-                        { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                        { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                        { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                        { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                        { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { customID: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                }
-            ],
+            components,
             embeds: [this.embeds[this.embed - 1]]
         };
 
@@ -157,79 +199,157 @@ export class SearchPaginator {
         const embed = new RichEmbed((interaction as ComponentInteraction<TextChannel>).message ? (interaction as ComponentInteraction<TextChannel>).message.embeds[0] : undefined);
         const userData = await UserModel.findOne({ id: interaction.user.id });
 
-        const hideComponent: MessageActionRow[] = [
-            {
-                components: [
-                    { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                    { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                    { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                    { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                    { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
-                ],
-                type: 1
-            },
-            {
-                components: [
-                    { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                    { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                    { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                    { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                ],
-                type: 1
-            },
-            {
-                components: [
-                    { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                    { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
-                ],
-                type: 1
-            },
-            {
-                components: [
-                    { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                    { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                    { customID: `hide_cover_${this.interaction.id}`, label: this.client.translate("main.cover.hide"), style: 1, type: 2 }
-                ],
-                type: 1
-            }
-        ];
+        const hideComponent = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_${this.interaction.id}`,
+                this.client.translate("main.result.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_${this.interaction.id}`,
+                this.client.translate("main.result.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_${this.interaction.id}`,
+                this.client.translate("main.result.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_${this.interaction.id}`,
+                this.client.translate("main.result.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_${this.interaction.id}`,
+                this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.SUCCESS,
+                `read_result_${this.interaction.id}`,
+                this.client.translate("main.read")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `hide_cover_${this.interaction.id}`,
+                this.client.translate("main.cover.hide")
+            )
+            .toJSON();
 
-        const showComponent: MessageActionRow[] = [
-            {
-                components: [
-                    { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                    { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                    { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                    { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                    { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
-                ],
-                type: 1
-            },
-            {
-                components: [
-                    { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                    { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                    { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                    { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                ],
-                type: 1
-            },
-            {
-                components: [
-                    { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                    { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
-                ],
-                type: 1
-            },
-            {
-                components: [
-                    { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                    { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                    { customID: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
-                ],
-                type: 1
-            }
-        ];
+        const showComponent = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_${this.interaction.id}`,
+                this.client.translate("main.result.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_${this.interaction.id}`,
+                this.client.translate("main.result.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_${this.interaction.id}`,
+                this.client.translate("main.result.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_${this.interaction.id}`,
+                this.client.translate("main.result.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_${this.interaction.id}`,
+                this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.SUCCESS,
+                `read_result_${this.interaction.id}`,
+                this.client.translate("main.read")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `show_cover_${this.interaction.id}`,
+                this.client.translate("main.cover.show")
+            )
+            .toJSON();
 
         if (interaction instanceof ComponentInteraction) {
             switch (interaction.data.customID) {
@@ -347,21 +467,14 @@ export class SearchPaginator {
                     break;
                 case `jumpto_result_${this.interaction.id}`:
                     interaction.createModal({
-                        components: [
-                            {
-                                components: [
-                                    {
-                                        customID: "result_number",
-                                        label: this.client.translate("main.result.enter"),
-                                        placeholder: "10",
-                                        required: true,
-                                        style: 1,
-                                        type: 4
-                                    }
-                                ],
-                                type: 1
-                            }
-                        ],
+                        components: new ComponentBuilder<ModalActionRow>()
+                            .addTextInput(
+                                Constants.TextInputStyles.SHORT,
+                                this.client.translate("main.result.enter"),
+                                "result_number",
+                                "10"
+                            )
+                            .toJSON(),
                         customID: `jumpto_result_modal_${this.interaction.id}`,
                         title: this.client.translate("main.result.enter")
                     });
@@ -369,21 +482,14 @@ export class SearchPaginator {
                     break;
                 case `jumpto_result_page_${this.interaction.id}`:
                     interaction.createModal({
-                        components: [
-                            {
-                                components: [
-                                    {
-                                        customID: "result_page_number",
-                                        label: this.client.translate("main.page.enter"),
-                                        placeholder: "5",
-                                        required: true,
-                                        style: 1,
-                                        type: 4
-                                    }
-                                ],
-                                type: 1
-                            }
-                        ],
+                        components: new ComponentBuilder<ModalActionRow>()
+                            .addTextInput(
+                                Constants.TextInputStyles.SHORT,
+                                this.client.translate("main.page.enter"),
+                                "result_page_number",
+                                "5"
+                            )
+                            .toJSON(),
                         customID: `jumpto_result_page_modal_${this.interaction.id}`,
                         title: this.client.translate("main.page.enter")
                     });
@@ -659,43 +765,84 @@ export class SearchPaginator {
      * Update the paginator class
      */
     public updatePaginator() {
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_${this.interaction.id}`,
+                this.client.translate("main.result.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_${this.interaction.id}`,
+                this.client.translate("main.result.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_${this.interaction.id}`,
+                this.client.translate("main.result.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_${this.interaction.id}`,
+                this.client.translate("main.result.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_${this.interaction.id}`,
+                this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.SUCCESS,
+                `read_result_${this.interaction.id}`,
+                this.client.translate("main.read")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `show_cover_${this.interaction.id}`,
+                this.client.translate("main.cover.show")
+            )
+            .toJSON();
+
         this.message.edit({
-            components: [
-                {
-                    components: [
-                        { customID: `first_result_${this.interaction.id}`, label: this.client.translate("main.result.first"), style: 1, type: 2 },
-                        { customID: `previous_result_${this.interaction.id}`, label: this.client.translate("main.result.previous"), style: 2, type: 2 },
-                        { customID: `stop_result_${this.interaction.id}`, label: this.client.translate("main.stop"), style: 4, type: 2 },
-                        { customID: `next_result_${this.interaction.id}`, label: this.client.translate("main.result.next"), style: 2, type: 2 },
-                        { customID: `last_result_${this.interaction.id}`, label: this.client.translate("main.result.last"), style: 1, type: 2 },
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `first_result_page_${this.interaction.id}`, label: this.client.translate("main.page.first"), style: 1, type: 2 },
-                        { customID: `previous_result_page_${this.interaction.id}`, label: this.client.translate("main.page.previous"), style: 2, type: 2 },
-                        { customID: `next_result_page_${this.interaction.id}`, label: this.client.translate("main.page.next"), style: 2, type: 2 },
-                        { customID: `last_result_page_${this.interaction.id}`, label: this.client.translate("main.page.last"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `jumpto_result_${this.interaction.id}`, label: this.client.translate("main.result.enter"), style: 1, type: 2 },
-                        { customID: `jumpto_result_page_${this.interaction.id}`, label: this.client.translate("main.page.enter"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                },
-                {
-                    components: [
-                        { customID: `read_result_${this.interaction.id}`, label: this.client.translate("main.read"), style: 3, type: 2 },
-                        { customID: `bookmark_${this.interaction.id}`, label: this.client.translate("main.bookmark"), style: 2, type: 2 },
-                        { customID: `show_cover_${this.interaction.id}`, label: this.client.translate("main.cover.show"), style: 1, type: 2 }
-                    ],
-                    type: 1
-                }
-            ],
+            components,
             embeds: [this.embeds[this.embed - 1]]
         });
     }

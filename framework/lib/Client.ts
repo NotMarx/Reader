@@ -2,7 +2,7 @@ import { APIStats } from "./Utils/APIStats";
 import { Client, ClientEvents } from "oceanic.js";
 import { Collection } from "./Utils";
 import { ICommand, IConfig, IEvent, IGuildSchemaSettings } from "./Interfaces";
-import { TLocale } from "./Types";
+import { TLocale, TranslationKey } from "./Types";
 import { connect } from "mongoose";
 import { GuildModel } from "./Models";
 import { Logger } from "./Utils/Logger";
@@ -135,7 +135,7 @@ export class NReaderClient extends Client {
      * @param key The translation key
      * @param format Key format
      */
-    public translate(key: string, format?: object): string;
+    public translate(key: TranslationKey, format?: object): string;
 
     /**
       * Translate keys from requested locale
@@ -144,7 +144,7 @@ export class NReaderClient extends Client {
       * @returns {string}
       */
     /* @ts-ignore */
-    public translateLocale(locale: TLocale, key: string, format?: object): string {
+    public translateLocale(locale: TLocale, key: TranslationKey, format?: object): string {
         this.initialiseLocale(locale);
 
         return t(key, format);
