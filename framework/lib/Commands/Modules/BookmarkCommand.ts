@@ -1,5 +1,6 @@
 import { NReaderClient } from "../../Client";
 import { MessageActionRow, CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { RichEmbed } from "../../Utils/RichEmbed";
 import { Gallery } from "../../API";
 import { UserModel } from "../../Models";
@@ -51,23 +52,18 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
             bookmarkedTitle.push(title);
         }
 
-        const component: MessageActionRow = {
-            components: [
-                {
-                    customID: `see_more_${interaction.id}`,
-                    label: client.translate("main.detail"),
-                    style: 1,
-                    type: 2
-                },
-                {
-                    customID: `stop_result_${interaction.id}`,
-                    label: client.translate("main.stop"),
-                    style: 4,
-                    type: 2
-                }
-            ],
-            type: 1
-        };
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `see_more_${interaction.id}`,
+                client.translate("main.detail")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${interaction.id}`,
+                client.translate("main.stop")
+            )
+            .toJSON();
 
         const embed = new RichEmbed()
             .setColor(client.config.BOT.COLOUR)
@@ -76,7 +72,7 @@ export async function bookmarkCommand(client: NReaderClient, interaction: Comman
 
         createBookmarkPaginator(client, galleries, interaction, user);
         return interaction.createFollowup({
-            components: [component],
+            components,
             embeds: [embed.data],
         });
     } else {
