@@ -12,7 +12,7 @@ export async function interactionCreateEvent(client: NReaderClient, interaction:
 
     const command = client.commands.get(interaction.data.name);
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
-    const userData = await UserModel.findOne({ id: interaction.user.id })
+    const userData = await UserModel.findOne({ id: interaction.user.id });
 
     client.translate = function (key, format) {
         const locale = guildData.settings.locale;

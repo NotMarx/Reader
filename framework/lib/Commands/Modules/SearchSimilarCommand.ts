@@ -9,7 +9,7 @@ import { setTimeout } from "node:timers/promises";
 export async function searchSimilarCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
     const galleryID = interaction.data.options.getInteger("id").toString();
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
-    const userData = await UserModel.findOne({ id: interaction.user.id })
+    const userData = await UserModel.findOne({ id: interaction.user.id });
 
     const gallery = await client.api.getGallery(galleryID);
     const tags = gallery.tags.tags.map((tag) => tag.name);
