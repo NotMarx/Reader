@@ -176,7 +176,7 @@ export class BookmarkPaginator {
         if (interaction.member.bot) return;
 
         const embed = new RichEmbed((interaction as ComponentInteraction).message ? (interaction as ComponentInteraction).message.embeds[0] : undefined);
-        const userData = await UserModel.findOne({ id: interaction.member.id });
+        const userData = await UserModel.findOne({ id: interaction.user.id });
 
         const hideComponent = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(

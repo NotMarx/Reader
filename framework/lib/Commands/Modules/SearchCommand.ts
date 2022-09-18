@@ -5,7 +5,7 @@ import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { RichEmbed } from "../../Utils/RichEmbed";
 import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
-import { GuildModel } from "../../Models";
+import { GuildModel, UserModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 
 export async function searchCommand(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
@@ -13,6 +13,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
     const query = interaction.data.options.getString("query");
     const sort = interaction.data.options.getString<Constant.TSearchSort>("sort");
     const guildData = await GuildModel.findOne({ id: interaction.guildID });
+    const userData = await UserModel.findOne({ id: interaction.user.id });
 
     const queryArgs = query.split(" ");
 
@@ -30,7 +31,7 @@ export async function searchCommand(client: NReaderClient, interaction: CommandI
     await interaction.defer();
     await setTimeout(2000);
 
-    client.api.searchGalleries(encodeURIComponent(guildData.settings.whitelisted ? query : `${query} -lolicon -shotacon`), page || 1, sort || "").then(async (search) => {
+    client.api.searchGalleries(encodeURIComponent(guildData.settings.whitelisted ? query : userData.settings.premium ? query : `${query} -lolicon -shotacon`), page || 1, sort || "").then(async (search) => {
         if (search.result.length === 0) {
             const embed = new RichEmbed()
                 .setColor(client.config.BOT.COLOUR)
