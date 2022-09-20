@@ -354,6 +354,23 @@ export class ReadPaginator {
         }
     }
 
+
+    /**
+     * Run the paginator class
+     */
+    public runPaginator() {
+        this.client.on("interactionCreate", this.onRead);
+        this.running = true;
+    }
+
+    /**
+     * Stop the paginator class
+     */
+    public stopPaginator() {
+        this.client.off("interactionCreate", this.onRead);
+        this.running = false;
+    }
+
     /**
      * Update the paginator class
      */
@@ -406,22 +423,6 @@ export class ReadPaginator {
             components,
             embeds: [this.embeds[this.embed - 1]]
         });
-    }
-
-    /**
-     * Run the paginator class
-     */
-    public runPaginator() {
-        this.client.on("interactionCreate", this.onRead);
-        this.running = true;
-    }
-
-    /**
-     * Stop the paginator class
-     */
-    public stopPaginator() {
-        this.client.off("interactionCreate", this.onRead);
-        this.running = false;
     }
 }
 
