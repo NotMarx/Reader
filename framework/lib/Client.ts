@@ -17,142 +17,157 @@ import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
 
 export class NReaderClient extends Client {
-  /**
-   * NHentai API
-   */
-  public api = new RequestHandler();
+    /**
+     * NHentai API
+     */
+    public api = new RequestHandler();
 
-  /**
-   * BotList API Stats
-   */
-  public apiStats = new APIStats(this);
+    /**
+     * BotList API Stats
+     */
+    public apiStats = new APIStats(this);
 
-  /**
-   * Collection of the bot's commands
-   */
-  public commands = new Collection<ICommand>();
+    /**
+     * Collection of the bot's commands
+     */
+    public commands = new Collection<ICommand>();
 
-  /**
-   * The configuration of the bot. Contains secret token
-   */
-  public config: IConfig;
+    /**
+     * The configuration of the bot. Contains secret token
+     */
+    public config: IConfig;
 
-  /**
-   * Collection of the bot's gateway events
-   */
-  public events = new Collection<IEvent>();
+    /**
+     * Collection of the bot's gateway events
+     */
+    public events = new Collection<IEvent>();
 
-  /**
-   * Logger
-   */
-  public logger = new Logger();
+    /**
+     * Logger
+     */
+    public logger = new Logger();
 
-  /**
-   * Initialise every handler for NReader
-   */
-  public initialiseEverything() {
-    this.connect();
-    connect(this.config.BOT.MONGODB).then(async () => {
-      this.logger.info({
-        message: "Database Connected",
-        subTitle: "NReaderFramework::MongoDB",
-        title: "DATABASE",
-      });
+    /**
+     * Initialise every handler for NReader
+     */
+    public initialiseEverything() {
+        this.connect();
+        connect(this.config.BOT.MONGODB).then(async () => {
+            this.logger.info({
+                message: "Database Connected",
+                subTitle: "NReaderFramework::MongoDB",
+                title: "DATABASE",
+            });
 
-      const guilds = this.guilds.map((guild) => guild.id);
+            const guilds = this.guilds.map((guild) => guild.id);
 
-      for (let i = 0; i < guilds.length; i++) {
-        const guildData = await GuildModel.findOne({ id: guilds[i] });
+            for (let i = 0; i < guilds.length; i++) {
+                const guildData = await GuildModel.findOne({ id: guilds[i] });
 
-        if (!guildData) {
-          GuildModel.create({
-            createdAt: new Date(),
-            id: guilds[i],
-            settings: {
-              blacklisted: false,
-              locale: "en",
-              whitelisted: false,
-            } as IGuildSchemaSettings,
-          });
-        }
-      }
-    });
+                if (!guildData) {
+                    GuildModel.create({
+                        createdAt: new Date(),
+                        id: guilds[i],
+                        settings: {
+                            blacklisted: false,
+                            locale: "en",
+                            whitelisted: false,
+                        } as IGuildSchemaSettings,
+                    });
+                }
+            }
+        });
 
-    const commandPath = join(__dirname, "..", "..", "bot", "src", "Commands");
-    const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");
+        const commandPath = join(
+            __dirname,
+            "..",
+            "..",
+            "bot",
+            "src",
+            "Commands"
+        );
+        const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");
 
-    readdirSync(commandPath).forEach(async (dir) => {
-      const commands = readdirSync(`${commandPath}/${dir}`).filter((file) =>
-        file.endsWith(".ts")
-      );
+        readdirSync(commandPath).forEach(async (dir) => {
+            const commands = readdirSync(`${commandPath}/${dir}`).filter(
+                (file) => file.endsWith(".ts")
+            );
 
-      for (const file of commands) {
-        const { command } = await import(`${commandPath}/${dir}/${file}`);
+            for (const file of commands) {
+                const { command } = await import(
+                    `${commandPath}/${dir}/${file}`
+                );
 
-        this.commands.set(command.name as string, command as ICommand);
-      }
-    });
+                this.commands.set(command.name as string, command as ICommand);
+            }
+        });
 
-    readdirSync(eventPath).forEach(async (file) => {
-      const { event } = await import(`${eventPath}/${file}`);
+        readdirSync(eventPath).forEach(async (file) => {
+            const { event } = await import(`${eventPath}/${file}`);
 
-      try {
-        this.events.set(event.name as keyof ClientEvents, event as IEvent);
-        this.on(event.name as keyof ClientEvents, event.run.bind(null, this));
-      } catch (err) {
-        return;
-      }
-    });
-  }
+            try {
+                this.events.set(
+                    event.name as keyof ClientEvents,
+                    event as IEvent
+                );
+                this.on(
+                    event.name as keyof ClientEvents,
+                    event.run.bind(null, this)
+                );
+            } catch (err) {
+                return;
+            }
+        });
+    }
 
-  /**
-   * Initialise localisation for NReader
-   * @param locale The requested locale
-   * @returns {Promise<TFunction>}
-   */
-  public initialiseLocale(locale: TLocale): Promise<TFunction> {
-    return use(i18NextICU).init({
-      fallbackLng: "en",
-      lng: locale,
-      resources: {
-        en: {
-          translation: localeEN,
-        },
-        id: {
-          translation: localeID,
-        },
-        ja: {
-          translation: localeJA,
-        },
-        zh: {
-          translation: localeZH,
-        },
-      },
-    });
-  }
+    /**
+     * Initialise localisation for NReader
+     * @param locale The requested locale
+     * @returns {Promise<TFunction>}
+     */
+    public initialiseLocale(locale: TLocale): Promise<TFunction> {
+        return use(i18NextICU).init({
+            fallbackLng: "en",
+            lng: locale,
+            resources: {
+                en: {
+                    translation: localeEN,
+                },
+                id: {
+                    translation: localeID,
+                },
+                ja: {
+                    translation: localeJA,
+                },
+                zh: {
+                    translation: localeZH,
+                },
+            },
+        });
+    }
 
-  /**
-   * Translate keys
-   * @param key The translation key
-   * @param format Key format
-   */
-  public translate(key: TranslationKey, format?: object): string;
+    /**
+     * Translate keys
+     * @param key The translation key
+     * @param format Key format
+     */
+    public translate(key: TranslationKey, format?: object): string;
 
-  /* @ts-ignore */
-  public translateLocale(
-    locale: TLocale,
-    key: TranslationKey,
-    format?: object
-  ): string {
-    this.initialiseLocale(locale);
+    /* @ts-ignore */
+    public translateLocale(
+        locale: TLocale,
+        key: TranslationKey,
+        format?: object
+    ): string {
+        this.initialiseLocale(locale);
 
-    return t(key, format);
-  }
+        return t(key, format);
+    }
 
-  /**
-   * Translate keys from requested locale
-   * @param key The translation key
-   * @param format Key format
-   * @returns {string}
-   */
+    /**
+     * Translate keys from requested locale
+     * @param key The translation key
+     * @param format Key format
+     * @returns {string}
+     */
 }

@@ -5,21 +5,21 @@ export const IMAGE_URL = "http://i.nhentai.net";
 export const THUMBNAIL_URL = "http://t.nhentai.net";
 
 export type TTagType =
-  | "artist"
-  | "category"
-  | "character"
-  | "group"
-  | "language"
-  | "parody"
-  | "tag";
+    | "artist"
+    | "category"
+    | "character"
+    | "group"
+    | "language"
+    | "parody"
+    | "tag";
 export type TExtension = "gif" | "jpg" | "png";
 export type TRawExtension = "g" | "j" | "p";
 export type TSearchSort =
-  | ""
-  | "popular"
-  | "popular-today"
-  | "popular-week"
-  | "popular-month";
+    | ""
+    | "popular"
+    | "popular-today"
+    | "popular-week"
+    | "popular-month";
 
 export interface IImage {
     h: number;

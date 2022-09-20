@@ -1,47 +1,47 @@
 export class Collection<T> extends Map<string, T> {
-  constructor() {
-    super();
-  }
-
-  public filter(func: (i: T) => boolean): T[] {
-    const arr: any[] = [];
-
-    for (const item of this.values()) {
-      if (func(item)) {
-        arr.push(item);
-      }
+    constructor() {
+        super();
     }
 
-    return arr;
-  }
+    public filter(func: (i: T) => boolean): T[] {
+        const arr: any[] = [];
 
-  public find(func: (i: T) => boolean): T | undefined {
-    for (const item of this.values()) {
-      if (func(item)) {
-        return item;
-      }
+        for (const item of this.values()) {
+            if (func(item)) {
+                arr.push(item);
+            }
+        }
+
+        return arr;
     }
 
-    return undefined;
-  }
+    public find(func: (i: T) => boolean): T | undefined {
+        for (const item of this.values()) {
+            if (func(item)) {
+                return item;
+            }
+        }
 
-  public map<R>(func: (i: T) => R): R[] {
-    const arr: any[] = [];
-
-    for (const item of this.values()) {
-      arr.push(func(item));
+        return undefined;
     }
 
-    return arr;
-  }
+    public map<R>(func: (i: T) => R): R[] {
+        const arr: any[] = [];
 
-  public some(func: (i: T) => boolean): boolean {
-    for (const item of this.values()) {
-      if (func(item)) {
-        return true;
-      }
+        for (const item of this.values()) {
+            arr.push(func(item));
+        }
+
+        return arr;
     }
 
-    return false;
-  }
+    public some(func: (i: T) => boolean): boolean {
+        for (const item of this.values()) {
+            if (func(item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
