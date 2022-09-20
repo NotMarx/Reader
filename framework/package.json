@@ -22,7 +22,6 @@
     "@types/byte-size": "^8.1.0",
     "@types/node-fetch": "^2.6.2",
     "@types/os-utils": "^0.0.1",
-    "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "eslint": "^8.11.0",
