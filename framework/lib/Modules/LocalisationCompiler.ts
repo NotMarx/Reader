@@ -1,18 +1,30 @@
 import { join } from "path";
-import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from "fs";
+import {
+    existsSync,
+    mkdirSync,
+    readdirSync,
+    unlinkSync,
+    writeFileSync,
+} from "fs";
 import { Logger } from "../Utils/Logger";
 
 const logger = new Logger();
 const folders = readdirSync(join(__dirname, "../../../localisation"));
 const compilingDate = new Date();
 
-logger.info({ message: "Compiling Localisations...", subTitle: "NReaderFramework::Localisation", title: "LOCALE" });
+logger.info({
+    message: "Compiling Localisations...",
+    subTitle: "NReaderFramework::Localisation",
+    title: "LOCALE",
+});
 
 for (const key in folders) {
     const folder = folders[key];
     if (folder.length !== 2) continue;
 
-    const files = readdirSync(join(__dirname, `../../../localisation/${folder}`));
+    const files = readdirSync(
+        join(__dirname, `../../../localisation/${folder}`)
+    );
     let object = {};
 
     for (const keyFile in files) {
@@ -45,4 +57,8 @@ for (const key in folders) {
     );
 }
 
-logger.success({ message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`, subTitle: "NReaderFramework::Localisation", title: "LOCALE" });
+logger.success({
+    message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`,
+    subTitle: "NReaderFramework::Localisation",
+    title: "LOCALE",
+});

@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build:locale": "ts-node ./lib/Modules/LocalisationCompiler.ts",
-    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
-    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\""
+    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && prettier --check . && echo \"\u001b[1m\u001b[32mLINT SUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mLINT FAILED\u001b[39m\u001b[22m\"",
+    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && prettier --write --list-different . && echo \"\u001b[1m\u001b[32mLINT SUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mLINT FAILED\u001b[39m\u001b[22m\""
   },
   "keywords": [
     "typescript",
@@ -22,12 +22,13 @@
     "@types/byte-size": "^8.1.0",
     "@types/node-fetch": "^2.6.2",
     "@types/os-utils": "^0.0.1",
-    "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "eslint": "^8.11.0",
+    "eslint-plugin-sort-class-members": "^1.15.2",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "prettier": "^2.7.1",
     "ts-node": "^10.8.2",
     "ts-node-dev": "^1.1.8",
     "tslib": "^2.4.0",

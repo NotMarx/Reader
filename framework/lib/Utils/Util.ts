@@ -1,5 +1,10 @@
 import { TLocale } from "../Types";
-import { CommandInteraction, Constants, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import {
+    CommandInteraction,
+    Constants,
+    ModalSubmitInteraction,
+    TextChannel,
+} from "oceanic.js";
 import { NReaderClient } from "../Client";
 import { ICommandRunPayload } from "../Interfaces";
 import byteSize from "byte-size";
@@ -11,7 +16,6 @@ interface IByteSize {
 }
 
 export class Util {
-
     /**
      * Convert a number to a readable size
      * @param bytes The bytes to convert
@@ -27,40 +31,58 @@ export class Util {
      * @param interaction Oceanic command interaction
      * @returns {Promise<void>}
      */
-    public static checkCommandPerms(client: NReaderClient, interaction: CommandInteraction<TextChannel>): Promise<void> {
+    public static checkCommandPerms(
+        client: NReaderClient,
+        interaction: CommandInteraction<TextChannel>
+    ): Promise<void> {
         const command = client.commands.get(interaction.data.name);
         const payload: ICommandRunPayload = { client, interaction };
-        const embed = new RichEmbed()
-            .setColor(client.config.BOT.COLOUR);
+        const embed = new RichEmbed().setColor(client.config.BOT.COLOUR);
 
         // Check if an owner-marked slash commands is run by random users
         // By default, there's no command with `adminOnly` set to true. However, this is for
         // security safety
-        if (command.adminOnly && !client.config.BOT.ADMIN.includes(interaction.member.id)) {
+        if (
+            command.adminOnly &&
+            !client.config.BOT.ADMIN.includes(interaction.member.id)
+        ) {
             return interaction.createMessage({
-                embeds: [embed.setDescription(client.translate("mod.noperms")).data],
-                flags: Constants.MessageFlags.EPHEMERAL
+                embeds: [
+                    embed.setDescription(client.translate("mod.noperms")).data,
+                ],
+                flags: Constants.MessageFlags.EPHEMERAL,
             });
         }
 
         // Check if user with no `manageGuild` perms runs the slash commands for guild mods
-        if (command.guildModOnly && !interaction.member.permissions.has("MANAGE_GUILD")) {
+        if (
+            command.guildModOnly &&
+            !interaction.member.permissions.has("MANAGE_GUILD")
+        ) {
             return interaction.createMessage({
-                embeds: [embed.setDescription(client.translate("mod.noperms")).data],
-                flags: Constants.MessageFlags.EPHEMERAL
+                embeds: [
+                    embed.setDescription(client.translate("mod.noperms")).data,
+                ],
+                flags: Constants.MessageFlags.EPHEMERAL,
             });
         }
 
         // Bypass NSFW restrictions
-        if (command.nsfwOnly && !interaction.channel.nsfw && client.config.BOT.ADMIN.includes(interaction.member.id)) {
+        if (
+            command.nsfwOnly &&
+            !interaction.channel.nsfw &&
+            client.config.BOT.ADMIN.includes(interaction.member.id)
+        ) {
             return command.run(payload);
         }
 
         // Check if an NSFW command is run outside channels marked as NSFW
         if (command.nsfwOnly && !interaction.channel.nsfw) {
             return interaction.createMessage({
-                embeds: [embed.setDescription(client.translate("main.noperms")).data],
-                flags: Constants.MessageFlags.EPHEMERAL
+                embeds: [
+                    embed.setDescription(client.translate("main.noperms")).data,
+                ],
+                flags: Constants.MessageFlags.EPHEMERAL,
             });
         }
 
@@ -68,10 +90,10 @@ export class Util {
     }
 
     /**
-    * Copies an object
-    * @param obj The object to clone
-    * @returns {Object}
-    */
+     * Copies an object
+     * @param obj The object to clone
+     * @returns {Object}
+     */
     public static cloneObject(obj): object {
         return Object.assign(Object.create(obj), obj);
     }
@@ -100,7 +122,6 @@ export class Util {
             default:
                 output = "Unknown";
                 break;
-
         }
 
         return output;
@@ -112,7 +133,10 @@ export class Util {
      * @param secondArray The second array to compare
      * @returns {Boolean}
      */
-    public static findCommonElement(firstArray: string[], secondArray: string[]): boolean {
+    public static findCommonElement(
+        firstArray: string[],
+        secondArray: string[]
+    ): boolean {
         for (let i = 0; i < firstArray.length; i++) {
             for (let j = 0; j < secondArray.length; j++) {
                 if (firstArray[i] === secondArray[j]) {
@@ -130,8 +154,13 @@ export class Util {
      * @param customID The custom ID of the modal
      * @returns {string}
      */
-    public static getModalID(interaction: ModalSubmitInteraction<TextChannel>, customID: string): string {
-        return interaction.data.components.find((component) => component.components[0].customID === customID).components[0].value;
+    public static getModalID(
+        interaction: ModalSubmitInteraction<TextChannel>,
+        customID: string
+    ): string {
+        return interaction.data.components.find(
+            (component) => component.components[0].customID === customID
+        ).components[0].value;
     }
 
     /**
@@ -183,14 +212,19 @@ export class Util {
     }
 
     /**
-    * Verifies the provided data is a string, otherwise throws provided error
-    * @param data The string to resolve
-    * @param error The error constructor. Default to `Error`
-    * @param errorMessage The error message to throw with
-    * @param allowEmpty Whether an empty string should be allowed
-    * @returns {String}
-    */
-    public static verifyString(data: string, error: any, errorMessage = `Expected typeof string, received ${data} instead`, allowEmpty = true): string {
+     * Verifies the provided data is a string, otherwise throws provided error
+     * @param data The string to resolve
+     * @param error The error constructor. Default to `Error`
+     * @param errorMessage The error message to throw with
+     * @param allowEmpty Whether an empty string should be allowed
+     * @returns {String}
+     */
+    public static verifyString(
+        data: string,
+        error: any,
+        errorMessage = `Expected typeof string, received ${data} instead`,
+        allowEmpty = true
+    ): string {
         if (typeof data !== "string") throw new error(errorMessage);
         if (!allowEmpty && data.length === 0) throw new error(errorMessage);
         return data;

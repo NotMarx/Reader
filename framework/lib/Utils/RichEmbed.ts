@@ -95,7 +95,9 @@ export class RichEmbed {
 
         if (data.fields) {
             // @ts-ignore:next-line
-            this.fields = skipValidation ? data.fields.map(Util.cloneObject) : this.normalizeFields(data.fields as EmbedField);
+            this.fields = skipValidation
+                ? data.fields.map(Util.cloneObject)
+                : this.normalizeFields(data.fields as EmbedField);
         }
     }
 
@@ -127,7 +129,11 @@ export class RichEmbed {
             (this.title?.length ?? 0) +
             (this.description?.length ?? 0) +
             (this.fields.length >= 1
-                ? this.fields.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0)
+                ? this.fields.reduce(
+                      (prev, curr) =>
+                          prev + curr.name.length + curr.value.length,
+                      0
+                  )
                 : 0) +
             (this.footer?.text.length ?? 0) +
             (this.author?.name.length ?? 0)
@@ -142,7 +148,11 @@ export class RichEmbed {
      * @ignore
      */
     private _fieldEquals(field: EmbedField, otherField: EmbedField): boolean {
-        return field.name === otherField.name && field.value === otherField.value && field.inline === otherField.inline;
+        return (
+            field.name === otherField.name &&
+            field.value === otherField.value &&
+            field.inline === otherField.inline
+        );
     }
 
     /**
@@ -168,7 +178,9 @@ export class RichEmbed {
                 `Expected type 'boolean', received type ${typeof inline}`
             );
         if (name.length > 256)
-            throw new RangeError("Embed field names cannot exceed 256 characters");
+            throw new RangeError(
+                "Embed field names cannot exceed 256 characters"
+            );
         if (value.length > 1024)
             throw new RangeError(
                 "Embed field descriptions cannot exceed 1024 characters"
@@ -187,16 +199,20 @@ export class RichEmbed {
         return (
             this.author?.name === embed.author?.name &&
             this.author?.url === embed.author?.url &&
-            this.author?.iconURL === (embed.author?.iconURL ?? embed.author?.iconURL) &&
+            this.author?.iconURL ===
+                (embed.author?.iconURL ?? embed.author?.iconURL) &&
             this.color === embed.color &&
             this.title === embed.title &&
             this.description === embed.description &&
             this.url === embed.url &&
             this.timestamp === embed.timestamp &&
             this.fields.length === (embed.fields ? embed.fields?.length : 0) &&
-            this.fields.every((field, i) => this._fieldEquals(field, embed.fields[i])) &&
+            this.fields.every((field, i) =>
+                this._fieldEquals(field, embed.fields[i])
+            ) &&
             this.footer?.text === embed.footer?.text &&
-            this.footer?.iconURL === (embed.footer?.iconURL ?? embed.footer?.iconURL) &&
+            this.footer?.iconURL ===
+                (embed.footer?.iconURL ?? embed.footer?.iconURL) &&
             this.image?.url === embed.image?.url &&
             this.thumbnail?.url === embed.thumbnail?.url
         );
@@ -212,8 +228,18 @@ export class RichEmbed {
     normalizeField(name: string, value: string, inline = false): EmbedField {
         return {
             inline,
-            name: Util.verifyString(name, RangeError, "EMBED_FIELD_NAME", false),
-            value: Util.verifyString(value, RangeError, "EMBED_FIELD_VALUE", false),
+            name: Util.verifyString(
+                name,
+                RangeError,
+                "EMBED_FIELD_NAME",
+                false
+            ),
+            value: Util.verifyString(
+                value,
+                RangeError,
+                "EMBED_FIELD_VALUE",
+                false
+            ),
         };
     }
 
@@ -225,8 +251,12 @@ export class RichEmbed {
     normalizeFields(...fields: EmbedField[]): EmbedField[] {
         return fields
             .flat(2)
-            .map(field =>
-                this.normalizeField(field.name, field.value, typeof field.inline === "boolean" ? field.inline : false),
+            .map((field) =>
+                this.normalizeField(
+                    field.name,
+                    field.value,
+                    typeof field.inline === "boolean" ? field.inline : false
+                )
             );
     }
 
@@ -243,7 +273,9 @@ export class RichEmbed {
                 `Expected type 'string', received type ${typeof name}`
             );
         if (name.length > 256)
-            throw new RangeError("Embed author names cannot exceed 256 characters");
+            throw new RangeError(
+                "Embed author names cannot exceed 256 characters"
+            );
         this.author = { name };
 
         if (url !== undefined) {
@@ -260,7 +292,10 @@ export class RichEmbed {
                 throw new TypeError(
                     `Expected type 'string', received type '${typeof iconURL}'`
                 );
-            if (!iconURL.startsWith("attachment://") && !URL_REGEX.test(iconURL))
+            if (
+                !iconURL.startsWith("attachment://") &&
+                !URL_REGEX.test(iconURL)
+            )
                 throw new Error("Not a well formed URL");
             this.author.iconURL = iconURL;
         }
@@ -280,7 +315,8 @@ export class RichEmbed {
             );
 
         if (typeof color === "number") {
-            if (color > 16777215 || color < 0) throw new RangeError("Invalid color");
+            if (color > 16777215 || color < 0)
+                throw new RangeError("Invalid color");
             this.color = color;
         } else {
             const match = color.match(HEX_REGEX);
@@ -302,7 +338,9 @@ export class RichEmbed {
                 `Expected type 'string', received type '${typeof description}'`
             );
         if (description.length > 4096)
-            throw new RangeError("Embed descriptions cannot exceed 4096 characters");
+            throw new RangeError(
+                "Embed descriptions cannot exceed 4096 characters"
+            );
         this.description = description;
         return this;
     }
@@ -319,7 +357,9 @@ export class RichEmbed {
                 `Expected type 'string', received type ${typeof text}`
             );
         if (text.length > 2048)
-            throw new RangeError("Embed footer texts cannot exceed 2048 characters");
+            throw new RangeError(
+                "Embed footer texts cannot exceed 2048 characters"
+            );
         this.footer = { text };
 
         if (iconURL !== undefined) {
@@ -327,7 +367,10 @@ export class RichEmbed {
                 throw new TypeError(
                     `Expected type 'string', received type '${typeof iconURL}'`
                 );
-            if (!iconURL.startsWith("attachment://") && !URL_REGEX.test(iconURL))
+            if (
+                !iconURL.startsWith("attachment://") &&
+                !URL_REGEX.test(iconURL)
+            )
                 throw new Error("Not a well formed URL");
             this.footer.iconURL = iconURL;
         }
@@ -365,7 +408,9 @@ export class RichEmbed {
             throw new Error("Invalid Date");
         }
 
-        this.timestamp = timestamp ? new Date(timestamp).toISOString() : new Date().toISOString();
+        this.timestamp = timestamp
+            ? new Date(timestamp).toISOString()
+            : new Date().toISOString();
         return this;
     }
 
@@ -407,8 +452,16 @@ export class RichEmbed {
      * @param fields The replacing fields objects
      * @returns {RichEmbed}
      */
-    spliceFields(index: number, deleteCount: number, ...fields: any): RichEmbed {
-        this.fields.splice(index, deleteCount, ...this.normalizeFields(...fields));
+    spliceFields(
+        index: number,
+        deleteCount: number,
+        ...fields: any
+    ): RichEmbed {
+        this.fields.splice(
+            index,
+            deleteCount,
+            ...this.normalizeFields(...fields)
+        );
         return this;
     }
 }

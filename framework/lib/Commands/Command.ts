@@ -4,7 +4,6 @@ import { ICommandRunPayload } from "../Interfaces";
 import * as CommandModules from "./Modules";
 
 export class NReaderCommand {
-
     /**
      * NReader client
      */
@@ -73,7 +72,10 @@ export class NReaderCommand {
      * @returns {Promise<void>}
      */
     public searchSimilarCommand() {
-        return CommandModules.searchSimilarCommand(this.client, this.interaction);
+        return CommandModules.searchSimilarCommand(
+            this.client,
+            this.interaction
+        );
     }
 
     /**

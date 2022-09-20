@@ -17,6 +17,10 @@ import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
 
 export class NReaderClient extends Client {
+    /**
+     * NHentai API
+     */
+    public api = new RequestHandler();
 
     /**
      * BotList API Stats
@@ -44,21 +48,16 @@ export class NReaderClient extends Client {
     public logger = new Logger();
 
     /**
-     * NHentai API
-     */
-    public get api() {
-        const handler = new RequestHandler();
-
-        return handler;
-    }
-
-    /**
      * Initialise every handler for NReader
      */
     public initialiseEverything() {
         this.connect();
         connect(this.config.BOT.MONGODB).then(async () => {
-            this.logger.info({ message: "Database Connected", subTitle: "NReaderFramework::MongoDB", title: "DATABASE" });
+            this.logger.info({
+                message: "Database Connected",
+                subTitle: "NReaderFramework::MongoDB",
+                title: "DATABASE",
+            });
 
             const guilds = this.guilds.map((guild) => guild.id);
 
@@ -69,24 +68,35 @@ export class NReaderClient extends Client {
                     GuildModel.create({
                         createdAt: new Date(),
                         id: guilds[i],
-                        settings: ({
+                        settings: {
                             blacklisted: false,
                             locale: "en",
-                            whitelisted: false
-                        } as IGuildSchemaSettings)
+                            whitelisted: false,
+                        } as IGuildSchemaSettings,
                     });
                 }
             }
         });
 
-        const commandPath = join(__dirname, "..", "..", "bot", "src", "Commands");
+        const commandPath = join(
+            __dirname,
+            "..",
+            "..",
+            "bot",
+            "src",
+            "Commands"
+        );
         const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");
 
         readdirSync(commandPath).forEach(async (dir) => {
-            const commands = readdirSync(`${commandPath}/${dir}`).filter((file) => file.endsWith(".ts"));
+            const commands = readdirSync(`${commandPath}/${dir}`).filter(
+                (file) => file.endsWith(".ts")
+            );
 
             for (const file of commands) {
-                const { command } = await import(`${commandPath}/${dir}/${file}`);
+                const { command } = await import(
+                    `${commandPath}/${dir}/${file}`
+                );
 
                 this.commands.set(command.name as string, command as ICommand);
             }
@@ -96,8 +106,14 @@ export class NReaderClient extends Client {
             const { event } = await import(`${eventPath}/${file}`);
 
             try {
-                this.events.set(event.name as keyof ClientEvents, event as IEvent);
-                this.on(event.name as keyof ClientEvents, event.run.bind(null, this));
+                this.events.set(
+                    event.name as keyof ClientEvents,
+                    event as IEvent
+                );
+                this.on(
+                    event.name as keyof ClientEvents,
+                    event.run.bind(null, this)
+                );
             } catch (err) {
                 return;
             }
@@ -115,18 +131,18 @@ export class NReaderClient extends Client {
             lng: locale,
             resources: {
                 en: {
-                    translation: localeEN
+                    translation: localeEN,
                 },
                 id: {
-                    translation: localeID
+                    translation: localeID,
                 },
                 ja: {
-                    translation: localeJA
+                    translation: localeJA,
                 },
                 zh: {
-                    translation: localeZH
-                }
-            }
+                    translation: localeZH,
+                },
+            },
         });
     }
 
@@ -137,16 +153,21 @@ export class NReaderClient extends Client {
      */
     public translate(key: TranslationKey, format?: object): string;
 
-    /**
-      * Translate keys from requested locale
-      * @param key The translation key
-      * @param format Key format
-      * @returns {string}
-      */
     /* @ts-ignore */
-    public translateLocale(locale: TLocale, key: TranslationKey, format?: object): string {
+    public translateLocale(
+        locale: TLocale,
+        key: TranslationKey,
+        format?: object
+    ): string {
         this.initialiseLocale(locale);
 
         return t(key, format);
     }
+
+    /**
+     * Translate keys from requested locale
+     * @param key The translation key
+     * @param format Key format
+     * @returns {string}
+     */
 }

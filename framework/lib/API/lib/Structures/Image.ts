@@ -3,7 +3,6 @@ import Endpoints from "../REST/Endpoints";
 import { Gallery } from "./Gallery";
 
 export class Image {
-
     /**
      * The file extension
      */
@@ -33,7 +32,11 @@ export class Image {
         this.extension = this.parse(image.t);
         this.height = image.h;
         this.page = isNaN(name as number) ? null : Number(name);
-        this.url = Endpoints.GALLERIES_MEDIA(gallery.mediaID, name, this.extension);
+        this.url = Endpoints.GALLERIES_MEDIA(
+            gallery.mediaID,
+            name,
+            this.extension
+        );
         this.width = image.w;
     }
 

@@ -1,7 +1,6 @@
 import { BASE_URL, IRawTag, TTagType } from "../../Constant";
 
 export class Tag {
-
     /**
      * The count of the tag
      */

@@ -1,12 +1,17 @@
 import { NReaderClient } from "../Client";
-import { ApplicationCommandTypes, ApplicationCommandOptions, CommandInteraction, TextChannel } from "oceanic.js";
+import {
+    ApplicationCommandTypes,
+    ApplicationCommandOptions,
+    CommandInteraction,
+    TextChannel,
+} from "oceanic.js";
 
 export interface ICommandRunPayload {
     client: NReaderClient;
     interaction: CommandInteraction<TextChannel>;
 }
 
-export interface  ICommandRun {
+export interface ICommandRun {
     (payload: ICommandRunPayload);
 }
 
