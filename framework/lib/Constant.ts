@@ -21,5 +21,5 @@ const TopGG = {
 export const NReaderConstant = {
     BHBotList,
     Source,
-    TopGG
+    TopGG,
 };

@@ -4,67 +4,72 @@ import { Image } from "./Image";
 import { TagManager } from "./TagManager";
 
 export class Gallery {
-
     /**
-     * The cover of the gallery
-     */
+   * The cover of the gallery
+   */
     readonly cover: Image;
 
     /**
-     * The favourites count of the gallery
-     */
+   * The favourites count of the gallery
+   */
     readonly favourites: number;
 
     /**
-     * The media ID of the gallery
-     */
-    readonly mediaID: string;
-
-    /**
-     * The ID of the gallery
-     */
+   * The ID of the gallery
+   */
     readonly id: string;
 
     /**
-     * The page length of the gallery
-     */
+   * The media ID of the gallery
+   */
+    readonly mediaID: string;
+
+    /**
+   * The page length of the gallery
+   */
     readonly pages: Image[];
 
     /**
-     * The scanlator of the gallery (null if none)
-     */
+   * The scanlator of the gallery (null if none)
+   */
     readonly scanlator: string | null;
 
     /**
-     * The tags of the gallery
-     */
+   * The tags of the gallery
+   */
     readonly tags: TagManager;
 
     /**
-     * The thumbnail of the gallery
-     */
+   * The thumbnail of the gallery
+   */
     readonly thumbnail: Image;
 
     /**
-     * The title of the gallery
-     */
+   * The title of the gallery
+   */
     readonly title: IRawGalleryTitle;
 
     /**
-     * The upload date of the gallery
-     */
+   * The upload date of the gallery
+   */
     readonly uploadDate: Date;
 
     /**
-     * The URL of the gallery
-     */
+   * The URL of the gallery
+   */
     readonly url: string;
 
     constructor(data: IRawGallery) {
         this.favourites = data.num_favorites;
-        this.mediaID = typeof data.media_id === "number" ? (data.media_id as number).toString() : data.media_id;
-        this.id = typeof data.id === "number" ? (data.id as number).toString() : data.id;
-        this.pages = data.images.pages.map((page, index) => new Image(page, index + 1, this));
+        this.mediaID =
+      typeof data.media_id === "number"
+          ? (data.media_id as number).toString()
+          : data.media_id;
+        this.id =
+      typeof data.id === "number" ? (data.id as number).toString() : data.id;
+        this.pages = data.images.pages.map(
+            (page, index) => new Image(page, index + 1, this)
+        );
         this.scanlator = data.scanlator || null;
         this.tags = new TagManager(data.tags);
         this.cover = new Image(data.images.cover, "cover", this);

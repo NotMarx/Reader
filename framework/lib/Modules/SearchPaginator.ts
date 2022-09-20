@@ -1,5 +1,16 @@
 import { RequestHandler, Search } from "../API";
-import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalActionRow, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import {
+    CommandInteraction,
+    ComponentInteraction,
+    Constants,
+    EmbedOptions,
+    InteractionContent,
+    MessageActionRow,
+    Message,
+    ModalActionRow,
+    ModalSubmitInteraction,
+    TextChannel,
+} from "oceanic.js";
 import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { NReaderClient } from "../Client";
 import { RichEmbed } from "../Utils/RichEmbed";
@@ -9,59 +20,62 @@ import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
 
 export class SearchPaginator {
-
     /**
-     * NHentai API
-     */
+   * NHentai API
+   */
     api: RequestHandler;
 
     /**
-     * NReader client
-     */
+   * NReader client
+   */
     client: NReaderClient;
 
     /**
-     * The index of current embed page
-     */
+   * The index of current embed page
+   */
     embed: number;
 
     /**
-     * An array of embed pages
-     */
+   * An array of embed pages
+   */
     embeds: EmbedOptions[];
 
     /**
-     * Oceanic command interaction
-     */
+   * Oceanic command interaction
+   */
     interaction: CommandInteraction<TextChannel>;
 
     /**
-     * The message for embed pages
-     */
+   * The message for embed pages
+   */
     message: Message<TextChannel>;
 
     /**
-     * The read paginator
-     */
+   * The read paginator
+   */
     paginationEmbed: ReadSearchPaginator;
 
     /**
-     * Whether the paginator is running or not
-     */
+   * Whether the paginator is running or not
+   */
     running: boolean;
 
     /**
-     * The search result
-     */
+   * The search result
+   */
     search: Search;
 
     /**
-     * Creates a search paginator
-     * @param client NReader client
-     * @param search The search result
-     * @param interaction Oceanic command interaction
-     */
-    constructor(client: NReaderClient, search: Search, interaction: CommandInteraction<TextChannel>) {
+   * Creates a search paginator
+   * @param client NReader client
+   * @param search The search result
+   * @param interaction Oceanic command interaction
+   */
+    constructor(
+        client: NReaderClient,
+        search: Search,
+        interaction: CommandInteraction<TextChannel>
+    ) {
         this.api = client.api;
         this.client = client;
         this.embed = 1;
@@ -73,33 +87,132 @@ export class SearchPaginator {
     }
 
     /**
-     * Initialise the paginator class
-     */
+   * Initialise the paginator class
+   */
     public async initialisePaginator() {
-        const title = this.search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+        const title = this.search.result.map(
+            (gallery, index) =>
+                `\`⬛ ${
+                    (index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `
+                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                    gallery.title.pretty.length >= 30
+                        ? `${gallery.title.pretty.slice(0, 30)}...`
+                        : gallery.title.pretty
+                }\``
+        );
         const embeds = this.search.result.map((gallery, index) => {
             const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
-            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
-            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
+            const characterTags: string[] = gallery.tags.characters.map(
+                (tag) => tag.name
+            );
+            const contentTags: string[] = gallery.tags.tags.map(
+                (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+            );
+            const languageTags: string[] = gallery.tags.languages.map(
+                (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+            );
             const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
             return new RichEmbed()
                 .setAuthor(gallery.id, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                .setDescription(
+                    title
+                        .join("\n")
+                        .replace(
+                            `\`⬛ ${
+                                (index + 1).toString().length > 1
+                                    ? `${index + 1}`
+                                    : `${index + 1} `
+                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                gallery.title.pretty.length >= 30
+                                    ? `${gallery.title.pretty.slice(0, 30)}...`
+                                    : gallery.title.pretty
+                            }\``,
+                            `**\`🟥 ${
+                                (index + 1).toString().length > 1
+                                    ? `${index + 1}`
+                                    : `${index + 1} `
+                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                gallery.title.pretty.length >= 30
+                                    ? `${gallery.title.pretty.slice(0, 30)}...`
+                                    : gallery.title.pretty
+                            }\`**`
+                        )
+                )
                 .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                .setTitle(this.client.translate("main.page", { firstIndex: this.search.page.toLocaleString(), lastIndex: this.search.numPages.toLocaleString() }))
+                .setTitle(
+                    this.client.translate("main.page", {
+                        firstIndex: this.search.page.toLocaleString(),
+                        lastIndex: this.search.numPages.toLocaleString(),
+                    })
+                )
                 .setThumbnail(gallery.cover.url)
-                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
-                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
+                .addField(
+                    this.client.translate("main.title"),
+                    `\`${gallery.title.pretty}\``
+                )
+                .addField(
+                    this.client.translate("main.pages"),
+                    `\`${gallery.pages.length}\``
+                )
                 .addField(this.client.translate("main.released"), uploadedAt)
-                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                .addField(
+                    languageTags.length > 1
+                        ? this.client.translate("main.languages")
+                        : this.client.translate("main.language"),
+                    `\`${
+                        languageTags.length !== 0
+                            ? languageTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    artistTags.length > 1
+                        ? this.client.translate("main.artists")
+                        : this.client.translate("main.artist"),
+                    `\`${
+                        artistTags.length !== 0
+                            ? artistTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    characterTags.length > 1
+                        ? this.client.translate("main.characters")
+                        : this.client.translate("main.character"),
+                    `\`${
+                        characterTags.length !== 0
+                            ? characterTags.join("`, `")
+                            : this.client.translate("main.original")
+                    }\``
+                )
+                .addField(
+                    parodyTags.length > 1
+                        ? this.client.translate("main.parodies")
+                        : this.client.translate("main.parody"),
+                    `\`${
+                        parodyTags.length !== 0
+                            ? parodyTags
+                                .join("`, `")
+                                .replace(
+                                    "original",
+                                    `${this.client.translate("main.original")}`
+                                )
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    contentTags.length > 1
+                        ? this.client.translate("main.tags")
+                        : this.client.translate("main.tag"),
+                    `\`${
+                        contentTags.length !== 0
+                            ? contentTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                );
         });
 
         this.embeds = embeds.map((embed) => embed.data);
@@ -182,7 +295,7 @@ export class SearchPaginator {
 
         const messageContent: InteractionContent = {
             components,
-            embeds: [this.embeds[this.embed - 1]]
+            embeds: [this.embeds[this.embed - 1]],
         };
 
         this.message = await this.interaction.editOriginal(messageContent);
@@ -190,13 +303,21 @@ export class SearchPaginator {
     }
 
     /**
-     * Start searching
-     * @param interaction Oceanic component interaction
-     */
-    public async onSearch(interaction: ComponentInteraction<TextChannel> | ModalSubmitInteraction<TextChannel>) {
+   * Start searching
+   * @param interaction Oceanic component interaction
+   */
+    public async onSearch(
+        interaction:
+        | ComponentInteraction<TextChannel>
+        | ModalSubmitInteraction<TextChannel>
+    ) {
         if (interaction.member.bot) return;
 
-        const embed = new RichEmbed((interaction as ComponentInteraction<TextChannel>).message ? (interaction as ComponentInteraction<TextChannel>).message.embeds[0] : undefined);
+        const embed = new RichEmbed(
+            (interaction as ComponentInteraction<TextChannel>).message
+                ? (interaction as ComponentInteraction<TextChannel>).message.embeds[0]
+                : undefined
+        );
         const userData = await UserModel.findOne({ id: interaction.user.id });
 
         const hideComponent = new ComponentBuilder<MessageActionRow>()
@@ -357,7 +478,11 @@ export class SearchPaginator {
                     interaction.deferUpdate();
 
                     this.api.getGallery(embed.author.name).then(async (gallery) => {
-                        this.paginationEmbed = new ReadSearchPaginator(this.client, gallery, this.interaction);
+                        this.paginationEmbed = new ReadSearchPaginator(
+                            this.client,
+                            gallery,
+                            this.interaction
+                        );
                         await this.paginationEmbed.initialisePaginator();
                         this.paginationEmbed.runPaginator();
                     });
@@ -368,17 +493,28 @@ export class SearchPaginator {
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    embed.setImage((await this.api.getGallery(embed.author.name)).cover.url);
-                    this.interaction.editOriginal({ components: hideComponent, embeds: [embed.data] });
+                    embed.setImage(
+                        (await this.api.getGallery(embed.author.name)).cover.url
+                    );
+                    this.interaction.editOriginal({
+                        components: hideComponent,
+                        embeds: [embed.data],
+                    });
                     interaction.deferUpdate();
                     break;
                 case `hide_cover_${this.interaction.id}`:
                     embed.setImage("");
-                    this.interaction.editOriginal({ components: showComponent, embeds: [embed.data] });
+                    this.interaction.editOriginal({
+                        components: showComponent,
+                        embeds: [embed.data],
+                    });
                     interaction.deferUpdate();
                     break;
                 case `home_result_${this.interaction.id}`:
-                    this.interaction.editOriginal({ components: showComponent, embeds: [this.embeds[this.embed - 1]] });
+                    this.interaction.editOriginal({
+                        components: showComponent,
+                        embeds: [this.embeds[this.embed - 1]],
+                    });
                     this.paginationEmbed.stopPaginator();
                     interaction.deferUpdate();
                     break;
@@ -404,21 +540,32 @@ export class SearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` })).data
+                                    .setDescription(
+                                        this.client.translate("main.bookmark.removed", {
+                                            id: `[\`${
+                                                embed.author.name
+                                            }\`](${NReaderConstant.Source.ID(embed.author.name)})`,
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
-                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": embed.author.name } }).exec();
+                        UserModel.findOneAndUpdate(
+                            { id: interaction.member.id },
+                            { $pull: { bookmark: embed.author.name } }
+                        ).exec();
                     } else {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
                                     new RichEmbed()
                                         .setColor(this.client.config.BOT.COLOUR)
-                                        .setDescription(this.client.translate("main.bookmark.maxed")).data
+                                        .setDescription(
+                                            this.client.translate("main.bookmark.maxed")
+                                        ).data,
                                 ],
-                                flags: Constants.MessageFlags.EPHEMERAL
+                                flags: Constants.MessageFlags.EPHEMERAL,
                             });
                         }
 
@@ -426,12 +573,21 @@ export class SearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${embed.author.name}\`](${NReaderConstant.Source.ID(embed.author.name)})` })).data
+                                    .setDescription(
+                                        this.client.translate("main.bookmark.saved", {
+                                            id: `[\`${
+                                                embed.author.name
+                                            }\`](${NReaderConstant.Source.ID(embed.author.name)})`,
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
-                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": embed.author.name } }).exec();
+                        UserModel.findOneAndUpdate(
+                            { id: interaction.member.id },
+                            { $push: { bookmark: embed.author.name } }
+                        ).exec();
                     }
 
                     break;
@@ -476,7 +632,7 @@ export class SearchPaginator {
                             )
                             .toJSON(),
                         customID: `jumpto_result_modal_${this.interaction.id}`,
-                        title: this.client.translate("main.result.enter")
+                        title: this.client.translate("main.result.enter"),
                     });
 
                     break;
@@ -491,82 +647,335 @@ export class SearchPaginator {
                             )
                             .toJSON(),
                         customID: `jumpto_result_page_modal_${this.interaction.id}`,
-                        title: this.client.translate("main.page.enter")
+                        title: this.client.translate("main.page.enter"),
                     });
 
                     break;
                 case `next_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
 
-                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) < this.search.numPages) {
-                        this.api.searchGalleries(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) + 1).then((search) => {
-                            const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
-                            const embeds = search.result.map((gallery, index) => {
-                                const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
-                                const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
-                                const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                                const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                                const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
-                                const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+                    if (
+                        parseInt(
+                            embed.title
+                                .split(this.client.translate("main.page").split(" ")[0])[1]
+                                .split("/")[0]
+                        ) < this.search.numPages
+                    ) {
+                        this.api
+                            .searchGalleries(
+                                this.search.query,
+                                parseInt(
+                                    embed.title
+                                        .split(this.client.translate("main.page").split(" ")[0])[1]
+                                        .split("/")[0]
+                                ) + 1
+                            )
+                            .then((search) => {
+                                const title = search.result.map(
+                                    (gallery, index) =>
+                                        `\`⬛ ${
+                                            (index + 1).toString().length > 1
+                                                ? `${index + 1}`
+                                                : `${index + 1} `
+                                        }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                            gallery.title.pretty.length >= 30
+                                                ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                : gallery.title.pretty
+                                        }\``
+                                );
+                                const embeds = search.result.map((gallery, index) => {
+                                    const artistTags: string[] = gallery.tags.artists.map(
+                                        (tag) => tag.name
+                                    );
+                                    const characterTags: string[] = gallery.tags.characters.map(
+                                        (tag) => tag.name
+                                    );
+                                    const contentTags: string[] = gallery.tags.tags.map(
+                                        (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+                                    );
+                                    const languageTags: string[] = gallery.tags.languages.map(
+                                        (tag) =>
+                                            tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+                                    );
+                                    const parodyTags: string[] = gallery.tags.parodies.map(
+                                        (tag) => tag.name
+                                    );
+                                    const uploadedAt = `<t:${
+                                        gallery.uploadDate.getTime() / 1000
+                                    }:F>`;
 
-                                return new RichEmbed()
-                                    .setAuthor(gallery.id, gallery.url)
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`)).setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
-                                    .setThumbnail(gallery.cover.url)
-                                    .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
-                                    .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
-                                    .addField(this.client.translate("main.released"), uploadedAt)
-                                    .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                    .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                    .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                    .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                    .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                                    return new RichEmbed()
+                                        .setAuthor(gallery.id, gallery.url)
+                                        .setColor(this.client.config.BOT.COLOUR)
+                                        .setDescription(
+                                            title
+                                                .join("\n")
+                                                .replace(
+                                                    `\`⬛ ${
+                                                        (index + 1).toString().length > 1
+                                                            ? `${index + 1}`
+                                                            : `${index + 1} `
+                                                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                        gallery.title.pretty.length >= 30
+                                                            ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                            : gallery.title.pretty
+                                                    }\``,
+                                                    `**\`🟥 ${
+                                                        (index + 1).toString().length > 1
+                                                            ? `${index + 1}`
+                                                            : `${index + 1} `
+                                                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                        gallery.title.pretty.length >= 30
+                                                            ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                            : gallery.title.pretty
+                                                    }\`**`
+                                                )
+                                        )
+                                        .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                        .setTitle(
+                                            this.client.translate("main.page", {
+                                                firstIndex: search.page.toLocaleString(),
+                                                lastIndex: search.numPages.toLocaleString(),
+                                            })
+                                        )
+                                        .setThumbnail(gallery.cover.url)
+                                        .addField(
+                                            this.client.translate("main.title"),
+                                            `\`${gallery.title.pretty}\``
+                                        )
+                                        .addField(
+                                            this.client.translate("main.pages"),
+                                            `\`${gallery.pages.length}\``
+                                        )
+                                        .addField(
+                                            this.client.translate("main.released"),
+                                            uploadedAt
+                                        )
+                                        .addField(
+                                            languageTags.length > 1
+                                                ? this.client.translate("main.languages")
+                                                : this.client.translate("main.language"),
+                                            `\`${
+                                                languageTags.length !== 0
+                                                    ? languageTags.join("`, `")
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        )
+                                        .addField(
+                                            artistTags.length > 1
+                                                ? this.client.translate("main.artists")
+                                                : this.client.translate("main.artist"),
+                                            `\`${
+                                                artistTags.length !== 0
+                                                    ? artistTags.join("`, `")
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        )
+                                        .addField(
+                                            characterTags.length > 1
+                                                ? this.client.translate("main.characters")
+                                                : this.client.translate("main.character"),
+                                            `\`${
+                                                characterTags.length !== 0
+                                                    ? characterTags.join("`, `")
+                                                    : this.client.translate("main.original")
+                                            }\``
+                                        )
+                                        .addField(
+                                            parodyTags.length > 1
+                                                ? this.client.translate("main.parodies")
+                                                : this.client.translate("main.parody"),
+                                            `\`${
+                                                parodyTags.length !== 0
+                                                    ? parodyTags
+                                                        .join("`, `")
+                                                        .replace(
+                                                            "original",
+                                                            `${this.client.translate("main.original")}`
+                                                        )
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        )
+                                        .addField(
+                                            contentTags.length > 1
+                                                ? this.client.translate("main.tags")
+                                                : this.client.translate("main.tag"),
+                                            `\`${
+                                                contentTags.length !== 0
+                                                    ? contentTags.join("`, `")
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        );
+                                });
+
+                                this.embeds = embeds.map((embed) => embed.data);
+                                this.embed = 1;
+                                this.updatePaginator();
                             });
-
-                            this.embeds = embeds.map((embed) => embed.data);
-                            this.embed = 1;
-                            this.updatePaginator();
-                        });
                     }
 
                     break;
                 case `previous_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
 
-                    if (parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) > 1) {
-                        this.api.searchGalleries(this.search.query, parseInt(embed.title.split(this.client.translate("main.page").split(" ")[0])[1].split("/")[0]) - 1).then((search) => {
-                            const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
-                            const embeds = search.result.map((gallery, index) => {
-                                const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
-                                const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
-                                const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                                const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                                const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
-                                const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+                    if (
+                        parseInt(
+                            embed.title
+                                .split(this.client.translate("main.page").split(" ")[0])[1]
+                                .split("/")[0]
+                        ) > 1
+                    ) {
+                        this.api
+                            .searchGalleries(
+                                this.search.query,
+                                parseInt(
+                                    embed.title
+                                        .split(this.client.translate("main.page").split(" ")[0])[1]
+                                        .split("/")[0]
+                                ) - 1
+                            )
+                            .then((search) => {
+                                const title = search.result.map(
+                                    (gallery, index) =>
+                                        `\`⬛ ${
+                                            (index + 1).toString().length > 1
+                                                ? `${index + 1}`
+                                                : `${index + 1} `
+                                        }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                            gallery.title.pretty.length >= 30
+                                                ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                : gallery.title.pretty
+                                        }\``
+                                );
+                                const embeds = search.result.map((gallery, index) => {
+                                    const artistTags: string[] = gallery.tags.artists.map(
+                                        (tag) => tag.name
+                                    );
+                                    const characterTags: string[] = gallery.tags.characters.map(
+                                        (tag) => tag.name
+                                    );
+                                    const contentTags: string[] = gallery.tags.tags.map(
+                                        (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+                                    );
+                                    const languageTags: string[] = gallery.tags.languages.map(
+                                        (tag) =>
+                                            tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+                                    );
+                                    const parodyTags: string[] = gallery.tags.parodies.map(
+                                        (tag) => tag.name
+                                    );
+                                    const uploadedAt = `<t:${
+                                        gallery.uploadDate.getTime() / 1000
+                                    }:F>`;
 
-                                return new RichEmbed()
-                                    .setAuthor(gallery.id, gallery.url)
-                                    .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
-                                    .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                                    .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
-                                    .setThumbnail(gallery.cover.url)
-                                    .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
-                                    .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
-                                    .addField(this.client.translate("main.released"), uploadedAt)
-                                    .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                    .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                    .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                    .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                    .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                                    return new RichEmbed()
+                                        .setAuthor(gallery.id, gallery.url)
+                                        .setColor(this.client.config.BOT.COLOUR)
+                                        .setDescription(
+                                            title
+                                                .join("\n")
+                                                .replace(
+                                                    `\`⬛ ${
+                                                        (index + 1).toString().length > 1
+                                                            ? `${index + 1}`
+                                                            : `${index + 1} `
+                                                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                        gallery.title.pretty.length >= 30
+                                                            ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                            : gallery.title.pretty
+                                                    }\``,
+                                                    `**\`🟥 ${
+                                                        (index + 1).toString().length > 1
+                                                            ? `${index + 1}`
+                                                            : `${index + 1} `
+                                                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                        gallery.title.pretty.length >= 30
+                                                            ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                            : gallery.title.pretty
+                                                    }\`**`
+                                                )
+                                        )
+                                        .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                        .setTitle(
+                                            this.client.translate("main.page", {
+                                                firstIndex: search.page.toLocaleString(),
+                                                lastIndex: search.numPages.toLocaleString(),
+                                            })
+                                        )
+                                        .setThumbnail(gallery.cover.url)
+                                        .addField(
+                                            this.client.translate("main.title"),
+                                            `\`${gallery.title.pretty}\``
+                                        )
+                                        .addField(
+                                            this.client.translate("main.pages"),
+                                            `\`${gallery.pages.length}\``
+                                        )
+                                        .addField(
+                                            this.client.translate("main.released"),
+                                            uploadedAt
+                                        )
+                                        .addField(
+                                            languageTags.length > 1
+                                                ? this.client.translate("main.languages")
+                                                : this.client.translate("main.language"),
+                                            `\`${
+                                                languageTags.length !== 0
+                                                    ? languageTags.join("`, `")
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        )
+                                        .addField(
+                                            artistTags.length > 1
+                                                ? this.client.translate("main.artists")
+                                                : this.client.translate("main.artist"),
+                                            `\`${
+                                                artistTags.length !== 0
+                                                    ? artistTags.join("`, `")
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        )
+                                        .addField(
+                                            characterTags.length > 1
+                                                ? this.client.translate("main.characters")
+                                                : this.client.translate("main.character"),
+                                            `\`${
+                                                characterTags.length !== 0
+                                                    ? characterTags.join("`, `")
+                                                    : this.client.translate("main.original")
+                                            }\``
+                                        )
+                                        .addField(
+                                            parodyTags.length > 1
+                                                ? this.client.translate("main.parodies")
+                                                : this.client.translate("main.parody"),
+                                            `\`${
+                                                parodyTags.length !== 0
+                                                    ? parodyTags
+                                                        .join("`, `")
+                                                        .replace(
+                                                            "original",
+                                                            `${this.client.translate("main.original")}`
+                                                        )
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        )
+                                        .addField(
+                                            contentTags.length > 1
+                                                ? this.client.translate("main.tags")
+                                                : this.client.translate("main.tag"),
+                                            `\`${
+                                                contentTags.length !== 0
+                                                    ? contentTags.join("`, `")
+                                                    : this.client.translate("main.none")
+                                            }\``
+                                        );
+                                });
+
+                                this.embeds = embeds.map((embed) => embed.data);
+                                this.embed = 1;
+                                this.updatePaginator();
                             });
-
-                            this.embeds = embeds.map((embed) => embed.data);
-                            this.embed = 1;
-                            this.updatePaginator();
-                        });
                     }
 
                     break;
@@ -574,30 +983,135 @@ export class SearchPaginator {
                     interaction.deferUpdate();
 
                     this.api.searchGalleries(this.search.query, 1).then((search) => {
-                        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                        const title = search.result.map(
+                            (gallery, index) =>
+                                `\`⬛ ${
+                                    (index + 1).toString().length > 1
+                                        ? `${index + 1}`
+                                        : `${index + 1} `
+                                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                    gallery.title.pretty.length >= 30
+                                        ? `${gallery.title.pretty.slice(0, 30)}...`
+                                        : gallery.title.pretty
+                                }\``
+                        );
                         const embeds = search.result.map((gallery, index) => {
-                            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
-                            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
-                            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                            const artistTags: string[] = gallery.tags.artists.map(
+                                (tag) => tag.name
+                            );
+                            const characterTags: string[] = gallery.tags.characters.map(
+                                (tag) => tag.name
+                            );
+                            const contentTags: string[] = gallery.tags.tags.map(
+                                (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+                            );
+                            const languageTags: string[] = gallery.tags.languages.map(
+                                (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+                            );
+                            const parodyTags: string[] = gallery.tags.parodies.map(
+                                (tag) => tag.name
+                            );
                             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                             return new RichEmbed()
                                 .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                                .setDescription(
+                                    title
+                                        .join("\n")
+                                        .replace(
+                                            `\`⬛ ${
+                                                (index + 1).toString().length > 1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                gallery.title.pretty.length >= 30
+                                                    ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                    : gallery.title.pretty
+                                            }\``,
+                                            `**\`🟥 ${
+                                                (index + 1).toString().length > 1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                gallery.title.pretty.length >= 30
+                                                    ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                    : gallery.title.pretty
+                                            }\`**`
+                                        )
+                                )
                                 .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                .setTitle(
+                                    this.client.translate("main.page", {
+                                        firstIndex: search.page.toLocaleString(),
+                                        lastIndex: search.numPages.toLocaleString(),
+                                    })
+                                )
                                 .setThumbnail(gallery.cover.url)
-                                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
+                                .addField(
+                                    this.client.translate("main.title"),
+                                    `\`${gallery.title.pretty}\``
+                                )
+                                .addField(
+                                    this.client.translate("main.pages"),
+                                    `\`${gallery.pages.length}\``
+                                )
                                 .addField(this.client.translate("main.released"), uploadedAt)
-                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                                .addField(
+                                    languageTags.length > 1
+                                        ? this.client.translate("main.languages")
+                                        : this.client.translate("main.language"),
+                                    `\`${
+                                        languageTags.length !== 0
+                                            ? languageTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    artistTags.length > 1
+                                        ? this.client.translate("main.artists")
+                                        : this.client.translate("main.artist"),
+                                    `\`${
+                                        artistTags.length !== 0
+                                            ? artistTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    characterTags.length > 1
+                                        ? this.client.translate("main.characters")
+                                        : this.client.translate("main.character"),
+                                    `\`${
+                                        characterTags.length !== 0
+                                            ? characterTags.join("`, `")
+                                            : this.client.translate("main.original")
+                                    }\``
+                                )
+                                .addField(
+                                    parodyTags.length > 1
+                                        ? this.client.translate("main.parodies")
+                                        : this.client.translate("main.parody"),
+                                    `\`${
+                                        parodyTags.length !== 0
+                                            ? parodyTags
+                                                .join("`, `")
+                                                .replace(
+                                                    "original",
+                                                    `${this.client.translate("main.original")}`
+                                                )
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    contentTags.length > 1
+                                        ? this.client.translate("main.tags")
+                                        : this.client.translate("main.tag"),
+                                    `\`${
+                                        contentTags.length !== 0
+                                            ? contentTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                );
                         });
 
                         this.embeds = embeds.map((embed) => embed.data);
@@ -609,37 +1123,146 @@ export class SearchPaginator {
                 case `last_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
 
-                    this.api.searchGalleries(this.search.query, this.search.numPages).then((search) => {
-                        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
-                        const embeds = search.result.map((gallery, index) => {
-                            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
-                            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
-                            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
-                            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+                    this.api
+                        .searchGalleries(this.search.query, this.search.numPages)
+                        .then((search) => {
+                            const title = search.result.map(
+                                (gallery, index) =>
+                                    `\`⬛ ${
+                                        (index + 1).toString().length > 1
+                                            ? `${index + 1}`
+                                            : `${index + 1} `
+                                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                        gallery.title.pretty.length >= 30
+                                            ? `${gallery.title.pretty.slice(0, 30)}...`
+                                            : gallery.title.pretty
+                                    }\``
+                            );
+                            const embeds = search.result.map((gallery, index) => {
+                                const artistTags: string[] = gallery.tags.artists.map(
+                                    (tag) => tag.name
+                                );
+                                const characterTags: string[] = gallery.tags.characters.map(
+                                    (tag) => tag.name
+                                );
+                                const contentTags: string[] = gallery.tags.tags.map(
+                                    (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+                                );
+                                const languageTags: string[] = gallery.tags.languages.map(
+                                    (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+                                );
+                                const parodyTags: string[] = gallery.tags.parodies.map(
+                                    (tag) => tag.name
+                                );
+                                const uploadedAt = `<t:${
+                                    gallery.uploadDate.getTime() / 1000
+                                }:F>`;
 
-                            return new RichEmbed()
-                                .setAuthor(gallery.id, gallery.url)
-                                .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
-                                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
-                                .setThumbnail(gallery.cover.url)
-                                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
-                                .addField(this.client.translate("main.released"), uploadedAt)
-                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                                return new RichEmbed()
+                                    .setAuthor(gallery.id, gallery.url)
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        title
+                                            .join("\n")
+                                            .replace(
+                                                `\`⬛ ${
+                                                    (index + 1).toString().length > 1
+                                                        ? `${index + 1}`
+                                                        : `${index + 1} `
+                                                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                    gallery.title.pretty.length >= 30
+                                                        ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                        : gallery.title.pretty
+                                                }\``,
+                                                `**\`🟥 ${
+                                                    (index + 1).toString().length > 1
+                                                        ? `${index + 1}`
+                                                        : `${index + 1} `
+                                                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                    gallery.title.pretty.length >= 30
+                                                        ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                        : gallery.title.pretty
+                                                }\`**`
+                                            )
+                                    )
+                                    .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                                    .setTitle(
+                                        this.client.translate("main.page", {
+                                            firstIndex: search.page.toLocaleString(),
+                                            lastIndex: search.numPages.toLocaleString(),
+                                        })
+                                    )
+                                    .setThumbnail(gallery.cover.url)
+                                    .addField(
+                                        this.client.translate("main.title"),
+                                        `\`${gallery.title.pretty}\``
+                                    )
+                                    .addField(
+                                        this.client.translate("main.pages"),
+                                        `\`${gallery.pages.length}\``
+                                    )
+                                    .addField(this.client.translate("main.released"), uploadedAt)
+                                    .addField(
+                                        languageTags.length > 1
+                                            ? this.client.translate("main.languages")
+                                            : this.client.translate("main.language"),
+                                        `\`${
+                                            languageTags.length !== 0
+                                                ? languageTags.join("`, `")
+                                                : this.client.translate("main.none")
+                                        }\``
+                                    )
+                                    .addField(
+                                        artistTags.length > 1
+                                            ? this.client.translate("main.artists")
+                                            : this.client.translate("main.artist"),
+                                        `\`${
+                                            artistTags.length !== 0
+                                                ? artistTags.join("`, `")
+                                                : this.client.translate("main.none")
+                                        }\``
+                                    )
+                                    .addField(
+                                        characterTags.length > 1
+                                            ? this.client.translate("main.characters")
+                                            : this.client.translate("main.character"),
+                                        `\`${
+                                            characterTags.length !== 0
+                                                ? characterTags.join("`, `")
+                                                : this.client.translate("main.original")
+                                        }\``
+                                    )
+                                    .addField(
+                                        parodyTags.length > 1
+                                            ? this.client.translate("main.parodies")
+                                            : this.client.translate("main.parody"),
+                                        `\`${
+                                            parodyTags.length !== 0
+                                                ? parodyTags
+                                                    .join("`, `")
+                                                    .replace(
+                                                        "original",
+                                                        `${this.client.translate("main.original")}`
+                                                    )
+                                                : this.client.translate("main.none")
+                                        }\``
+                                    )
+                                    .addField(
+                                        contentTags.length > 1
+                                            ? this.client.translate("main.tags")
+                                            : this.client.translate("main.tag"),
+                                        `\`${
+                                            contentTags.length !== 0
+                                                ? contentTags.join("`, `")
+                                                : this.client.translate("main.none")
+                                        }\``
+                                    );
+                            });
+
+                            this.embeds = embeds.map((embed) => embed.data);
+                            this.embed = 1;
+                            this.updatePaginator();
                         });
-
-                        this.embeds = embeds.map((embed) => embed.data);
-                        this.embed = 1;
-                        this.updatePaginator();
-                    });
 
                     break;
             }
@@ -647,16 +1270,20 @@ export class SearchPaginator {
             switch (interaction.data.customID) {
                 case `jumpto_result_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
-                    const pageResult = parseInt(Util.getModalID(interaction, "result_number"));
+          const pageResult = parseInt(
+                        Util.getModalID(interaction, "result_number")
+                    );
 
                     if (isNaN(pageResult)) {
                         return interaction.createMessage({
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.invalid")).data
+                                    .setDescription(
+                                        this.client.translate("main.result.enter.invalid")
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -665,9 +1292,13 @@ export class SearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() })).data
+                                    .setDescription(
+                                        this.client.translate("main.result.enter.unknown", {
+                                            index: pageResult.toLocaleString(),
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -676,9 +1307,13 @@ export class SearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.result.enter.unknown", { index: pageResult.toLocaleString() })).data
+                                    .setDescription(
+                                        this.client.translate("main.result.enter.unknown", {
+                                            index: pageResult.toLocaleString(),
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -688,16 +1323,20 @@ export class SearchPaginator {
                     break;
                 case `jumpto_result_page_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
-                    const page = parseInt(Util.getModalID(interaction, "result_page_number"));
+          const page = parseInt(
+                        Util.getModalID(interaction, "result_page_number")
+                    );
 
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.invalid")).data
+                                    .setDescription(
+                                        this.client.translate("main.page.enter.invalid")
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -706,9 +1345,13 @@ export class SearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
+                                    .setDescription(
+                                        this.client.translate("main.page.enter.unknown", {
+                                            index: page.toLocaleString(),
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -717,37 +1360,146 @@ export class SearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
+                                    .setDescription(
+                                        this.client.translate("main.page.enter.unknown", {
+                                            index: page.toLocaleString(),
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
                     this.api.searchGalleries(this.search.query, page).then((search) => {
-                        const title = search.result.map((gallery, index) => `\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``);
+                        const title = search.result.map(
+                            (gallery, index) =>
+                                `\`⬛ ${
+                                    (index + 1).toString().length > 1
+                                        ? `${index + 1}`
+                                        : `${index + 1} `
+                                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                    gallery.title.pretty.length >= 30
+                                        ? `${gallery.title.pretty.slice(0, 30)}...`
+                                        : gallery.title.pretty
+                                }\``
+                        );
                         const embeds = search.result.map((gallery, index) => {
-                            const artistTags: string[] = gallery.tags.artists.map((tag) => tag.name);
-                            const characterTags: string[] = gallery.tags.characters.map((tag) => tag.name);
-                            const contentTags: string[] = gallery.tags.tags.map((tag) => `${tag.name} (${tag.count.toLocaleString()})`);
-                            const languageTags: string[] = gallery.tags.languages.map((tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1));
-                            const parodyTags: string[] = gallery.tags.parodies.map((tag) => tag.name);
+                            const artistTags: string[] = gallery.tags.artists.map(
+                                (tag) => tag.name
+                            );
+                            const characterTags: string[] = gallery.tags.characters.map(
+                                (tag) => tag.name
+                            );
+                            const contentTags: string[] = gallery.tags.tags.map(
+                                (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+                            );
+                            const languageTags: string[] = gallery.tags.languages.map(
+                                (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+                            );
+                            const parodyTags: string[] = gallery.tags.parodies.map(
+                                (tag) => tag.name
+                            );
                             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
                             return new RichEmbed()
                                 .setAuthor(gallery.id, gallery.url)
                                 .setColor(this.client.config.BOT.COLOUR)
-                                .setDescription(title.join("\n").replace(`\`⬛ ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\``, `**\`🟥 ${(index + 1).toString().length > 1 ? `${index + 1}` : `${index + 1} `}\` - [\`${gallery.id}\`](${gallery.url}) - \`${gallery.title.pretty.length >= 30 ? `${gallery.title.pretty.slice(0, 30)}...` : gallery.title.pretty}\`**`))
+                                .setDescription(
+                                    title
+                                        .join("\n")
+                                        .replace(
+                                            `\`⬛ ${
+                                                (index + 1).toString().length > 1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                gallery.title.pretty.length >= 30
+                                                    ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                    : gallery.title.pretty
+                                            }\``,
+                                            `**\`🟥 ${
+                                                (index + 1).toString().length > 1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                                gallery.title.pretty.length >= 30
+                                                    ? `${gallery.title.pretty.slice(0, 30)}...`
+                                                    : gallery.title.pretty
+                                            }\`**`
+                                        )
+                                )
                                 .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                                .setTitle(this.client.translate("main.page", { firstIndex: search.page.toLocaleString(), lastIndex: search.numPages.toLocaleString() }))
+                                .setTitle(
+                                    this.client.translate("main.page", {
+                                        firstIndex: search.page.toLocaleString(),
+                                        lastIndex: search.numPages.toLocaleString(),
+                                    })
+                                )
                                 .setThumbnail(gallery.cover.url)
-                                .addField(this.client.translate("main.title"), `\`${gallery.title.pretty}\``)
-                                .addField(this.client.translate("main.pages"), `\`${gallery.pages.length}\``)
+                                .addField(
+                                    this.client.translate("main.title"),
+                                    `\`${gallery.title.pretty}\``
+                                )
+                                .addField(
+                                    this.client.translate("main.pages"),
+                                    `\`${gallery.pages.length}\``
+                                )
                                 .addField(this.client.translate("main.released"), uploadedAt)
-                                .addField(languageTags.length > 1 ? this.client.translate("main.languages") : this.client.translate("main.language"), `\`${languageTags.length !== 0 ? languageTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(artistTags.length > 1 ? this.client.translate("main.artists") : this.client.translate("main.artist"), `\`${artistTags.length !== 0 ? artistTags.join("`, `") : this.client.translate("main.none")}\``)
-                                .addField(characterTags.length > 1 ? this.client.translate("main.characters") : this.client.translate("main.character"), `\`${characterTags.length !== 0 ? characterTags.join("`, `") : this.client.translate("main.original")}\``)
-                                .addField(parodyTags.length > 1 ? this.client.translate("main.parodies") : this.client.translate("main.parody"), `\`${parodyTags.length !== 0 ? parodyTags.join("`, `").replace("original", `${this.client.translate("main.original")}`) : this.client.translate("main.none")}\``)
-                                .addField(contentTags.length > 1 ? this.client.translate("main.tags") : this.client.translate("main.tag"), `\`${contentTags.length !== 0 ? contentTags.join("`, `") : this.client.translate("main.none")}\``);
+                                .addField(
+                                    languageTags.length > 1
+                                        ? this.client.translate("main.languages")
+                                        : this.client.translate("main.language"),
+                                    `\`${
+                                        languageTags.length !== 0
+                                            ? languageTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    artistTags.length > 1
+                                        ? this.client.translate("main.artists")
+                                        : this.client.translate("main.artist"),
+                                    `\`${
+                                        artistTags.length !== 0
+                                            ? artistTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    characterTags.length > 1
+                                        ? this.client.translate("main.characters")
+                                        : this.client.translate("main.character"),
+                                    `\`${
+                                        characterTags.length !== 0
+                                            ? characterTags.join("`, `")
+                                            : this.client.translate("main.original")
+                                    }\``
+                                )
+                                .addField(
+                                    parodyTags.length > 1
+                                        ? this.client.translate("main.parodies")
+                                        : this.client.translate("main.parody"),
+                                    `\`${
+                                        parodyTags.length !== 0
+                                            ? parodyTags
+                                                .join("`, `")
+                                                .replace(
+                                                    "original",
+                                                    `${this.client.translate("main.original")}`
+                                                )
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    contentTags.length > 1
+                                        ? this.client.translate("main.tags")
+                                        : this.client.translate("main.tag"),
+                                    `\`${
+                                        contentTags.length !== 0
+                                            ? contentTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                );
                         });
 
                         this.embeds = embeds.map((embed) => embed.data);
@@ -762,24 +1514,24 @@ export class SearchPaginator {
     }
 
     /**
-     * Run the paginator class
-     */
+   * Run the paginator class
+   */
     public runPaginator() {
         this.client.on("interactionCreate", this.onSearch);
         this.running = true;
     }
 
     /**
-     * Stop the paginator class
-     */
+   * Stop the paginator class
+   */
     public stopPaginator() {
         this.client.off("interactionCreate", this.onSearch);
         this.running = false;
     }
 
     /**
-    * Update the paginator class
-    */
+   * Update the paginator class
+   */
     public updatePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -859,12 +1611,16 @@ export class SearchPaginator {
 
         this.message.edit({
             components,
-            embeds: [this.embeds[this.embed - 1]]
+            embeds: [this.embeds[this.embed - 1]],
         });
     }
 }
 
-export async function createSearchPaginator(client: NReaderClient, search: Search, interaction: CommandInteraction<TextChannel>) {
+export async function createSearchPaginator(
+    client: NReaderClient,
+    search: Search,
+    interaction: CommandInteraction<TextChannel>
+) {
     const paginator = new SearchPaginator(client, search, interaction);
 
     paginator.runPaginator();

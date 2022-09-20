@@ -10,77 +10,77 @@ import { Util } from "./Util";
 
 const HEX_REGEX = /^#?([a-fA-F0-9]{6})$/;
 const URL_REGEX =
-    /^http(s)?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+  /^http(s)?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
 /**
  * Represents an Embed class constructor
  */
 export class RichEmbed {
     /**
-     * The author of the embed
-     * @type {EmbedAuthor}
-     */
+   * The author of the embed
+   * @type {EmbedAuthor}
+   */
     author: EmbedAuthor;
 
     /**
-     * The color of the embed. Color is in hex number
-     * @type {Number}
-     */
+   * The color of the embed. Color is in hex number
+   * @type {Number}
+   */
     color: number;
 
     /**
-     * The description of the embed
-     * @type {String}
-     */
+   * The description of the embed
+   * @type {String}
+   */
     description: string;
 
     /**
-     * An array of fields of the embed
-     * @type {Array<EmbedField>}
-     */
+   * An array of fields of the embed
+   * @type {Array<EmbedField>}
+   */
     fields: EmbedField[];
 
     /**
-     * The footer of the embed
-     * @type {EmbedFooter}
-     */
+   * The footer of the embed
+   * @type {EmbedFooter}
+   */
     footer: EmbedFooter;
 
     /**
-     * The image of the embed
-     * @type {EmbedImage}
-     */
+   * The image of the embed
+   * @type {EmbedImage}
+   */
     image: EmbedImage;
 
     /**
-     * The thumbnail of the embed
-     * @type {EmbedImage}
-     */
+   * The thumbnail of the embed
+   * @type {EmbedImage}
+   */
     thumbnail: EmbedImage;
 
     /**
-     * The timestamp of the embed
-     * @type {String}
-     */
+   * The timestamp of the embed
+   * @type {String}
+   */
     timestamp: string;
 
     /**
-     * The title of the embed
-     * @type {String}
-     */
+   * The title of the embed
+   * @type {String}
+   */
     title: string;
 
     /**
-     * The URL of the embed
-     * @type {String}
-     */
+   * The URL of the embed
+   * @type {String}
+   */
     url: string;
 
     /**
-     * Represents an Embed class constructor
-     * @param {EmbedOptions} data The embed data
-     * @param {Boolean} skipValidation
-     */
+   * Represents an Embed class constructor
+   * @param {EmbedOptions} data The embed data
+   * @param {Boolean} skipValidation
+   */
     constructor(data: EmbedOptions = {}, skipValidation = false) {
         if (data.title) this.title = data.title;
         if (data.description) this.description = data.description;
@@ -95,13 +95,15 @@ export class RichEmbed {
 
         if (data.fields) {
             // @ts-ignore:next-line
-            this.fields = skipValidation ? data.fields.map(Util.cloneObject) : this.normalizeFields(data.fields as EmbedField);
+            this.fields = skipValidation
+                ? data.fields.map(Util.cloneObject)
+                : this.normalizeFields(data.fields as EmbedField);
         }
     }
 
     /**
-     * The whole data of the embed
-     */
+   * The whole data of the embed
+   */
     get data(): EmbedOptions {
         return {
             author: this.author,
@@ -118,40 +120,47 @@ export class RichEmbed {
     }
 
     /**
-     * The accumulated length for the embed title, description, field, footer text, and author name
-     * @type {Number}
-     * @readonly
-     */
+   * The accumulated length for the embed title, description, field, footer text, and author name
+   * @type {Number}
+   * @readonly
+   */
     get length(): number {
         return (
             (this.title?.length ?? 0) +
-            (this.description?.length ?? 0) +
-            (this.fields.length >= 1
-                ? this.fields.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0)
-                : 0) +
-            (this.footer?.text.length ?? 0) +
-            (this.author?.name.length ?? 0)
+      (this.description?.length ?? 0) +
+      (this.fields.length >= 1
+          ? this.fields.reduce(
+              (prev, curr) => prev + curr.name.length + curr.value.length,
+              0
+          )
+          : 0) +
+      (this.footer?.text.length ?? 0) +
+      (this.author?.name.length ?? 0)
         );
     }
 
     /**
-     * Compares two given embed field to check whether they are equal
-     * @param field The first field
-     * @param otherField The second field
-     * @returns {Boolean}
-     * @ignore
-     */
+   * Compares two given embed field to check whether they are equal
+   * @param field The first field
+   * @param otherField The second field
+   * @returns {Boolean}
+   * @ignore
+   */
     private _fieldEquals(field: EmbedField, otherField: EmbedField): boolean {
-        return field.name === otherField.name && field.value === otherField.value && field.inline === otherField.inline;
+        return (
+            field.name === otherField.name &&
+      field.value === otherField.value &&
+      field.inline === otherField.inline
+        );
     }
 
     /**
-     * Adds a field to the embed. Max is 25
-     * @param name The name of the field
-     * @param value The value of the field
-     * @param inline Whether the field should be displayed inline
-     * @returns {RichEmbed}
-     */
+   * Adds a field to the embed. Max is 25
+   * @param name The name of the field
+   * @param value The value of the field
+   * @param inline Whether the field should be displayed inline
+   * @returns {RichEmbed}
+   */
     addField(name: string, value: string, inline = false): RichEmbed {
         if (this.fields.length >= 25)
             throw new RangeError("Embeds cannot contain more than 25 fields");
@@ -179,36 +188,40 @@ export class RichEmbed {
     }
 
     /**
-     * Check if the embed is equal to another embed by comparing every single one of their properties
-     * @param embed The embed to compare with
-     * @returns {Boolean}
-     */
+   * Check if the embed is equal to another embed by comparing every single one of their properties
+   * @param embed The embed to compare with
+   * @returns {Boolean}
+   */
     equals(embed: Embed): boolean {
         return (
             this.author?.name === embed.author?.name &&
-            this.author?.url === embed.author?.url &&
-            this.author?.iconURL === (embed.author?.iconURL ?? embed.author?.iconURL) &&
-            this.color === embed.color &&
-            this.title === embed.title &&
-            this.description === embed.description &&
-            this.url === embed.url &&
-            this.timestamp === embed.timestamp &&
-            this.fields.length === (embed.fields ? embed.fields?.length : 0) &&
-            this.fields.every((field, i) => this._fieldEquals(field, embed.fields[i])) &&
-            this.footer?.text === embed.footer?.text &&
-            this.footer?.iconURL === (embed.footer?.iconURL ?? embed.footer?.iconURL) &&
-            this.image?.url === embed.image?.url &&
-            this.thumbnail?.url === embed.thumbnail?.url
+      this.author?.url === embed.author?.url &&
+      this.author?.iconURL ===
+        (embed.author?.iconURL ?? embed.author?.iconURL) &&
+      this.color === embed.color &&
+      this.title === embed.title &&
+      this.description === embed.description &&
+      this.url === embed.url &&
+      this.timestamp === embed.timestamp &&
+      this.fields.length === (embed.fields ? embed.fields?.length : 0) &&
+      this.fields.every((field, i) =>
+          this._fieldEquals(field, embed.fields[i])
+      ) &&
+      this.footer?.text === embed.footer?.text &&
+      this.footer?.iconURL ===
+        (embed.footer?.iconURL ?? embed.footer?.iconURL) &&
+      this.image?.url === embed.image?.url &&
+      this.thumbnail?.url === embed.thumbnail?.url
         );
     }
 
     /**
-     * Normalize field input verifies strings
-     * @param name The name of the field
-     * @param value The value of the field
-     * @param inline Whether the field should be displayed inline
-     * @returns {EmbedField}
-     */
+   * Normalize field input verifies strings
+   * @param name The name of the field
+   * @param value The value of the field
+   * @param inline Whether the field should be displayed inline
+   * @returns {EmbedField}
+   */
     normalizeField(name: string, value: string, inline = false): EmbedField {
         return {
             inline,
@@ -218,25 +231,29 @@ export class RichEmbed {
     }
 
     /**
-     * Normalize field input and resolves strings
-     * @param fields An array of fields to normalize
-     * @returns {EmbedField[]}
-     */
+   * Normalize field input and resolves strings
+   * @param fields An array of fields to normalize
+   * @returns {EmbedField[]}
+   */
     normalizeFields(...fields: EmbedField[]): EmbedField[] {
         return fields
             .flat(2)
-            .map(field =>
-                this.normalizeField(field.name, field.value, typeof field.inline === "boolean" ? field.inline : false),
+            .map((field) =>
+                this.normalizeField(
+                    field.name,
+                    field.value,
+                    typeof field.inline === "boolean" ? field.inline : false
+                )
             );
     }
 
     /**
-     * Sets the author of the embed
-     * @param name The name of the author
-     * @param url The URL of the author
-     * @param iconURL The icon URL of the author
-     * @returns {RichEmbed}
-     */
+   * Sets the author of the embed
+   * @param name The name of the author
+   * @param url The URL of the author
+   * @param iconURL The icon URL of the author
+   * @returns {RichEmbed}
+   */
     setAuthor(name: string, url?: string, iconURL?: string): RichEmbed {
         if (typeof name !== "string")
             throw new TypeError(
@@ -269,10 +286,10 @@ export class RichEmbed {
     }
 
     /**
-     * Sets the color of the embed
-     * @param color The color of the embed. Color must be in hex number
-     * @returns {RichEmbed}
-     */
+   * Sets the color of the embed
+   * @param color The color of the embed. Color must be in hex number
+   * @returns {RichEmbed}
+   */
     setColor(color: string | number): RichEmbed {
         if (typeof color !== "string" && typeof color !== "number")
             throw new TypeError(
@@ -292,10 +309,10 @@ export class RichEmbed {
     }
 
     /**
-     * Sets the description of the embed
-     * @param description The description of the embed
-     * @returns {RichEmbed}
-     */
+   * Sets the description of the embed
+   * @param description The description of the embed
+   * @returns {RichEmbed}
+   */
     setDescription(description: string): RichEmbed {
         if (typeof description !== "string")
             throw new TypeError(
@@ -308,11 +325,11 @@ export class RichEmbed {
     }
 
     /**
-     * Sets the foother of the embed
-     * @param text The text of the embed
-     * @param iconURL The icon URL of the embed
-     * @returns {RichEmbed}
-     */
+   * Sets the foother of the embed
+   * @param text The text of the embed
+   * @param iconURL The icon URL of the embed
+   * @returns {RichEmbed}
+   */
     setFooter(text: string, iconURL: string = undefined): RichEmbed {
         if (typeof text !== "string")
             throw new TypeError(
@@ -336,44 +353,46 @@ export class RichEmbed {
     }
 
     /**
-     * Sets the image of the embed
-     * @param imageURL The image URL of the embed
-     * @returns {RichEmbed}
-     */
+   * Sets the image of the embed
+   * @param imageURL The image URL of the embed
+   * @returns {RichEmbed}
+   */
     setImage(imageURL: string): RichEmbed {
         this.image = { url: imageURL };
         return this;
     }
 
     /**
-     * Sets the thumbnail of the embed
-     * @param thumbnailURL The thumnail URL of the embed
-     * @returns {RichEmbed}
-     */
+   * Sets the thumbnail of the embed
+   * @param thumbnailURL The thumnail URL of the embed
+   * @returns {RichEmbed}
+   */
     setThumbnail(thumbnailURL: string): RichEmbed {
         this.thumbnail = { url: thumbnailURL };
         return this;
     }
 
     /**
-     * Sets the timestamp of the embed
-     * @param timestamp The timestamp of the embed. Default timestamp is current date
-     * @returns {RichEmbed}
-     */
+   * Sets the timestamp of the embed
+   * @param timestamp The timestamp of the embed. Default timestamp is current date
+   * @returns {RichEmbed}
+   */
     setTimestamp(timestamp?: string): RichEmbed {
         if (timestamp && Number.isNaN(new Date(timestamp).getTime())) {
             throw new Error("Invalid Date");
         }
 
-        this.timestamp = timestamp ? new Date(timestamp).toISOString() : new Date().toISOString();
+        this.timestamp = timestamp
+            ? new Date(timestamp).toISOString()
+            : new Date().toISOString();
         return this;
     }
 
     /**
-     * Sets the title of the embed
-     * @param title The title of the embed
-     * @returns {RichEmbed}
-     */
+   * Sets the title of the embed
+   * @param title The title of the embed
+   * @returns {RichEmbed}
+   */
     setTitle(title: string): RichEmbed {
         if (typeof title !== "string")
             throw new TypeError(
@@ -386,10 +405,10 @@ export class RichEmbed {
     }
 
     /**
-     * Sets the URL of the embed
-     * @param url The URL of the embed
-     * @returns {RichEmbed}
-     */
+   * Sets the URL of the embed
+   * @param url The URL of the embed
+   * @returns {RichEmbed}
+   */
     setURL(url: string): RichEmbed {
         if (typeof url !== "string")
             throw new TypeError(
@@ -401,12 +420,12 @@ export class RichEmbed {
     }
 
     /**
-     * Removes, replaces, and inserts fields in the embed. Max is 25
-     * @param index The index to start at
-     * @param deleteCount The number of fields to remove
-     * @param fields The replacing fields objects
-     * @returns {RichEmbed}
-     */
+   * Removes, replaces, and inserts fields in the embed. Max is 25
+   * @param index The index to start at
+   * @param deleteCount The number of fields to remove
+   * @param fields The replacing fields objects
+   * @returns {RichEmbed}
+   */
     spliceFields(index: number, deleteCount: number, ...fields: any): RichEmbed {
         this.fields.splice(index, deleteCount, ...this.normalizeFields(...fields));
         return this;

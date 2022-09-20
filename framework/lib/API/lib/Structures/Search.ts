@@ -1,36 +1,39 @@
-import { IRawGallerySearch, IRawGallerySearchParam, TSearchSort } from "../../Constant";
+import {
+    IRawGallerySearch,
+    IRawGallerySearchParam,
+    TSearchSort,
+} from "../../Constant";
 import { Gallery } from "./Gallery";
 
 export class Search {
-
     /**
-     * The total pages of the search
-     */
+   * The total pages of the search
+   */
     readonly numPages: number;
 
     /**
-     * The current page of the search
-     */
+   * The current page of the search
+   */
     readonly page: number;
 
     /**
-     * The results length of the search per page
-     */
+   * The results length of the search per page
+   */
     readonly perPage: number;
 
     /**
-     * The query of the search
-     */
+   * The query of the search
+   */
     readonly query: string | null;
 
     /**
-     * The results of the search
-     */
+   * The results of the search
+   */
     readonly result: Gallery[];
 
     /**
-     * The sort of the search
-     */
+   * The sort of the search
+   */
     readonly sort: TSearchSort | null;
 
     constructor(data: IRawGallerySearch, param?: IRawGallerySearchParam) {

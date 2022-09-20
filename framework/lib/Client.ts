@@ -17,44 +17,47 @@ import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
 
 export class NReaderClient extends Client {
-
     /**
-     * NHentai API
-     */
+   * NHentai API
+   */
     public api = new RequestHandler();
 
     /**
-     * BotList API Stats
-     */
+   * BotList API Stats
+   */
     public apiStats = new APIStats(this);
 
     /**
-     * Collection of the bot's commands
-     */
+   * Collection of the bot's commands
+   */
     public commands = new Collection<ICommand>();
 
     /**
-     * The configuration of the bot. Contains secret token
-     */
+   * The configuration of the bot. Contains secret token
+   */
     public config: IConfig;
 
     /**
-     * Collection of the bot's gateway events
-     */
+   * Collection of the bot's gateway events
+   */
     public events = new Collection<IEvent>();
 
     /**
-     * Logger
-     */
+   * Logger
+   */
     public logger = new Logger();
 
     /**
-     * Initialise every handler for NReader
-     */
+   * Initialise every handler for NReader
+   */
     public initialiseEverything() {
         this.connect();
         connect(this.config.BOT.MONGODB).then(async () => {
-            this.logger.info({ message: "Database Connected", subTitle: "NReaderFramework::MongoDB", title: "DATABASE" });
+            this.logger.info({
+                message: "Database Connected",
+                subTitle: "NReaderFramework::MongoDB",
+                title: "DATABASE",
+            });
 
             const guilds = this.guilds.map((guild) => guild.id);
 
@@ -65,11 +68,11 @@ export class NReaderClient extends Client {
                     GuildModel.create({
                         createdAt: new Date(),
                         id: guilds[i],
-                        settings: ({
+                        settings: {
                             blacklisted: false,
                             locale: "en",
-                            whitelisted: false
-                        } as IGuildSchemaSettings)
+                            whitelisted: false,
+                        } as IGuildSchemaSettings,
                     });
                 }
             }
@@ -79,7 +82,9 @@ export class NReaderClient extends Client {
         const eventPath = join(__dirname, "..", "..", "bot", "src", "Events");
 
         readdirSync(commandPath).forEach(async (dir) => {
-            const commands = readdirSync(`${commandPath}/${dir}`).filter((file) => file.endsWith(".ts"));
+            const commands = readdirSync(`${commandPath}/${dir}`).filter((file) =>
+                file.endsWith(".ts")
+            );
 
             for (const file of commands) {
                 const { command } = await import(`${commandPath}/${dir}/${file}`);
@@ -101,48 +106,53 @@ export class NReaderClient extends Client {
     }
 
     /**
-     * Initialise localisation for NReader
-     * @param locale The requested locale
-     * @returns {Promise<TFunction>}
-     */
+   * Initialise localisation for NReader
+   * @param locale The requested locale
+   * @returns {Promise<TFunction>}
+   */
     public initialiseLocale(locale: TLocale): Promise<TFunction> {
         return use(i18NextICU).init({
             fallbackLng: "en",
             lng: locale,
             resources: {
                 en: {
-                    translation: localeEN
+                    translation: localeEN,
                 },
                 id: {
-                    translation: localeID
+                    translation: localeID,
                 },
                 ja: {
-                    translation: localeJA
+                    translation: localeJA,
                 },
                 zh: {
-                    translation: localeZH
-                }
-            }
+                    translation: localeZH,
+                },
+            },
         });
     }
 
     /**
-     * Translate keys
-     * @param key The translation key
-     * @param format Key format
-     */
+   * Translate keys
+   * @param key The translation key
+   * @param format Key format
+   */
     public translate(key: TranslationKey, format?: object): string;
 
-    /**
-      * Translate keys from requested locale
-      * @param key The translation key
-      * @param format Key format
-      * @returns {string}
-      */
     /* @ts-ignore */
-    public translateLocale(locale: TLocale, key: TranslationKey, format?: object): string {
+    public translateLocale(
+        locale: TLocale,
+        key: TranslationKey,
+        format?: object
+    ): string {
         this.initialiseLocale(locale);
 
         return t(key, format);
     }
+
+    /**
+   * Translate keys from requested locale
+   * @param key The translation key
+   * @param format Key format
+   * @returns {string}
+   */
 }
