@@ -5,6 +5,7 @@ env:
 plugins:
   - sort-keys-fix
   - sort-imports-es6-autofix
+  - sort-class-members
 extends:
   - eslint:recommended
   - plugin:@typescript-eslint/eslint-recommended
@@ -56,3 +57,21 @@ rules:
     - asc
   sort-keys-fix/sort-keys-fix:
     - 2
+  sort-class-members/sort-class-members:
+    - 2
+    - order:
+        - "[alphabetical-properties]"
+        - constructor
+        - "[alphabetical-getters]"
+        - "[alphabetical-methods]"
+        - "[everything-else]"
+      groups:
+        alphabetical-properties:
+          - type: property
+            sort: alphabetical
+        alphabetical-getters:
+          - kind: get
+            sort: alphabetical
+        alphabetical-methods:
+          - type: method
+            sort: alphabetical
