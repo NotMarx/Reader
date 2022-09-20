@@ -8,9 +8,8 @@
   },
   "scripts": {
     "build:locale": "ts-node ./lib/Modules/LocalisationCompiler.ts",
-    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
-    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && prettier --write --list-different . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
-    "lint:prettier": "prettier --check . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\""
+    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && prettier --check . && echo \"\u001b[1m\u001b[32mLINT SUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mLINT FAILED\u001b[39m\u001b[22m\"",
+    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && prettier --write --list-different . && echo \"\u001b[1m\u001b[32mLINT SUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mLINT FAILED\u001b[39m\u001b[22m\""
   },
   "keywords": [
     "typescript",
