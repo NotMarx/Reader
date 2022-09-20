@@ -1,13 +1,12 @@
 export class APIError extends Error {
-
     /**
-     * The error response
-     */
+   * The error response
+   */
     response: Record<string, unknown>;
 
     /**
-     * The Endpoint URL that caused the error
-     */
+   * The Endpoint URL that caused the error
+   */
     url: string;
 
     constructor(response: Record<string, unknown>, url: string) {

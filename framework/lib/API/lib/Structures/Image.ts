@@ -3,30 +3,29 @@ import Endpoints from "../REST/Endpoints";
 import { Gallery } from "./Gallery";
 
 export class Image {
-
     /**
-     * The file extension
-     */
+   * The file extension
+   */
     readonly extension: TExtension;
 
     /**
-     * The height of the image (in pixels)
-     */
+   * The height of the image (in pixels)
+   */
     readonly height: number;
 
     /**
-     * The page number. Returns null if it represents a cover/thumbnail
-     */
+   * The page number. Returns null if it represents a cover/thumbnail
+   */
     readonly page: number | null;
 
     /**
-     * The URL of the image
-     */
+   * The URL of the image
+   */
     readonly url: string;
 
     /**
-     * The width of the image (in pixels)
-     */
+   * The width of the image (in pixels)
+   */
     readonly width: number;
 
     constructor(image: IImage, name: string | number, gallery: Gallery) {

@@ -1,5 +1,16 @@
 import { Gallery } from "../API";
-import { CommandInteraction, ComponentInteraction, Constants, EmbedOptions, InteractionContent, MessageActionRow, Message, ModalActionRow, ModalSubmitInteraction, TextChannel } from "oceanic.js";
+import {
+    CommandInteraction,
+    ComponentInteraction,
+    Constants,
+    EmbedOptions,
+    InteractionContent,
+    MessageActionRow,
+    Message,
+    ModalActionRow,
+    ModalSubmitInteraction,
+    TextChannel,
+} from "oceanic.js";
 import { ComponentBuilder } from "@oceanicjs/component-builder";
 import { NReaderClient } from "../Client";
 import { RichEmbed } from "../Utils/RichEmbed";
@@ -8,56 +19,64 @@ import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
 
 export class ReadSearchPaginator {
-
     /**
-     * NReader client
-     */
+   * NReader client
+   */
     client: NReaderClient;
 
     /**
-     * The index of current embed page
-     */
+   * The index of current embed page
+   */
     embed: number;
 
     /**
-     * An array of embed pages
-     */
+   * An array of embed pages
+   */
     embeds: EmbedOptions[];
 
     /**
-     * Current NHentai gallery
-     */
+   * Current NHentai gallery
+   */
     gallery: Gallery;
 
     /**
-     * Oceanic command interaction
-     */
+   * Oceanic command interaction
+   */
     interaction: CommandInteraction<TextChannel>;
 
     /**
-     * The message for embed pages
-     */
+   * The message for embed pages
+   */
     message: Message<TextChannel>;
 
     /**
-     * Whether the paginator is running or not
-     */
+   * Whether the paginator is running or not
+   */
     running: boolean;
 
     /**
-     * Creates a read paginator
-     * @param client NReader client
-     * @param gallery Current NHentai gallery
-     * @param interaction Oceanic command interaction
-     */
-    constructor(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextChannel>) {
+   * Creates a read paginator
+   * @param client NReader client
+   * @param gallery Current NHentai gallery
+   * @param interaction Oceanic command interaction
+   */
+    constructor(
+        client: NReaderClient,
+        gallery: Gallery,
+        interaction: CommandInteraction<TextChannel>
+    ) {
         this.client = client;
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
             return new RichEmbed()
                 .setAuthor(gallery.id, page.url)
                 .setColor(client.config.BOT.COLOUR)
-                .setFooter(client.translate("main.page", { firstIndex: index + 1, lastIndex: gallery.pages.length }))
+                .setFooter(
+                    client.translate("main.page", {
+                        firstIndex: index + 1,
+                        lastIndex: gallery.pages.length,
+                    })
+                )
                 .setImage(page.url)
                 .setTitle(gallery.title.pretty)
                 .setURL(gallery.url).data;
@@ -69,8 +88,8 @@ export class ReadSearchPaginator {
     }
 
     /**
-     * Initialise the paginator class
-     */
+   * Initialise the paginator class
+   */
     public async initialisePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -118,17 +137,21 @@ export class ReadSearchPaginator {
 
         const messageContent: InteractionContent = {
             components,
-            embeds: [this.embeds[this.embed - 1]]
+            embeds: [this.embeds[this.embed - 1]],
         };
 
         this.message = await this.interaction.editOriginal(messageContent);
     }
 
     /**
-     * Start reading
-     * @param interaction Oceanic component interaction
-     */
-    public async onRead(interaction: ComponentInteraction<TextChannel> | ModalSubmitInteraction<TextChannel>) {
+   * Start reading
+   * @param interaction Oceanic component interaction
+   */
+    public async onRead(
+        interaction:
+        | ComponentInteraction<TextChannel>
+        | ModalSubmitInteraction<TextChannel>
+    ) {
         if (interaction.member.bot) return;
 
         const userData = await UserModel.findOne({ id: interaction.member.id });
@@ -145,21 +168,34 @@ export class ReadSearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.removed", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` })).data
+                                    .setDescription(
+                                        this.client.translate("main.bookmark.removed", {
+                                            id: `[\`${
+                                                this.embeds[0].author.name
+                                            }\`](${NReaderConstant.Source.ID(
+                                                this.embeds[0].author.name
+                                            )})`,
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
-                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $pull: { "bookmark": this.embeds[0].author.name } }).exec();
+                        UserModel.findOneAndUpdate(
+                            { id: interaction.member.id },
+                            { $pull: { bookmark: this.embeds[0].author.name } }
+                        ).exec();
                     } else {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
                                     new RichEmbed()
                                         .setColor(this.client.config.BOT.COLOUR)
-                                        .setDescription(this.client.translate("main.bookmark.maxed")).data
+                                        .setDescription(
+                                            this.client.translate("main.bookmark.maxed")
+                                        ).data,
                                 ],
-                                flags: Constants.MessageFlags.EPHEMERAL
+                                flags: Constants.MessageFlags.EPHEMERAL,
                             });
                         }
 
@@ -167,12 +203,23 @@ export class ReadSearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.bookmark.saved", { id: `[\`${this.embeds[0].author.name}\`](${NReaderConstant.Source.ID(this.embeds[0].author.name)})` })).data
+                                    .setDescription(
+                                        this.client.translate("main.bookmark.saved", {
+                                            id: `[\`${
+                                                this.embeds[0].author.name
+                                            }\`](${NReaderConstant.Source.ID(
+                                                this.embeds[0].author.name
+                                            )})`,
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
-                        UserModel.findOneAndUpdate({ id: interaction.member.id }, { $push: { "bookmark": this.embeds[0].author.name } }).exec();
+                        UserModel.findOneAndUpdate(
+                            { id: interaction.member.id },
+                            { $push: { bookmark: this.embeds[0].author.name } }
+                        ).exec();
                     }
 
                     break;
@@ -217,7 +264,7 @@ export class ReadSearchPaginator {
                             )
                             .toJSON(),
                         customID: `jumpto_page_modal_${this.interaction.id}`,
-                        title: this.client.translate("main.page.enter")
+                        title: this.client.translate("main.page.enter"),
                     });
 
                     break;
@@ -226,16 +273,18 @@ export class ReadSearchPaginator {
             switch (interaction.data.customID) {
                 case `jumpto_page_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
-                    const page = parseInt(Util.getModalID(interaction, "page_number"));
+          const page = parseInt(Util.getModalID(interaction, "page_number"));
 
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.invalid")).data
+                                    .setDescription(
+                                        this.client.translate("main.page.enter.invalid")
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -244,9 +293,13 @@ export class ReadSearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
+                                    .setDescription(
+                                        this.client.translate("main.page.enter.unknown", {
+                                            index: page.toLocaleString(),
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -255,9 +308,13 @@ export class ReadSearchPaginator {
                             embeds: [
                                 new RichEmbed()
                                     .setColor(this.client.config.BOT.COLOUR)
-                                    .setDescription(this.client.translate("main.page.enter.unknown", { index: page.toLocaleString() })).data
+                                    .setDescription(
+                                        this.client.translate("main.page.enter.unknown", {
+                                            index: page.toLocaleString(),
+                                        })
+                                    ).data,
                             ],
-                            flags: Constants.MessageFlags.EPHEMERAL
+                            flags: Constants.MessageFlags.EPHEMERAL,
                         });
                     }
 
@@ -270,24 +327,24 @@ export class ReadSearchPaginator {
     }
 
     /**
-     * Run the paginator class
-     */
+   * Run the paginator class
+   */
     public runPaginator() {
         this.client.on("interactionCreate", this.onRead);
         this.running = true;
     }
 
     /**
-     * Stop the paginator class
-     */
+   * Stop the paginator class
+   */
     public stopPaginator() {
         this.client.off("interactionCreate", this.onRead);
         this.running = false;
     }
 
     /**
-     * Update the paginator class
-     */
+   * Update the paginator class
+   */
     public updatePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -335,12 +392,16 @@ export class ReadSearchPaginator {
 
         this.message.edit({
             components,
-            embeds: [this.embeds[this.embed - 1]]
+            embeds: [this.embeds[this.embed - 1]],
         });
     }
 }
 
-export async function createReadSearchPaginator(client: NReaderClient, gallery: Gallery, interaction: CommandInteraction<TextChannel>) {
+export async function createReadSearchPaginator(
+    client: NReaderClient,
+    gallery: Gallery,
+    interaction: CommandInteraction<TextChannel>
+) {
     const paginator = new ReadSearchPaginator(client, gallery, interaction);
 
     paginator.runPaginator();

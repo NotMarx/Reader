@@ -1,12 +1,22 @@
 import { join } from "path";
-import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from "fs";
+import {
+    existsSync,
+    mkdirSync,
+    readdirSync,
+    unlinkSync,
+    writeFileSync,
+} from "fs";
 import { Logger } from "../Utils/Logger";
 
 const logger = new Logger();
 const folders = readdirSync(join(__dirname, "../../../localisation"));
 const compilingDate = new Date();
 
-logger.info({ message: "Compiling Localisations...", subTitle: "NReaderFramework::Localisation", title: "LOCALE" });
+logger.info({
+    message: "Compiling Localisations...",
+    subTitle: "NReaderFramework::Localisation",
+    title: "LOCALE",
+});
 
 for (const key in folders) {
     const folder = folders[key];
@@ -21,7 +31,7 @@ for (const key in folders) {
         if (!file.endsWith(".json")) continue;
 
         /* eslint-disable-next-line */
-        const content = require(join(
+    const content = require(join(
             __dirname,
             `../../../localisation/${folder}/${file}`
         ));
@@ -45,4 +55,8 @@ for (const key in folders) {
     );
 }
 
-logger.success({ message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`, subTitle: "NReaderFramework::Localisation", title: "LOCALE" });
+logger.success({
+    message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`,
+    subTitle: "NReaderFramework::Localisation",
+    title: "LOCALE",
+});
