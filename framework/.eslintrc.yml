@@ -11,11 +11,6 @@ extends:
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:@typescript-eslint/recommended
 rules:
-  "@typescript-eslint/indent":
-    - 2
-    - 4
-    - SwitchCase: 1
-      ignoreComments: false
   "@typescript-eslint/no-empty-function": 0
   "@typescript-eslint/no-explicit-any": 0
   "@typescript-eslint/consistent-type-definitions": 2
