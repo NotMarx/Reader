@@ -125,60 +125,6 @@ export class ReadSearchPaginator {
     }
 
     /**
-     * Update the paginator class
-     */
-    public updatePaginator() {
-        const components = new ComponentBuilder<MessageActionRow>()
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `first_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.SECONDARY,
-                `previous_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
-                this.client.translate("main.stop")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.SECONDARY,
-                `next_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `last_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
-            )
-            .addRow()
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `jumpto_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.SECONDARY,
-                `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_result_${this.interaction.id}`,
-                this.client.translate("main.home")
-            )
-            .toJSON();
-
-        this.message.edit({
-            components,
-            embeds: [this.embeds[this.embed - 1]]
-        });
-    }
-
-    /**
      * Start reading
      * @param interaction Oceanic component interaction
      */
@@ -337,6 +283,60 @@ export class ReadSearchPaginator {
     public stopPaginator() {
         this.client.off("interactionCreate", this.onRead);
         this.running = false;
+    }
+
+    /**
+     * Update the paginator class
+     */
+    public updatePaginator() {
+        const components = new ComponentBuilder<MessageActionRow>()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `first_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                this.client.translate("main.stop")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `bookmark_${this.interaction.id}`,
+                this.client.translate("main.bookmark")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `home_result_${this.interaction.id}`,
+                this.client.translate("main.home")
+            )
+            .toJSON();
+
+        this.message.edit({
+            components,
+            embeds: [this.embeds[this.embed - 1]]
+        });
     }
 }
 

@@ -19,6 +19,11 @@ import localeZH from "./Locales/zh.json";
 export class NReaderClient extends Client {
 
     /**
+     * NHentai API
+     */
+    public api = new RequestHandler();
+
+    /**
      * BotList API Stats
      */
     public apiStats = new APIStats(this);
@@ -42,15 +47,6 @@ export class NReaderClient extends Client {
      * Logger
      */
     public logger = new Logger();
-
-    /**
-     * NHentai API
-     */
-    public get api() {
-        const handler = new RequestHandler();
-
-        return handler;
-    }
 
     /**
      * Initialise every handler for NReader

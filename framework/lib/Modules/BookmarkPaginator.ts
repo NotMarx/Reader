@@ -456,9 +456,25 @@ export class BookmarkPaginator {
     }
 
     /**
+     * Run the paginator class
+     */
+    public runPaginator() {
+        this.client.on("interactionCreate", this.onSearch);
+        this.running = true;
+    }
+
+    /**
+     * Stop the paginator class
+     */
+    public stopPaginator() {
+        this.client.off("interactionCreate", this.onSearch);
+        this.running = false;
+    }
+
+    /**
      * Update the paginator class
      */
-    public updatePaginator() {
+     public updatePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
@@ -513,22 +529,6 @@ export class BookmarkPaginator {
             components,
             embeds: [this.embeds[this.embed - 1]]
         });
-    }
-
-    /**
-     * Run the paginator class
-     */
-    public runPaginator() {
-        this.client.on("interactionCreate", this.onSearch);
-        this.running = true;
-    }
-
-    /**
-     * Stop the paginator class
-     */
-    public stopPaginator() {
-        this.client.off("interactionCreate", this.onSearch);
-        this.running = false;
     }
 }
 

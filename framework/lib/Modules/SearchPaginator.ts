@@ -762,8 +762,24 @@ export class SearchPaginator {
     }
 
     /**
-     * Update the paginator class
+     * Run the paginator class
      */
+    public runPaginator() {
+        this.client.on("interactionCreate", this.onSearch);
+        this.running = true;
+    }
+
+    /**
+     * Stop the paginator class
+     */
+    public stopPaginator() {
+        this.client.off("interactionCreate", this.onSearch);
+        this.running = false;
+    }
+
+    /**
+    * Update the paginator class
+    */
     public updatePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -845,22 +861,6 @@ export class SearchPaginator {
             components,
             embeds: [this.embeds[this.embed - 1]]
         });
-    }
-
-    /**
-     * Run the paginator class
-     */
-    public runPaginator() {
-        this.client.on("interactionCreate", this.onSearch);
-        this.running = true;
-    }
-
-    /**
-     * Stop the paginator class
-     */
-    public stopPaginator() {
-        this.client.off("interactionCreate", this.onSearch);
-        this.running = false;
     }
 }
 
