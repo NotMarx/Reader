@@ -4,7 +4,6 @@ import { Image } from "./Image";
 import { TagManager } from "./TagManager";
 
 export class Gallery {
-
     /**
      * The cover of the gallery
      */
@@ -16,14 +15,14 @@ export class Gallery {
     readonly favourites: number;
 
     /**
-     * The media ID of the gallery
-     */
-    readonly mediaID: string;
-
-    /**
      * The ID of the gallery
      */
     readonly id: string;
+
+    /**
+     * The media ID of the gallery
+     */
+    readonly mediaID: string;
 
     /**
      * The page length of the gallery
@@ -62,9 +61,17 @@ export class Gallery {
 
     constructor(data: IRawGallery) {
         this.favourites = data.num_favorites;
-        this.mediaID = typeof data.media_id === "number" ? (data.media_id as number).toString() : data.media_id;
-        this.id = typeof data.id === "number" ? (data.id as number).toString() : data.id;
-        this.pages = data.images.pages.map((page, index) => new Image(page, index + 1, this));
+        this.mediaID =
+            typeof data.media_id === "number"
+                ? (data.media_id as number).toString()
+                : data.media_id;
+        this.id =
+            typeof data.id === "number"
+                ? (data.id as number).toString()
+                : data.id;
+        this.pages = data.images.pages.map(
+            (page, index) => new Image(page, index + 1, this)
+        );
         this.scanlator = data.scanlator || null;
         this.tags = new TagManager(data.tags);
         this.cover = new Image(data.images.cover, "cover", this);

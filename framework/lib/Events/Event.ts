@@ -2,7 +2,6 @@ import { NReaderClient } from "../Client";
 import * as EventModules from "./Modules";
 
 export class NReaderEvent<F, S, T, L> {
-
     /**
      * NReader client
      */
@@ -12,6 +11,11 @@ export class NReaderEvent<F, S, T, L> {
      * First paramter passed in the event
      */
     private firstParam?: any;
+
+    /**
+     * Fourth paramter passed in the event
+     */
+    private fourthParam?: any;
 
     /**
      * Second paramter passed in the event
@@ -24,16 +28,17 @@ export class NReaderEvent<F, S, T, L> {
     private thirdParam?: any;
 
     /**
-     * Fourth paramter passed in the event
-     */
-    private fourthParam?: any;
-
-    /**
      * NReader's Gateway event class
      * @param client NReader client
      * @param args Parameters passed for gateway events
      */
-    constructor(client: NReaderClient, firstParam?: F, secondParam?: S, thirdParam?: T, fourthParam?: L) {
+    constructor(
+        client: NReaderClient,
+        firstParam?: F,
+        secondParam?: S,
+        thirdParam?: T,
+        fourthParam?: L
+    ) {
         this.client = client;
         this.firstParam = firstParam;
         this.secondParam = secondParam;
@@ -46,7 +51,11 @@ export class NReaderEvent<F, S, T, L> {
      * @returns {void}
      */
     public debugEvent(): void {
-        return EventModules.debugEvent(this.client, this.firstParam, this.secondParam);
+        return EventModules.debugEvent(
+            this.client,
+            this.firstParam,
+            this.secondParam
+        );
     }
 
     /**
@@ -54,7 +63,11 @@ export class NReaderEvent<F, S, T, L> {
      * @returns {void}
      */
     public errorEvent(): void {
-        return EventModules.errorEvent(this.client, this.firstParam, this.secondParam);
+        return EventModules.errorEvent(
+            this.client,
+            this.firstParam,
+            this.secondParam
+        );
     }
 
     /**
@@ -78,7 +91,10 @@ export class NReaderEvent<F, S, T, L> {
      * @returns {Promise<void>}
      */
     public interactionCreateEvent(): Promise<void> {
-        return EventModules.interactionCreateEvent(this.client, this.firstParam);
+        return EventModules.interactionCreateEvent(
+            this.client,
+            this.firstParam
+        );
     }
 
     /**

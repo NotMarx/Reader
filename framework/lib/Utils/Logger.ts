@@ -30,7 +30,17 @@ export class Logger {
      * @returns {void}
      */
     error(options: LoggingOptions): void {
-        return console.log(`${chalk.bgRed(` ${options.type ? options.type.toUpperCase() : "ERROR"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.red(options.message)}`);
+        return console.log(
+            `${chalk.bgRed(
+                ` ${options.type ? options.type.toUpperCase() : "ERROR"} `
+            )}${
+                options.subTitle
+                    ? chalk.bgWhite(chalk.black(` ${options.subTitle} `))
+                    : ""
+            } ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(
+                moment().format("MMMM Do YYYY, hh:mm:ss A")
+            )} - ${chalk.red(options.message)}`
+        );
     }
 
     /**
@@ -43,7 +53,17 @@ export class Logger {
      * @returns {void}
      */
     info(options: LoggingOptions): void {
-        return console.log(`${chalk.bgCyan(` ${options.type ? options.type.toUpperCase() : "INFO"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.cyan(options.message)}`);
+        return console.log(
+            `${chalk.bgCyan(
+                ` ${options.type ? options.type.toUpperCase() : "INFO"} `
+            )}${
+                options.subTitle
+                    ? chalk.bgWhite(chalk.black(` ${options.subTitle} `))
+                    : ""
+            } ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(
+                moment().format("MMMM Do YYYY, hh:mm:ss A")
+            )} - ${chalk.cyan(options.message)}`
+        );
     }
 
     /**
@@ -57,7 +77,15 @@ export class Logger {
      * @returns {void}
      */
     log(options: CustomLoggingOptions): void {
-        return console.log(`${chalk.bgHex(options.color)(` ${options.type.toUpperCase()} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.hex(options.color)(options.message)}`);
+        return console.log(
+            `${chalk.bgHex(options.color)(` ${options.type.toUpperCase()} `)}${
+                options.subTitle
+                    ? chalk.bgWhite(chalk.black(` ${options.subTitle} `))
+                    : ""
+            } ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(
+                moment().format("MMMM Do YYYY, hh:mm:ss A")
+            )} - ${chalk.hex(options.color)(options.message)}`
+        );
     }
 
     /**
@@ -71,7 +99,17 @@ export class Logger {
      * @returns {void}
      */
     success(options: LoggingOptions): void {
-        return console.log(`${chalk.bgGreen(` ${options.type ? options.type.toUpperCase() : "SUCCESS"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.green(options.message)}`);
+        return console.log(
+            `${chalk.bgGreen(
+                ` ${options.type ? options.type.toUpperCase() : "SUCCESS"} `
+            )}${
+                options.subTitle
+                    ? chalk.bgWhite(chalk.black(` ${options.subTitle} `))
+                    : ""
+            } ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(
+                moment().format("MMMM Do YYYY, hh:mm:ss A")
+            )} - ${chalk.green(options.message)}`
+        );
     }
 
     /**
@@ -85,7 +123,17 @@ export class Logger {
      * @returns {void}
      */
     system(options: LoggingOptions): void {
-        return console.log(`${chalk.bgBlue(` ${options.type ? options.type.toUpperCase() : "SYSTEM"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.blue(options.message)}`);
+        return console.log(
+            `${chalk.bgBlue(
+                ` ${options.type ? options.type.toUpperCase() : "SYSTEM"} `
+            )}${
+                options.subTitle
+                    ? chalk.bgWhite(chalk.black(` ${options.subTitle} `))
+                    : ""
+            } ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(
+                moment().format("MMMM Do YYYY, hh:mm:ss A")
+            )} - ${chalk.blue(options.message)}`
+        );
     }
 
     /**
@@ -99,6 +147,16 @@ export class Logger {
      * @returns {void}
      */
     warn(options: LoggingOptions): void {
-        return console.log(`${chalk.bgYellow(` ${options.type ? options.type.toUpperCase() : "WARNING"} `)}${options.subTitle ? chalk.bgWhite(chalk.black(` ${options.subTitle} `)) : ""} ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(moment().format("MMMM Do YYYY, hh:mm:ss A"))} - ${chalk.yellow(options.message)}`);
+        return console.log(
+            `${chalk.bgYellow(
+                ` ${options.type ? options.type.toUpperCase() : "WARNING"} `
+            )}${
+                options.subTitle
+                    ? chalk.bgWhite(chalk.black(` ${options.subTitle} `))
+                    : ""
+            } ${chalk.underline(options.title.toUpperCase())} - ${chalk.grey(
+                moment().format("MMMM Do YYYY, hh:mm:ss A")
+            )} - ${chalk.yellow(options.message)}`
+        );
     }
 }

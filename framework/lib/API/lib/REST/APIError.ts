@@ -1,5 +1,4 @@
 export class APIError extends Error {
-
     /**
      * The error response
      */

@@ -4,10 +4,22 @@ export const BASE_IP_URL = "http://138.2.77.198:3002";
 export const IMAGE_URL = "http://i.nhentai.net";
 export const THUMBNAIL_URL = "http://t.nhentai.net";
 
-export type TTagType = "artist" | "category" | "character" | "group" | "language" | "parody" | "tag";
+export type TTagType =
+    | "artist"
+    | "category"
+    | "character"
+    | "group"
+    | "language"
+    | "parody"
+    | "tag";
 export type TExtension = "gif" | "jpg" | "png";
 export type TRawExtension = "g" | "j" | "p";
-export type TSearchSort = "" | "popular" | "popular-today" | "popular-week" | "popular-month";
+export type TSearchSort =
+    | ""
+    | "popular"
+    | "popular-today"
+    | "popular-week"
+    | "popular-month";
 
 export interface IImage {
     h: number;
@@ -35,7 +47,7 @@ export interface IRawGallery {
         pages: IImage[];
         cover: IImage;
         thumbnail: IImage;
-    }
+    };
     scanlator: string;
     upload_date: number;
     tags: IRawTag[];

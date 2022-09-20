@@ -5,7 +5,10 @@ import { GuildModel, UserModel } from "../../Models";
 import { Util } from "../../Utils";
 import { RichEmbed } from "../../Utils/RichEmbed";
 
-export async function interactionCreateEvent(client: NReaderClient, interaction: CommandInteraction<TextChannel>) {
+export async function interactionCreateEvent(
+    client: NReaderClient,
+    interaction: CommandInteraction<TextChannel>
+) {
     if (!interaction.guildID) return;
 
     if (interaction.member.bot) return;
@@ -33,12 +36,12 @@ export async function interactionCreateEvent(client: NReaderClient, interaction:
             id: interaction.member.id,
             settings: {
                 premium: false,
-            }
+            },
         });
 
         return interaction.createMessage({
             embeds: [embed.data],
-            flags: Constants.MessageFlags.EPHEMERAL
+            flags: Constants.MessageFlags.EPHEMERAL,
         });
     }
 

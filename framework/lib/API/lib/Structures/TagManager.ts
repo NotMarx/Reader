@@ -2,7 +2,6 @@ import { IRawTag, TTagType } from "../../Constant";
 import { Tag } from "./Tag";
 
 export class TagManager {
-
     /**
      * All parsed tags
      */

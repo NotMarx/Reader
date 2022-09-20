@@ -8,21 +8,28 @@ export async function guildCreateEvent(client: NReaderClient, guild: Guild) {
 
     if (guild) {
         if (client.config.LIST.ENABLED) {
-            client.apiStats.postStats("bhbotlist.tech", client.config.LIST.BHBOTLIST.AUTH);
+            client.apiStats.postStats(
+                "bhbotlist.tech",
+                client.config.LIST.BHBOTLIST.AUTH
+            );
             client.apiStats.postStats("top.gg", client.config.LIST.TOPGG.AUTH);
         }
 
-        client.logger.info({ message: `Guild ${guild.name} (${guild.id}) Has Joined`, subTitle: "NReaderFramework::Events::GuildCreate", title: "GUILDS" });
+        client.logger.info({
+            message: `Guild ${guild.name} (${guild.id}) Has Joined`,
+            subTitle: "NReaderFramework::Events::GuildCreate",
+            title: "GUILDS",
+        });
 
         if (!guildData) {
             GuildModel.create({
                 createdAt: new Date(),
                 id: guild.id,
-                settings: ({
+                settings: {
                     blacklisted: false,
                     locale: "en",
-                    whitelisted: false
-                } as IGuildSchemaSettings)
+                    whitelisted: false,
+                } as IGuildSchemaSettings,
             });
         }
     }

@@ -1,8 +1,11 @@
-import { IRawGallerySearch, IRawGallerySearchParam, TSearchSort } from "../../Constant";
+import {
+    IRawGallerySearch,
+    IRawGallerySearchParam,
+    TSearchSort,
+} from "../../Constant";
 import { Gallery } from "./Gallery";
 
 export class Search {
-
     /**
      * The total pages of the search
      */
