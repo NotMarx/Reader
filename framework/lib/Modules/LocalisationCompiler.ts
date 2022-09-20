@@ -1,10 +1,10 @@
 import { join } from "path";
 import {
-    existsSync,
-    mkdirSync,
-    readdirSync,
-    unlinkSync,
-    writeFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  unlinkSync,
+  writeFileSync,
 } from "fs";
 import { Logger } from "../Utils/Logger";
 
@@ -13,50 +13,50 @@ const folders = readdirSync(join(__dirname, "../../../localisation"));
 const compilingDate = new Date();
 
 logger.info({
-    message: "Compiling Localisations...",
-    subTitle: "NReaderFramework::Localisation",
-    title: "LOCALE",
+  message: "Compiling Localisations...",
+  subTitle: "NReaderFramework::Localisation",
+  title: "LOCALE",
 });
 
 for (const key in folders) {
-    const folder = folders[key];
-    if (folder.length !== 2) continue;
+  const folder = folders[key];
+  if (folder.length !== 2) continue;
 
-    const files = readdirSync(join(__dirname, `../../../localisation/${folder}`));
-    let object = {};
+  const files = readdirSync(join(__dirname, `../../../localisation/${folder}`));
+  let object = {};
 
-    for (const keyFile in files) {
-        const file = files[keyFile];
+  for (const keyFile in files) {
+    const file = files[keyFile];
 
-        if (!file.endsWith(".json")) continue;
+    if (!file.endsWith(".json")) continue;
 
-        /* eslint-disable-next-line */
+    /* eslint-disable-next-line */
     const content = require(join(
-            __dirname,
-            `../../../localisation/${folder}/${file}`
-        ));
+      __dirname,
+      `../../../localisation/${folder}/${file}`
+    ));
 
-        if (!Object.keys(content).length) continue;
+    if (!Object.keys(content).length) continue;
 
-        object = { ...object, ...content };
-    }
+    object = { ...object, ...content };
+  }
 
-    if (!existsSync(join(__dirname, "../Locales"))) {
-        mkdirSync(join(__dirname, "../Locales"));
-    }
+  if (!existsSync(join(__dirname, "../Locales"))) {
+    mkdirSync(join(__dirname, "../Locales"));
+  }
 
-    if (existsSync(join(__dirname, `../Locales/${folder}.json`))) {
-        unlinkSync(join(__dirname, `../Locales/${folder}.json`));
-    }
+  if (existsSync(join(__dirname, `../Locales/${folder}.json`))) {
+    unlinkSync(join(__dirname, `../Locales/${folder}.json`));
+  }
 
-    writeFileSync(
-        join(__dirname, `../Locales/${folder}.json`),
-        JSON.stringify(object)
-    );
+  writeFileSync(
+    join(__dirname, `../Locales/${folder}.json`),
+    JSON.stringify(object)
+  );
 }
 
 logger.success({
-    message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`,
-    subTitle: "NReaderFramework::Localisation",
-    title: "LOCALE",
+  message: `Compiled Localisations in ${compilingDate.getMilliseconds()}ms`,
+  subTitle: "NReaderFramework::Localisation",
+  title: "LOCALE",
 });

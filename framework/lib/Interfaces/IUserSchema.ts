@@ -1,10 +1,10 @@
 export interface IUserSchemaSettings {
-    premium: boolean;
+  premium: boolean;
 }
 
 export interface IUserSchema {
-    bookmark: string[];
-    createdAt: Date;
-    id: string;
-    settings: IUserSchemaSettings;
+  bookmark: string[];
+  createdAt: Date;
+  id: string;
+  settings: IUserSchemaSettings;
 }
