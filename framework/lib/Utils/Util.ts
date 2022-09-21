@@ -6,9 +6,9 @@ import {
     TextChannel,
 } from "oceanic.js";
 import { NReaderClient } from "../Client";
+import { EmbedBuilder } from "@oceanicjs/builders";
 import { ICommandRunPayload } from "../Interfaces";
 import byteSize from "byte-size";
-import { RichEmbed } from "../Utils/RichEmbed";
 
 interface IByteSize {
     value: number;
@@ -37,7 +37,7 @@ export class Util {
     ): Promise<void> {
         const command = client.commands.get(interaction.data.name);
         const payload: ICommandRunPayload = { client, interaction };
-        const embed = new RichEmbed().setColor(client.config.BOT.COLOUR);
+        const embed = new EmbedBuilder().setColor(client.config.BOT.COLOUR);
 
         // Check if an owner-marked slash commands is run by random users
         // By default, there's no command with `adminOnly` set to true. However, this is for
@@ -48,7 +48,9 @@ export class Util {
         ) {
             return interaction.createMessage({
                 embeds: [
-                    embed.setDescription(client.translate("mod.noperms")).data,
+                    embed
+                        .setDescription(client.translate("mod.noperms"))
+                        .toJSON(),
                 ],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });
@@ -61,7 +63,9 @@ export class Util {
         ) {
             return interaction.createMessage({
                 embeds: [
-                    embed.setDescription(client.translate("mod.noperms")).data,
+                    embed
+                        .setDescription(client.translate("mod.noperms"))
+                        .toJSON(),
                 ],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });
@@ -80,7 +84,9 @@ export class Util {
         if (command.nsfwOnly && !interaction.channel.nsfw) {
             return interaction.createMessage({
                 embeds: [
-                    embed.setDescription(client.translate("main.noperms")).data,
+                    embed
+                        .setDescription(client.translate("main.noperms"))
+                        .toJSON(),
                 ],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });

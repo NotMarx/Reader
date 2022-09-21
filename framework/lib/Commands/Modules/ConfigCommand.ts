@@ -1,6 +1,6 @@
 import { NReaderClient } from "../../Client";
 import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { EmbedBuilder } from "@oceanicjs/builders";
 import { Util } from "../../Utils";
 import { TLocale } from "../../Types";
 import { GuildModel } from "../../Models";
@@ -17,7 +17,7 @@ export function configCommand(
             { $set: { "settings.locale": language } }
         ).exec();
 
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(
                 client.translateLocale(language, "mod.language.set", {
@@ -26,7 +26,7 @@ export function configCommand(
             );
 
         return interaction.createMessage({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
             flags: Constants.MessageFlags.EPHEMERAL,
         });
     }

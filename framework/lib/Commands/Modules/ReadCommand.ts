@@ -5,11 +5,10 @@ import {
     Constants,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { Util } from "../../Utils";
 import { GuildModel, UserModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
-import { RichEmbed } from "../../Utils/RichEmbed";
 import { setTimeout } from "node:timers/promises";
 
 export async function readCommand(
@@ -56,7 +55,7 @@ export async function readCommand(
                 !guildData.settings.whitelisted &&
                 !userData.settings.premium
             ) {
-                const embed = new RichEmbed()
+                const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(
                         client.translate("main.tags.restricted", {
@@ -67,12 +66,12 @@ export async function readCommand(
                     );
 
                 return interaction.createFollowup({
-                    embeds: [embed.data],
+                    embeds: [embed.toJSON()],
                     flags: Constants.MessageFlags.EPHEMERAL,
                 });
             }
 
-            const embed = new RichEmbed()
+            const embed = new EmbedBuilder()
                 .setAuthor(gallery.id, gallery.url)
                 .setColor(client.config.BOT.COLOUR)
                 .addField(
@@ -165,16 +164,19 @@ export async function readCommand(
                 )
                 .toJSON();
 
-            interaction.createFollowup({ components, embeds: [embed.data] });
+            interaction.createFollowup({
+                components,
+                embeds: [embed.toJSON()],
+            });
             createReadPaginator(client, gallery, interaction);
         })
         .catch((err: Error) => {
-            const embed = new RichEmbed()
+            const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.error"));
 
             interaction.createFollowup({
-                embeds: [embed.data],
+                embeds: [embed.toJSON()],
             });
 
             return client.logger.error({
