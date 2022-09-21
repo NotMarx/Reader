@@ -6,7 +6,7 @@
 
 A Discord bot.
 
-- You may invite Official [NReader](https://discord.com/api/oauth2/authorize?client_id=746948584150270014&permissions=339008&scope=bot%20applications.commands) to your Discord server!
+- [NReader's](https://discord.com/api/oauth2/authorize?client_id=746948584150270014&permissions=339008&scope=bot%20applications.commands) Official Discord invite link.
 
 ## Task List
 
@@ -17,9 +17,16 @@ A Discord bot.
 
 ## Translate NReader
 
-**NReader** is currently available in three languages. These include **English**, **Chinese**, and **Japanese**. Please keep in mind that most of them have a rough translation.
+- Click [Here](https://crowdin.com/project/nreader) to translate NReader.
 
-- Click [Here](https://crowdin.com/project/nreader) to translate/proofread NReader!
+**NReader**'s available localisations:
+
+- Chinese
+- English
+- Indonesian
+- Japanese
+
+Please keep in mind that most of them were roughly translated.
 
 ## Support Guide
 
@@ -29,7 +36,7 @@ We don't provide guide or allowed for anyone to self-host this project. If you e
 
 ## Listed Website
 
-The Official **NReader** is listed on these websites!
+The Official **NReader** is listed on these websites:
 
 [![Discord Bots](https://top.gg/api/widget/746948584150270014.svg)](https://top.gg/bot/746948584150270014)
 <a href="https://bhbotlist.tech/bot/746948584150270014" target="_blank"><img src="https://bhbotlist.tech/bot/746948584150270014/embed" style="height: 150px; width: 300px;"></a>
