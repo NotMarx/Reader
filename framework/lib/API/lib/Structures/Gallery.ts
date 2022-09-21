@@ -81,10 +81,20 @@ export class Gallery {
         this.url = Endpoints.G(this.id);
     }
 
+    /**
+     * Check if the gallery has a tag by the ID
+     * @param id The ID of the tag
+     * @returns {boolean}
+     */
     public hasTagByID(id: number): boolean {
         return !!this.tags.all.find((tag) => tag.id === id);
     }
 
+    /**
+     * Check if the gallery has a tag by the name
+     * @param name The name of the tag
+     * @returns {boolean}
+     */
     public hasTagByName(name: string): boolean {
         return !!this.tags.all.find((tag) => tag.name === name);
     }
