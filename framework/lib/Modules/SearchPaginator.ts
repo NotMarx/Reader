@@ -11,7 +11,7 @@ import {
     ModalSubmitInteraction,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders"
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderClient } from "../Client";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
@@ -320,7 +320,12 @@ export class SearchPaginator {
     ) {
         if (interaction.member.bot) return;
 
-        const embed = EmbedBuilder.loadFromJSON((interaction as ComponentInteraction<TextChannel>).message ? (interaction as ComponentInteraction<TextChannel>).message.embeds[0] : undefined);
+        const embed = EmbedBuilder.loadFromJSON(
+            (interaction as ComponentInteraction<TextChannel>).message
+                ? (interaction as ComponentInteraction<TextChannel>).message
+                      .embeds[0]
+                : undefined
+        );
         const userData = await UserModel.findOne({ id: interaction.user.id });
 
         const hideComponent = new ComponentBuilder<MessageActionRow>()
@@ -499,7 +504,8 @@ export class SearchPaginator {
                     break;
                 case `show_cover_${this.interaction.id}`:
                     embed.setImage(
-                        (await this.api.getGallery(embed.toJSON().author.name)).cover.url
+                        (await this.api.getGallery(embed.toJSON().author.name))
+                            .cover.url
                     );
                     this.interaction.editOriginal({
                         components: hideComponent,
@@ -540,7 +546,9 @@ export class SearchPaginator {
                         return;
                     }
 
-                    if (userData.bookmark.includes(embed.toJSON().author.name)) {
+                    if (
+                        userData.bookmark.includes(embed.toJSON().author.name)
+                    ) {
                         interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()
@@ -676,8 +684,9 @@ export class SearchPaginator {
 
                     if (
                         parseInt(
-                            embed.toJSON().title
-                                .split(
+                            embed
+                                .toJSON()
+                                .title.split(
                                     this.client
                                         .translate("main.page")
                                         .split(" ")[0]
@@ -689,8 +698,9 @@ export class SearchPaginator {
                             .searchGalleries(
                                 this.search.query,
                                 parseInt(
-                                    embed.toJSON().title
-                                        .split(
+                                    embed
+                                        .toJSON()
+                                        .title.split(
                                             this.client
                                                 .translate("main.page")
                                                 .split(" ")[0]
@@ -937,7 +947,9 @@ export class SearchPaginator {
                                     }
                                 );
 
-                                this.embeds = embeds.map((embed) => embed.toJSON());
+                                this.embeds = embeds.map((embed) =>
+                                    embed.toJSON()
+                                );
                                 this.embed = 1;
                                 this.updatePaginator();
                             });
@@ -949,8 +961,9 @@ export class SearchPaginator {
 
                     if (
                         parseInt(
-                            embed.toJSON().title
-                                .split(
+                            embed
+                                .toJSON()
+                                .title.split(
                                     this.client
                                         .translate("main.page")
                                         .split(" ")[0]
@@ -962,8 +975,9 @@ export class SearchPaginator {
                             .searchGalleries(
                                 this.search.query,
                                 parseInt(
-                                    embed.toJSON().title
-                                        .split(
+                                    embed
+                                        .toJSON()
+                                        .title.split(
                                             this.client
                                                 .translate("main.page")
                                                 .split(" ")[0]
@@ -1210,7 +1224,9 @@ export class SearchPaginator {
                                     }
                                 );
 
-                                this.embeds = embeds.map((embed) => embed.toJSON());
+                                this.embeds = embeds.map((embed) =>
+                                    embed.toJSON()
+                                );
                                 this.embed = 1;
                                 this.updatePaginator();
                             });
