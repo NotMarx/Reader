@@ -11,9 +11,8 @@ import {
     ModalSubmitInteraction,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderClient } from "../Client";
-import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
 import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
@@ -68,7 +67,7 @@ export class ReadPaginator {
         this.client = client;
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
-            return new RichEmbed()
+            return new EmbedBuilder()
                 .setAuthor(gallery.id, page.url)
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
@@ -79,7 +78,8 @@ export class ReadPaginator {
                 )
                 .setImage(page.url)
                 .setTitle(gallery.title.pretty)
-                .setURL(gallery.url).data;
+                .setURL(gallery.url)
+                .toJSON();
         });
         this.gallery = gallery;
         this.interaction = interaction;
@@ -172,7 +172,7 @@ export class ReadPaginator {
         );
         const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
 
-        const resultEmbed = new RichEmbed()
+        const resultEmbed = new EmbedBuilder()
             .setAuthor(this.gallery.id, this.gallery.url)
             .setColor(this.client.config.BOT.COLOUR)
             .addField(
@@ -298,22 +298,22 @@ export class ReadPaginator {
                     resultEmbed.setImage(this.gallery.cover.url);
                     this.interaction.editOriginal({
                         components: hideComponent,
-                        embeds: [resultEmbed.data],
+                        embeds: [resultEmbed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
                 case `hide_cover_${this.interaction.id}`:
-                    resultEmbed.setImage("");
+                    resultEmbed.removeImage();
                     this.interaction.editOriginal({
                         components: showComponent,
-                        embeds: [resultEmbed.data],
+                        embeds: [resultEmbed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
                 case `home_${this.interaction.id}`:
                     this.interaction.editOriginal({
                         components: showComponent,
-                        embeds: [resultEmbed.data],
+                        embeds: [resultEmbed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
@@ -328,7 +328,7 @@ export class ReadPaginator {
                     ) {
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -341,7 +341,8 @@ export class ReadPaginator {
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -354,13 +355,14 @@ export class ReadPaginator {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
-                                    new RichEmbed()
+                                    new EmbedBuilder()
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             this.client.translate(
                                                 "main.bookmark.maxed"
                                             )
-                                        ).data,
+                                        )
+                                        .toJSON(),
                                 ],
                                 flags: Constants.MessageFlags.EPHEMERAL,
                             });
@@ -368,7 +370,7 @@ export class ReadPaginator {
 
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -381,7 +383,8 @@ export class ReadPaginator {
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -450,13 +453,14 @@ export class ReadPaginator {
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.page.enter.invalid"
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -465,7 +469,7 @@ export class ReadPaginator {
                     if (page > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -474,7 +478,8 @@ export class ReadPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -483,7 +488,7 @@ export class ReadPaginator {
                     if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -492,7 +497,8 @@ export class ReadPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
