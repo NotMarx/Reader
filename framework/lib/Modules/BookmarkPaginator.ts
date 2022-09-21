@@ -295,7 +295,12 @@ export class BookmarkPaginator {
     ) {
         if (interaction.member.bot) return;
 
-        const embed = EmbedBuilder.loadFromJSON((interaction as ComponentInteraction<TextChannel>).message ? (interaction as ComponentInteraction<TextChannel>).message.embeds[0] : undefined);
+        const embed = EmbedBuilder.loadFromJSON(
+            (interaction as ComponentInteraction<TextChannel>).message
+                ? (interaction as ComponentInteraction<TextChannel>).message
+                      .embeds[0]
+                : undefined
+        );
         const userData = await UserModel.findOne({ id: interaction.user.id });
 
         const hideComponent = new ComponentBuilder<MessageActionRow>()
@@ -422,7 +427,8 @@ export class BookmarkPaginator {
                     break;
                 case `show_cover_${this.interaction.id}`:
                     embed.setImage(
-                        (await this.api.getGallery(embed.toJSON().author.name)).cover.url
+                        (await this.api.getGallery(embed.toJSON().author.name))
+                            .cover.url
                     );
                     this.interaction.editOriginal({
                         components: hideComponent,
@@ -463,7 +469,9 @@ export class BookmarkPaginator {
                         return;
                     }
 
-                    if (userData.bookmark.includes(embed.toJSON().author.name)) {
+                    if (
+                        userData.bookmark.includes(embed.toJSON().author.name)
+                    ) {
                         interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()

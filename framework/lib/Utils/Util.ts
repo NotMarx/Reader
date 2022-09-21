@@ -48,7 +48,9 @@ export class Util {
         ) {
             return interaction.createMessage({
                 embeds: [
-                    embed.setDescription(client.translate("mod.noperms")).toJSON(),
+                    embed
+                        .setDescription(client.translate("mod.noperms"))
+                        .toJSON(),
                 ],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });
@@ -61,7 +63,9 @@ export class Util {
         ) {
             return interaction.createMessage({
                 embeds: [
-                    embed.setDescription(client.translate("mod.noperms")).toJSON(),
+                    embed
+                        .setDescription(client.translate("mod.noperms"))
+                        .toJSON(),
                 ],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });
@@ -80,7 +84,9 @@ export class Util {
         if (command.nsfwOnly && !interaction.channel.nsfw) {
             return interaction.createMessage({
                 embeds: [
-                    embed.setDescription(client.translate("main.noperms")).toJSON(),
+                    embed
+                        .setDescription(client.translate("main.noperms"))
+                        .toJSON(),
                 ],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });
