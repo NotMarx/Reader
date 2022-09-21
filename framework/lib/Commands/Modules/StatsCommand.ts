@@ -1,7 +1,7 @@
 import { NReaderClient } from "../../Client";
 import { CommandInteraction, TextChannel, VERSION } from "oceanic.js";
 import { GuildModel, UserModel } from "../../Models";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { EmbedBuilder } from "@oceanicjs/builders";
 import { Util } from "../../Utils";
 import osUtils from "os-utils";
 import os from "os";
@@ -28,11 +28,11 @@ export async function statsCommand(
     const userData = await UserModel.find({});
 
     osUtils.cpuUsage((percentage) => {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setFooter(client.user.username, client.user.avatarURL("png"))
             .setThumbnail(client.user.avatarURL("png"))
-            .setTimestamp()
+            .setTimestamp("now")
             .setTitle(
                 client
                     .translate("general.stats.title")
@@ -76,7 +76,7 @@ export async function statsCommand(
             );
 
         return interaction.createFollowup({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
         });
     });
 }

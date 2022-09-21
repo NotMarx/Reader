@@ -5,8 +5,7 @@ import {
     Constants,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { Gallery } from "../../API";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
@@ -25,7 +24,7 @@ export async function bookmarkCommand(
 
     if (user) {
         if (!bookmarked || bookmarked.length === 0) {
-            const embed = new RichEmbed()
+            const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(
                     client.translate("main.bookmark.none", {
@@ -39,7 +38,7 @@ export async function bookmarkCommand(
                 );
 
             return interaction.createMessage({
-                embeds: [embed.data],
+                embeds: [embed.toJSON()],
                 flags: Constants.MessageFlags.EPHEMERAL,
             });
         }
@@ -71,12 +70,12 @@ export async function bookmarkCommand(
                     );
                 gallery = await client.api.getGallery(bookmarked[i]);
             } catch (err) {
-                const embed = new RichEmbed()
+                const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(client.translate("main.error"));
 
                 return interaction.createMessage({
-                    embeds: [embed.data],
+                    embeds: [embed.toJSON()],
                 });
             }
 
@@ -97,7 +96,7 @@ export async function bookmarkCommand(
             )
             .toJSON();
 
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(bookmarkedTitle.join("\n"))
             .setTitle(
@@ -107,15 +106,15 @@ export async function bookmarkCommand(
         createBookmarkPaginator(client, galleries, interaction, user);
         return interaction.createFollowup({
             components,
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
         });
     } else {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("main.error"));
 
         return interaction.createFollowup({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
         });
     }
 }

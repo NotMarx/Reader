@@ -12,9 +12,8 @@ import {
     TextChannel,
     User,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderClient } from "../Client";
-import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 import { NReaderConstant } from "../Constant";
@@ -126,7 +125,7 @@ export class BookmarkPaginator {
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-            return new RichEmbed()
+            return new EmbedBuilder()
                 .setAuthor(gallery.id, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
@@ -224,7 +223,7 @@ export class BookmarkPaginator {
                 );
         });
 
-        this.embeds = embeds.map((embed) => embed.data);
+        this.embeds = embeds.map((embed) => embed.toJSON());
 
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -296,9 +295,10 @@ export class BookmarkPaginator {
     ) {
         if (interaction.member.bot) return;
 
-        const embed = new RichEmbed(
-            (interaction as ComponentInteraction).message
-                ? (interaction as ComponentInteraction).message.embeds[0]
+        const embed = EmbedBuilder.loadFromJSON(
+            (interaction as ComponentInteraction<TextChannel>).message
+                ? (interaction as ComponentInteraction<TextChannel>).message
+                      .embeds[0]
                 : undefined
         );
         const userData = await UserModel.findOne({ id: interaction.user.id });
@@ -409,12 +409,13 @@ export class BookmarkPaginator {
                     interaction.deferUpdate();
 
                     this.api
-                        .getGallery(embed.author.name)
+                        .getGallery(embed.toJSON().author.name)
                         .then(async (gallery) => {
                             this.paginationEmbed = new ReadSearchPaginator(
                                 this.client,
                                 gallery,
-                                this.interaction
+                                this.interaction,
+                                this
                             );
                             await this.paginationEmbed.initialisePaginator();
                             this.paginationEmbed.runPaginator();
@@ -427,19 +428,20 @@ export class BookmarkPaginator {
                     break;
                 case `show_cover_${this.interaction.id}`:
                     embed.setImage(
-                        (await this.api.getGallery(embed.author.name)).cover.url
+                        (await this.api.getGallery(embed.toJSON().author.name))
+                            .cover.url
                     );
                     this.interaction.editOriginal({
                         components: hideComponent,
-                        embeds: [embed.data],
+                        embeds: [embed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
                 case `hide_cover_${this.interaction.id}`:
-                    embed.setImage("");
+                    embed.removeImage();
                     this.interaction.editOriginal({
                         components: showComponent,
-                        embeds: [embed.data],
+                        embeds: [embed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
@@ -468,42 +470,46 @@ export class BookmarkPaginator {
                         return;
                     }
 
-                    if (userData.bookmark.includes(embed.author.name)) {
+                    if (
+                        userData.bookmark.includes(embed.toJSON().author.name)
+                    ) {
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.bookmark.removed",
                                             {
                                                 id: `[\`${
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 }\`](${NReaderConstant.Source.ID(
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
-                            { $pull: { bookmark: embed.author.name } }
+                            { $pull: { bookmark: embed.toJSON().author.name } }
                         ).exec();
                     } else {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
-                                    new RichEmbed()
+                                    new EmbedBuilder()
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             this.client.translate(
                                                 "main.bookmark.maxed"
                                             )
-                                        ).data,
+                                        )
+                                        .toJSON(),
                                 ],
                                 flags: Constants.MessageFlags.EPHEMERAL,
                             });
@@ -511,27 +517,28 @@ export class BookmarkPaginator {
 
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.bookmark.saved",
                                             {
                                                 id: `[\`${
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 }\`](${NReaderConstant.Source.ID(
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
-                            { $push: { bookmark: embed.author.name } }
+                            { $push: { bookmark: embed.toJSON().author.name } }
                         ).exec();
                     }
 
@@ -593,13 +600,14 @@ export class BookmarkPaginator {
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.result.enter.invalid"
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -608,7 +616,7 @@ export class BookmarkPaginator {
                     if (page > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -617,7 +625,8 @@ export class BookmarkPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -626,7 +635,7 @@ export class BookmarkPaginator {
                     if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -635,7 +644,8 @@ export class BookmarkPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });

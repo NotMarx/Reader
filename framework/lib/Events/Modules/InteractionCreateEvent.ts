@@ -3,7 +3,7 @@ import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
 import { t } from "i18next";
 import { GuildModel, UserModel } from "../../Models";
 import { Util } from "../../Utils";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { EmbedBuilder } from "@oceanicjs/builders";
 
 export async function interactionCreateEvent(
     client: NReaderClient,
@@ -26,7 +26,7 @@ export async function interactionCreateEvent(
     };
 
     if (!userData) {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("general.register"));
 
@@ -40,7 +40,7 @@ export async function interactionCreateEvent(
         });
 
         return interaction.createMessage({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
             flags: Constants.MessageFlags.EPHEMERAL,
         });
     }

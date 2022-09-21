@@ -11,9 +11,8 @@ import {
     ModalSubmitInteraction,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderClient } from "../Client";
-import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 import { NReaderConstant } from "../Constant";
@@ -120,7 +119,7 @@ export class SearchPaginator {
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
-            return new RichEmbed()
+            return new EmbedBuilder()
                 .setAuthor(gallery.id, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
@@ -223,7 +222,7 @@ export class SearchPaginator {
                 );
         });
 
-        this.embeds = embeds.map((embed) => embed.data);
+        this.embeds = embeds.map((embed) => embed.toJSON());
 
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -321,7 +320,7 @@ export class SearchPaginator {
     ) {
         if (interaction.member.bot) return;
 
-        const embed = new RichEmbed(
+        const embed = EmbedBuilder.loadFromJSON(
             (interaction as ComponentInteraction<TextChannel>).message
                 ? (interaction as ComponentInteraction<TextChannel>).message
                       .embeds[0]
@@ -487,12 +486,13 @@ export class SearchPaginator {
                     interaction.deferUpdate();
 
                     this.api
-                        .getGallery(embed.author.name)
+                        .getGallery(embed.toJSON().author.name)
                         .then(async (gallery) => {
                             this.paginationEmbed = new ReadSearchPaginator(
                                 this.client,
                                 gallery,
-                                this.interaction
+                                this.interaction,
+                                this
                             );
                             await this.paginationEmbed.initialisePaginator();
                             this.paginationEmbed.runPaginator();
@@ -505,19 +505,20 @@ export class SearchPaginator {
                     break;
                 case `show_cover_${this.interaction.id}`:
                     embed.setImage(
-                        (await this.api.getGallery(embed.author.name)).cover.url
+                        (await this.api.getGallery(embed.toJSON().author.name))
+                            .cover.url
                     );
                     this.interaction.editOriginal({
                         components: hideComponent,
-                        embeds: [embed.data],
+                        embeds: [embed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
                 case `hide_cover_${this.interaction.id}`:
-                    embed.setImage("");
+                    embed.removeImage();
                     this.interaction.editOriginal({
                         components: showComponent,
-                        embeds: [embed.data],
+                        embeds: [embed.toJSON()],
                     });
                     interaction.deferUpdate();
                     break;
@@ -546,42 +547,46 @@ export class SearchPaginator {
                         return;
                     }
 
-                    if (userData.bookmark.includes(embed.author.name)) {
+                    if (
+                        userData.bookmark.includes(embed.toJSON().author.name)
+                    ) {
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.bookmark.removed",
                                             {
                                                 id: `[\`${
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 }\`](${NReaderConstant.Source.ID(
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
-                            { $pull: { bookmark: embed.author.name } }
+                            { $pull: { bookmark: embed.toJSON().author.name } }
                         ).exec();
                     } else {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
-                                    new RichEmbed()
+                                    new EmbedBuilder()
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             this.client.translate(
                                                 "main.bookmark.maxed"
                                             )
-                                        ).data,
+                                        )
+                                        .toJSON(),
                                 ],
                                 flags: Constants.MessageFlags.EPHEMERAL,
                             });
@@ -589,27 +594,28 @@ export class SearchPaginator {
 
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.bookmark.saved",
                                             {
                                                 id: `[\`${
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 }\`](${NReaderConstant.Source.ID(
-                                                    embed.author.name
+                                                    embed.toJSON().author.name
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
-                            { $push: { bookmark: embed.author.name } }
+                            { $push: { bookmark: embed.toJSON().author.name } }
                         ).exec();
                     }
 
@@ -679,8 +685,9 @@ export class SearchPaginator {
 
                     if (
                         parseInt(
-                            embed.title
-                                .split(
+                            embed
+                                .toJSON()
+                                .title.split(
                                     this.client
                                         .translate("main.page")
                                         .split(" ")[0]
@@ -692,8 +699,9 @@ export class SearchPaginator {
                             .searchGalleries(
                                 this.search.query,
                                 parseInt(
-                                    embed.title
-                                        .split(
+                                    embed
+                                        .toJSON()
+                                        .title.split(
                                             this.client
                                                 .translate("main.page")
                                                 .split(" ")[0]
@@ -752,7 +760,7 @@ export class SearchPaginator {
                                             gallery.uploadDate.getTime() / 1000
                                         }:F>`;
 
-                                        return new RichEmbed()
+                                        return new EmbedBuilder()
                                             .setAuthor(gallery.id, gallery.url)
                                             .setColor(
                                                 this.client.config.BOT.COLOUR
@@ -940,7 +948,9 @@ export class SearchPaginator {
                                     }
                                 );
 
-                                this.embeds = embeds.map((embed) => embed.data);
+                                this.embeds = embeds.map((embed) =>
+                                    embed.toJSON()
+                                );
                                 this.embed = 1;
                                 this.updatePaginator();
                             });
@@ -952,8 +962,9 @@ export class SearchPaginator {
 
                     if (
                         parseInt(
-                            embed.title
-                                .split(
+                            embed
+                                .toJSON()
+                                .title.split(
                                     this.client
                                         .translate("main.page")
                                         .split(" ")[0]
@@ -965,8 +976,9 @@ export class SearchPaginator {
                             .searchGalleries(
                                 this.search.query,
                                 parseInt(
-                                    embed.title
-                                        .split(
+                                    embed
+                                        .toJSON()
+                                        .title.split(
                                             this.client
                                                 .translate("main.page")
                                                 .split(" ")[0]
@@ -1025,7 +1037,7 @@ export class SearchPaginator {
                                             gallery.uploadDate.getTime() / 1000
                                         }:F>`;
 
-                                        return new RichEmbed()
+                                        return new EmbedBuilder()
                                             .setAuthor(gallery.id, gallery.url)
                                             .setColor(
                                                 this.client.config.BOT.COLOUR
@@ -1213,7 +1225,9 @@ export class SearchPaginator {
                                     }
                                 );
 
-                                this.embeds = embeds.map((embed) => embed.data);
+                                this.embeds = embeds.map((embed) =>
+                                    embed.toJSON()
+                                );
                                 this.embed = 1;
                                 this.updatePaginator();
                             });
@@ -1276,7 +1290,7 @@ export class SearchPaginator {
                                         gallery.uploadDate.getTime() / 1000
                                     }:F>`;
 
-                                    return new RichEmbed()
+                                    return new EmbedBuilder()
                                         .setAuthor(gallery.id, gallery.url)
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
@@ -1435,7 +1449,7 @@ export class SearchPaginator {
                                 }
                             );
 
-                            this.embeds = embeds.map((embed) => embed.data);
+                            this.embeds = embeds.map((embed) => embed.toJSON());
                             this.embed = 1;
                             this.updatePaginator();
                         });
@@ -1500,7 +1514,7 @@ export class SearchPaginator {
                                         gallery.uploadDate.getTime() / 1000
                                     }:F>`;
 
-                                    return new RichEmbed()
+                                    return new EmbedBuilder()
                                         .setAuthor(gallery.id, gallery.url)
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
@@ -1659,7 +1673,7 @@ export class SearchPaginator {
                                 }
                             );
 
-                            this.embeds = embeds.map((embed) => embed.data);
+                            this.embeds = embeds.map((embed) => embed.toJSON());
                             this.embed = 1;
                             this.updatePaginator();
                         });
@@ -1677,13 +1691,14 @@ export class SearchPaginator {
                     if (isNaN(pageResult)) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.result.enter.invalid"
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -1692,7 +1707,7 @@ export class SearchPaginator {
                     if (pageResult > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -1701,7 +1716,8 @@ export class SearchPaginator {
                                                 index: pageResult.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -1710,7 +1726,7 @@ export class SearchPaginator {
                     if (pageResult <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -1719,7 +1735,8 @@ export class SearchPaginator {
                                                 index: pageResult.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -1738,13 +1755,14 @@ export class SearchPaginator {
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.page.enter.invalid"
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -1753,7 +1771,7 @@ export class SearchPaginator {
                     if (page > this.search.numPages) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -1762,7 +1780,8 @@ export class SearchPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -1771,7 +1790,7 @@ export class SearchPaginator {
                     if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -1780,7 +1799,8 @@ export class SearchPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -1839,7 +1859,7 @@ export class SearchPaginator {
                                         gallery.uploadDate.getTime() / 1000
                                     }:F>`;
 
-                                    return new RichEmbed()
+                                    return new EmbedBuilder()
                                         .setAuthor(gallery.id, gallery.url)
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
@@ -1998,7 +2018,7 @@ export class SearchPaginator {
                                 }
                             );
 
-                            this.embeds = embeds.map((embed) => embed.data);
+                            this.embeds = embeds.map((embed) => embed.toJSON());
                             this.embed = 1;
                             this.updatePaginator();
                         });
