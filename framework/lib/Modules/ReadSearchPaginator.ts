@@ -11,9 +11,8 @@ import {
     ModalSubmitInteraction,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderClient } from "../Client";
-import { RichEmbed } from "../Utils/RichEmbed";
 import { UserModel } from "../Models";
 import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
@@ -68,7 +67,7 @@ export class ReadSearchPaginator {
         this.client = client;
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
-            return new RichEmbed()
+            return new EmbedBuilder()
                 .setAuthor(gallery.id, page.url)
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
@@ -79,7 +78,8 @@ export class ReadSearchPaginator {
                 )
                 .setImage(page.url)
                 .setTitle(gallery.title.pretty)
-                .setURL(gallery.url).data;
+                .setURL(gallery.url)
+                .toJSON();
         });
         this.gallery = gallery;
         this.interaction = interaction;
@@ -168,7 +168,7 @@ export class ReadSearchPaginator {
                     ) {
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -181,7 +181,8 @@ export class ReadSearchPaginator {
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -194,13 +195,14 @@ export class ReadSearchPaginator {
                         if (userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
-                                    new RichEmbed()
+                                    new EmbedBuilder()
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             this.client.translate(
                                                 "main.bookmark.maxed"
                                             )
-                                        ).data,
+                                        )
+                                        .toJSON(),
                                 ],
                                 flags: Constants.MessageFlags.EPHEMERAL,
                             });
@@ -208,7 +210,7 @@ export class ReadSearchPaginator {
 
                         interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -221,7 +223,8 @@ export class ReadSearchPaginator {
                                                 )})`,
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -290,13 +293,14 @@ export class ReadSearchPaginator {
                     if (isNaN(page)) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
                                             "main.page.enter.invalid"
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -305,7 +309,7 @@ export class ReadSearchPaginator {
                     if (page > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -314,7 +318,8 @@ export class ReadSearchPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
@@ -323,7 +328,7 @@ export class ReadSearchPaginator {
                     if (page <= 0) {
                         return interaction.createMessage({
                             embeds: [
-                                new RichEmbed()
+                                new EmbedBuilder()
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
@@ -332,7 +337,8 @@ export class ReadSearchPaginator {
                                                 index: page.toLocaleString(),
                                             }
                                         )
-                                    ).data,
+                                    )
+                                    .toJSON(),
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });

@@ -6,8 +6,7 @@ import {
     Constants,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel, UserModel } from "../../Models";
@@ -30,7 +29,7 @@ export async function searchCommand(
         Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) &&
         !guildData.settings.whitelisted
     ) {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(
                 client.translate("main.tags.restricted", {
@@ -41,7 +40,7 @@ export async function searchCommand(
             );
 
         return interaction.createFollowup({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
             flags: Constants.MessageFlags.EPHEMERAL,
         });
     }
@@ -63,14 +62,14 @@ export async function searchCommand(
         )
         .then(async (search) => {
             if (search.result.length === 0) {
-                const embed = new RichEmbed()
+                const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(
                         client.translate("main.search.none", { query: query })
                     );
 
                 return interaction.createFollowup({
-                    embeds: [embed.data],
+                    embeds: [embed.toJSON()],
                 });
             }
 
@@ -87,7 +86,7 @@ export async function searchCommand(
                     }\``
             );
 
-            const embed = new RichEmbed()
+            const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(title.join("\n"))
                 .setTitle(
@@ -113,17 +112,17 @@ export async function searchCommand(
             createSearchPaginator(client, search, interaction);
             interaction.createFollowup({
                 components: components,
-                embeds: [embed.data],
+                embeds: [embed.toJSON()],
             });
         })
         .catch((err: Error) => {
             if (err) {
-                const embed = new RichEmbed()
+                const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(client.translate("main.error"));
 
                 interaction.createFollowup({
-                    embeds: [embed.data],
+                    embeds: [embed.toJSON()],
                 });
             }
 

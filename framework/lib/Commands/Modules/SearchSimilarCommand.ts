@@ -5,8 +5,7 @@ import {
     Constants,
     TextChannel,
 } from "oceanic.js";
-import { ComponentBuilder } from "@oceanicjs/component-builder";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
 import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel, UserModel } from "../../Models";
@@ -28,7 +27,7 @@ export async function searchSimilarCommand(
         !guildData.settings.whitelisted &&
         !userData.settings.premium
     ) {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(
                 client.translate("main.tags.restricted", {
@@ -39,7 +38,7 @@ export async function searchSimilarCommand(
             );
 
         return interaction.createMessage({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
             flags: Constants.MessageFlags.EPHEMERAL,
         });
     }
@@ -51,12 +50,12 @@ export async function searchSimilarCommand(
         .getGalleryRelated(galleryID)
         .then(async (search) => {
             if (search.result.length === 0) {
-                const embed = new RichEmbed()
+                const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(client.translate("main.search.empty"));
 
                 return interaction.createFollowup({
-                    embeds: [embed.data],
+                    embeds: [embed.toJSON()],
                 });
             }
 
@@ -73,7 +72,7 @@ export async function searchSimilarCommand(
                     }\``
             );
 
-            const embed = new RichEmbed()
+            const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(title.join("\n"))
                 .setTitle(
@@ -99,16 +98,16 @@ export async function searchSimilarCommand(
             createSearchPaginator(client, search, interaction);
             interaction.createFollowup({
                 components,
-                embeds: [embed.data],
+                embeds: [embed.toJSON()],
             });
         })
         .catch((err: Error) => {
-            const embed = new RichEmbed()
+            const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
                 .setDescription(client.translate("main.error"));
 
             interaction.createFollowup({
-                embeds: [embed.data],
+                embeds: [embed.toJSON()],
             });
 
             return client.logger.error({

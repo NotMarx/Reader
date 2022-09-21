@@ -1,6 +1,6 @@
 import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
 import { NReaderClient } from "../../Client";
-import { RichEmbed } from "../../Utils/RichEmbed";
+import { EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderConstant } from "../../Constant";
 
 export function helpCommand(
@@ -8,7 +8,7 @@ export function helpCommand(
     interaction: CommandInteraction<TextChannel>
 ) {
     if (interaction.channel.nsfw) {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(
                 client.translate("general.help.description", {
@@ -32,16 +32,16 @@ export function helpCommand(
             .setTitle(client.translate("general.help.title"));
 
         return interaction.createMessage({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
         });
     } else {
-        const embed = new RichEmbed()
+        const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
             .setDescription(client.translate("general.help.nsfw"))
             .setTitle(client.translate("general.help.title"));
 
         return interaction.createMessage({
-            embeds: [embed.data],
+            embeds: [embed.toJSON()],
             flags: Constants.MessageFlags.EPHEMERAL,
         });
     }
