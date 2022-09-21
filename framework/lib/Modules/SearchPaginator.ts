@@ -491,7 +491,8 @@ export class SearchPaginator {
                             this.paginationEmbed = new ReadSearchPaginator(
                                 this.client,
                                 gallery,
-                                this.interaction
+                                this.interaction,
+                                this
                             );
                             await this.paginationEmbed.initialisePaginator();
                             this.paginationEmbed.runPaginator();

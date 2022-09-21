@@ -16,6 +16,8 @@ import { NReaderClient } from "../Client";
 import { UserModel } from "../Models";
 import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
+import { SearchPaginator } from "./SearchPaginator";
+import { BookmarkPaginator } from "./BookmarkPaginator";
 
 export class ReadSearchPaginator {
     /**
@@ -44,6 +46,11 @@ export class ReadSearchPaginator {
     interaction: CommandInteraction<TextChannel>;
 
     /**
+     * The main origin paginator class
+     */
+    mainPaginator: SearchPaginator | BookmarkPaginator;
+
+    /**
      * The message for embed pages
      */
     message: Message<TextChannel>;
@@ -58,11 +65,13 @@ export class ReadSearchPaginator {
      * @param client NReader client
      * @param gallery Current NHentai gallery
      * @param interaction Oceanic command interaction
+     * @param mainPaginator The main origin paginator class
      */
     constructor(
         client: NReaderClient,
         gallery: Gallery,
-        interaction: CommandInteraction<TextChannel>
+        interaction: CommandInteraction<TextChannel>,
+        mainPaginator: SearchPaginator | BookmarkPaginator
     ) {
         this.client = client;
         this.embed = 1;
@@ -83,6 +92,7 @@ export class ReadSearchPaginator {
         });
         this.gallery = gallery;
         this.interaction = interaction;
+        this.mainPaginator = mainPaginator;
         this.onRead = this.onRead.bind(this);
         this.running = false;
     }
@@ -161,6 +171,12 @@ export class ReadSearchPaginator {
                 case `read_${this.interaction.id}`:
                     this.initialisePaginator();
                     interaction.deferUpdate();
+                    break;
+                case `stop_${this.interaction.id}`:
+                    interaction.message.delete();
+                    interaction.deferUpdate();
+                    this.stopPaginator();
+                    this.mainPaginator.stopPaginator();
                     break;
                 case `bookmark_${this.interaction.id}`:
                     if (
@@ -426,9 +442,15 @@ export class ReadSearchPaginator {
 export async function createReadSearchPaginator(
     client: NReaderClient,
     gallery: Gallery,
-    interaction: CommandInteraction<TextChannel>
+    interaction: CommandInteraction<TextChannel>,
+    mainPaginator: SearchPaginator | BookmarkPaginator
 ) {
-    const paginator = new ReadSearchPaginator(client, gallery, interaction);
+    const paginator = new ReadSearchPaginator(
+        client,
+        gallery,
+        interaction,
+        mainPaginator
+    );
 
     paginator.runPaginator();
 
