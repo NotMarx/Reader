@@ -68,7 +68,7 @@ export class ReadPaginator {
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
             return new EmbedBuilder()
-                .setAuthor(gallery.id, page.url)
+                .setAuthor(gallery.id, undefined, page.url)
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
                     client.translate("main.page", {
@@ -173,7 +173,7 @@ export class ReadPaginator {
         const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
 
         const resultEmbed = new EmbedBuilder()
-            .setAuthor(this.gallery.id, this.gallery.url)
+            .setAuthor(this.gallery.id, undefined, this.gallery.url)
             .setColor(this.client.config.BOT.COLOUR)
             .addField(
                 this.client.translate("main.title"),
