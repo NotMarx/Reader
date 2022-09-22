@@ -120,7 +120,7 @@ export class SearchPaginator {
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
             return new EmbedBuilder()
-                .setAuthor(gallery.id, gallery.url)
+                .setAuthor(gallery.id, undefined, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
                     title
@@ -761,7 +761,11 @@ export class SearchPaginator {
                                         }:F>`;
 
                                         return new EmbedBuilder()
-                                            .setAuthor(gallery.id, gallery.url)
+                                            .setAuthor(
+                                                gallery.id,
+                                                undefined,
+                                                gallery.url
+                                            )
                                             .setColor(
                                                 this.client.config.BOT.COLOUR
                                             )
@@ -1038,7 +1042,11 @@ export class SearchPaginator {
                                         }:F>`;
 
                                         return new EmbedBuilder()
-                                            .setAuthor(gallery.id, gallery.url)
+                                            .setAuthor(
+                                                gallery.id,
+                                                undefined,
+                                                gallery.url
+                                            )
                                             .setColor(
                                                 this.client.config.BOT.COLOUR
                                             )
@@ -1291,7 +1299,11 @@ export class SearchPaginator {
                                     }:F>`;
 
                                     return new EmbedBuilder()
-                                        .setAuthor(gallery.id, gallery.url)
+                                        .setAuthor(
+                                            gallery.id,
+                                            undefined,
+                                            gallery.url
+                                        )
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             title
@@ -1515,7 +1527,11 @@ export class SearchPaginator {
                                     }:F>`;
 
                                     return new EmbedBuilder()
-                                        .setAuthor(gallery.id, gallery.url)
+                                        .setAuthor(
+                                            gallery.id,
+                                            undefined,
+                                            gallery.url
+                                        )
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             title
@@ -1860,7 +1876,11 @@ export class SearchPaginator {
                                     }:F>`;
 
                                     return new EmbedBuilder()
-                                        .setAuthor(gallery.id, gallery.url)
+                                        .setAuthor(
+                                            gallery.id,
+                                            undefined,
+                                            gallery.url
+                                        )
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
                                             title
