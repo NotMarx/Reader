@@ -72,7 +72,7 @@ export async function readCommand(
             }
 
             const embed = new EmbedBuilder()
-                .setAuthor(gallery.id, gallery.url)
+                .setAuthor(gallery.id, undefined, gallery.url)
                 .setColor(client.config.BOT.COLOUR)
                 .addField(
                     client.translate("main.title"),

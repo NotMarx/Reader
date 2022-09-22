@@ -126,7 +126,7 @@ export class BookmarkPaginator {
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
 
             return new EmbedBuilder()
-                .setAuthor(gallery.id, gallery.url)
+                .setAuthor(gallery.id, undefined, gallery.url)
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
                     title
