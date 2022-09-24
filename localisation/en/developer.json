@@ -1,0 +1,5 @@
+{
+    "developer.premium.config": "**{user}'s Premium** has been set to **{premium}**!",
+    "developer.temporaryPremium.config": "**Premium** has been set to **{premium}** for all users!",
+    "developer.user.notfound": "User Not Found!"
+}

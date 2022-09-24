@@ -1,4 +1,9 @@
-type GeneralKey =
+type TDeveloperKey =
+    | "developer.premium.config"
+    | "developer.temporaryPremium.config"
+    | "developer.user.notfound";
+
+type TGeneralKey =
     | "general.help.description"
     | "general.help.nsfw"
     | "general.help.search.name"
@@ -16,7 +21,7 @@ type GeneralKey =
     | "general.stats.uptime"
     | "general.stats.user";
 
-type MainKey =
+type TMainKey =
     | "main.artist"
     | "main.artists"
     | "main.bookmark"
@@ -69,6 +74,6 @@ type MainKey =
     | "main.timeout"
     | "main.title";
 
-type ModKey = "mod.language.set" | "mod.noperms";
+type TModKey = "mod.language.set" | "mod.noperms";
 
-export type TranslationKey = GeneralKey | MainKey | ModKey;
+export type TranslationKey = TDeveloperKey | TGeneralKey | TMainKey | TModKey;
