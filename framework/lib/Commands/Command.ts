@@ -36,6 +36,14 @@ export class NReaderCommand {
     }
 
     /**
+     * Executes a `eval` command
+     * @returns {Promise<void>}
+     */
+    public evalCommand() {
+        return CommandModules.evalCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `help` command
      * @returns {Promise<void>}
      */
