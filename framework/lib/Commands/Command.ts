@@ -60,6 +60,14 @@ export class NReaderCommand {
     }
 
     /**
+     * Executes a `premium` command
+     * @returns {Promise<void>}
+     */
+    public premiumCommand() {
+        return CommandModules.premiumCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `read` command
      * @returns {Promise<void>}
      */
