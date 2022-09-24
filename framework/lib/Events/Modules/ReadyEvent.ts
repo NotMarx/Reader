@@ -5,17 +5,28 @@ export function readyEvent(client: NReaderClient) {
         const commands = client.commands.map((command) => command);
 
         if (commands) {
-            commands.forEach((command) => {
-                client.rest.applicationCommands
-                    .createGlobalCommand(client.application.id, {
-                        description: command.description,
-                        name: command.name,
-                        options: command.options,
-                        type: command.type,
-                    })
-                    .catch(() => {});
-            });
+            commands
+                .filter((command) => command.adminOnly !== true)
+                .forEach((command) => {
+                    client.rest.applicationCommands
+                        .createGlobalCommand(client.application.id, {
+                            description: command.description,
+                            name: command.name,
+                            options: command.options,
+                            type: command.type,
+                        })
+                        .catch(() => {});
+                });
         }
+
+        const evalCommand = commands.find((command) => command.name === "eval");
+
+        client.application.createGuildCommand(client.config.BOT.GUILD, {
+            description: evalCommand.description,
+            name: evalCommand.name,
+            options: evalCommand.options,
+            type: evalCommand.type,
+        });
 
         if (client.config.LIST.ENABLED) {
             client.apiStats.postStats(

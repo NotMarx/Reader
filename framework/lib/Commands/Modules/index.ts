@@ -1,5 +1,6 @@
 export * from "./BookmarkCommand";
 export * from "./ConfigCommand";
+export * from "./EvalCommand";
 export * from "./HelpCommand";
 export * from "./PingCommand";
 export * from "./ReadCommand";

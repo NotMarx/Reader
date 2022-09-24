@@ -6,6 +6,7 @@
         "ADMIN": [],
         "COLOUR": "COLOUR",
         "DEBUG": false,
+        "GUILD": "",
         "MONGODB": "",
         "TOKEN": ""
     },
