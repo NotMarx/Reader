@@ -6,6 +6,7 @@ export interface IConfigBot {
     ADMIN: string[];
     COLOUR: number;
     DEBUG: boolean;
+    GUILD: string;
     MONGODB: string;
     TOKEN: string;
 }
