@@ -53,6 +53,7 @@ export async function readCommand(
                     client.config.API.RESTRICTED_TAGS
                 ) &&
                 !guildData.settings.whitelisted &&
+                !userData.settings.temporaryPremium &&
                 !userData.settings.premium
             ) {
                 const embed = new EmbedBuilder()
