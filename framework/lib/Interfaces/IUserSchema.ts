@@ -1,5 +1,6 @@
 export interface IUserSchemaSettings {
     premium: boolean;
+    temporaryPremium: boolean;
 }
 
 export interface IUserSchema {

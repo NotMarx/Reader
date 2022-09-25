@@ -105,6 +105,15 @@ export class Util {
     }
 
     /**
+     * Convert boolean type to "True" or "False" string
+     * @param value The boolean value
+     * @returns {string}
+     */
+    public static convertBoolean(value: boolean): string {
+        return value ? "True" : "False";
+    }
+
+    /**
      * Convert 2 code country to full text
      * @param locale The locale
      * @returns {string}

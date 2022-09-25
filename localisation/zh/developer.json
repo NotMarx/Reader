@@ -1,0 +1,5 @@
+{
+    "developer.premium.config": "**{user}的 Premium** 已设置为 **{premium}**！",
+    "developer.temporaryPremium.config": "**Premium** 已设置为**{premium}** 所有用户！",
+    "developer.user.notfound": "用户不存在"
+}

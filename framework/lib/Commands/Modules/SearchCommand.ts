@@ -27,7 +27,9 @@ export async function searchCommand(
 
     if (
         Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) &&
-        !guildData.settings.whitelisted
+        !guildData.settings.whitelisted &&
+        !userData.settings.temporaryPremium &&
+        !userData.settings.premium
     ) {
         const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
@@ -52,6 +54,8 @@ export async function searchCommand(
         .searchGalleries(
             encodeURIComponent(
                 guildData.settings.whitelisted
+                    ? query
+                    : userData.settings.temporaryPremium
                     ? query
                     : userData.settings.premium
                     ? query
