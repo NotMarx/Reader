@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "nreader-framework": "file:../framework",
-    "oceanic.js": "^1.0.2"
+    "oceanic.js": "^1.1.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.32.0",
