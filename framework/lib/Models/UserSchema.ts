@@ -22,7 +22,6 @@ const userSchema = new Schema<IUserSchema>({
             type: Schema.Types.Boolean,
         },
         temporaryPremium: {
-            default: false,
             required: true,
             type: Schema.Types.Boolean,
         },
