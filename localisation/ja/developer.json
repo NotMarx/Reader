@@ -1,0 +1,5 @@
+{
+    "developer.premium.config": "**{user}の プレミアム** が **{premium} **に設定されました！",
+    "developer.temporaryPremium.config": "**Premium** はすべてのユーザーに**{premium}**に設定されました！",
+    "developer.user.notfound": "ユーザーが見つかりませんでした"
+}

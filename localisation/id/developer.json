@@ -1,0 +1,5 @@
+{
+    "developer.premium.config": "**Premium {user}** telah disetel ke **{premium}**!",
+    "developer.temporaryPremium.config": "**Premium** telah disetel ke **{premium}** kepada semua users!",
+    "developer.user.notfound": "User Tidak Ditemukan!"
+}
