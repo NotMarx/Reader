@@ -4,6 +4,7 @@ import { t } from "i18next";
 import { GuildModel, UserModel } from "../../Models";
 import { Util } from "../../Utils";
 import { EmbedBuilder } from "@oceanicjs/builders";
+import { IUserSchema } from "../../Interfaces";
 
 export async function interactionCreateEvent(
     client: NReaderClient,
@@ -36,8 +37,9 @@ export async function interactionCreateEvent(
             id: interaction.member.id,
             settings: {
                 premium: false,
+                temporaryPremium: false,
             },
-        });
+        } as IUserSchema);
 
         return interaction.createMessage({
             embeds: [embed.toJSON()],

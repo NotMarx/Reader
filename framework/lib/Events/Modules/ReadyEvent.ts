@@ -8,8 +8,22 @@ export function readyEvent(client: NReaderClient) {
             commands
                 .filter((command) => command.adminOnly !== true)
                 .forEach((command) => {
-                    client.rest.applicationCommands
-                        .createGlobalCommand(client.application.id, {
+                    client.application
+                        .createGlobalCommand({
+                            description: command.description,
+                            name: command.name,
+                            options: command.options,
+                            type: command.type,
+                        })
+                        .catch(() => {});
+                });
+
+            commands
+                .filter((command) => command.adminOnly === true)
+                .forEach((command) => {
+                    client.application
+                        .createGuildCommand(client.config.BOT.GUILD, {
+                            defaultMemberPermissions: "8",
                             description: command.description,
                             name: command.name,
                             options: command.options,
@@ -18,15 +32,6 @@ export function readyEvent(client: NReaderClient) {
                         .catch(() => {});
                 });
         }
-
-        const evalCommand = commands.find((command) => command.name === "eval");
-
-        client.application.createGuildCommand(client.config.BOT.GUILD, {
-            description: evalCommand.description,
-            name: evalCommand.name,
-            options: evalCommand.options,
-            type: evalCommand.type,
-        });
 
         if (client.config.LIST.ENABLED) {
             client.apiStats.postStats(
