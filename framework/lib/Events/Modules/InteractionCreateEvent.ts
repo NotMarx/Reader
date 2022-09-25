@@ -37,7 +37,7 @@ export async function interactionCreateEvent(
             id: interaction.member.id,
             settings: {
                 premium: false,
-                temporaryPremium: false,
+                temporaryPremium: client.config.API.TEMPORARY_PREMIUM,
             },
         } as IUserSchema);
 

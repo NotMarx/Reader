@@ -1,6 +1,7 @@
 {
     "API": {
-        "RESTRICTED_TAGS": []
+        "RESTRICTED_TAGS": [],
+        "TEMPORARY_PREMIUM": false
     },
     "BOT": {
         "ADMIN": [],

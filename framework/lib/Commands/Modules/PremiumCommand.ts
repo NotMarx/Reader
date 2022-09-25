@@ -53,6 +53,7 @@ export async function premiumCommand(
                 })
             );
 
+        client.config.API.TEMPORARY_PREMIUM = premium;
         usersData.forEach((user) => {
             user.settings.temporaryPremium = premium;
             user.save();
