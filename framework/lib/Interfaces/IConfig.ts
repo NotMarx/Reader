@@ -1,5 +1,6 @@
 export interface IConfigAPI {
     RESTRICTED_TAGS: string[];
+    TEMPORARY_PREMIUM: boolean;
 }
 
 export interface IConfigBot {
