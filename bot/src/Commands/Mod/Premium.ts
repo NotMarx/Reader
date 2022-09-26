@@ -1,5 +1,4 @@
-import { NReaderCommand, NReaderInterface } from "nreader-framework/lib";
-import { Constants } from "oceanic.js";
+import { NReaderCommand, NReaderInterface, NReaderOceanic } from "nreader-framework/lib";
 
 export const command: NReaderInterface.ICommand = {
     name: "premium",
@@ -10,18 +9,18 @@ export const command: NReaderInterface.ICommand = {
         {
             name: "user",
             description: "Manage a user",
-            type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+            type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
             options: [
                 {
                     name: "user",
                     description: "The user to manage",
-                    type: Constants.ApplicationCommandOptionTypes.USER,
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.USER,
                     required: true
                 },
                 {
                     name: "premium",
                     description: "Whether to enable or disable the user's premium",
-                    type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.BOOLEAN,
                     required: true
                 }
             ]
@@ -30,12 +29,12 @@ export const command: NReaderInterface.ICommand = {
         {
             name: "temporary",
             description: "Manage temporary premium for all users",
-            type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+            type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
             options: [
                 {
                     name: "premium",
                     description: "Whether to enable or disable the user's temporary premium",
-                    type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.BOOLEAN,
                     required: true
                 }
             ]
