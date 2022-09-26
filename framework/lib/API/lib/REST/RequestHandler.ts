@@ -42,7 +42,7 @@ export class RequestHandler {
                 if (json.error) {
                     const response = {
                         error: json.error,
-                        url
+                        url,
                     };
 
                     throw new APIError(response, url);
