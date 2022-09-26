@@ -1,48 +1,79 @@
-import { NReaderCommand, NReaderInterface } from "nreader-framework/lib";
+import { NReaderCommand, NReaderInterface, NReaderOceanic } from "nreader-framework/lib";
 
 export const command: NReaderInterface.ICommand = {
     name: "search",
-    description: "Search for NHentai doujin",
+    description: "Search for NHentai doujins",
     nsfwOnly: true,
     options: [
         {
             name: "query",
-            description: "The title query of the doujin",
-            type: 3,
-            required: true
+            description: "Search doujins by the query",
+            type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+            options: [
+
+                {
+                    name: "query",
+                    description: "The title query",
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
+                },
+                {
+                    name: "page",
+                    description: "Page of the results",
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.INTEGER,
+                },
+                {
+                    name: "sort",
+                    description: "Sort results based on the sort mode",
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.STRING,
+                    choices: [
+                        {
+                            name: "Popular All Time",
+                            value: "popular"
+                        },
+                        {
+                            name: "Popular Today",
+                            value: "popular-today"
+                        },
+                        {
+                            name: "Popular This Week",
+                            value: "popular-week"
+                        },
+                        {
+                            name: "Popular This Month",
+                            value: "popular-month"
+                        }
+                    ]
+                }
+            ]
         },
         {
-            name: "page",
-            description: "Page of the results",
-            type: 4,
-        },
-        {
-            name: "sort",
-            description: "Sort results based on the sort mode",
-            type: 3,
-            /* @ts-ignore */
-            choices: [
+            name: "similar",
+            description: "Search for similar doujins",
+            type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+            options: [
                 {
-                    name: "Popular All Time",
-                    value: "popular"
-                },
-                {
-                    name: "Popular Today",
-                    value: "popular-today"
-                },
-                {
-                    name: "Popular This Week",
-                    value: "popular-week"
-                },
-                {
-                    name: "Popular This Month",
-                    value: "popular-month"
+                    name: "id",
+                    description: "The ID of the doujin",
+                    type: NReaderOceanic.Constants.ApplicationCommandOptionTypes.INTEGER,
+                    required: true
                 }
             ]
         }
     ],
     type: 1,
     run: (payload) => {
-        return new NReaderCommand(payload).searchCommand();
+        const command = new NReaderCommand(payload);
+        const interaction = payload.interaction;
+        const query = interaction.data.options.getString("query");
+        const id = interaction.data.options.getInteger("id");
+
+        if (query) {
+            return command.searchCommand();
+        }
+
+        if (id) {
+            return command.searchSimilarCommand();
+        }
     }
 };
