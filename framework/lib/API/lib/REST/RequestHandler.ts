@@ -40,7 +40,12 @@ export class RequestHandler {
             .then((res) => res.json())
             .then((json) => {
                 if (json.error) {
-                    throw new APIError(json, url);
+                    const response = {
+                        error: json.error,
+                        url
+                    };
+
+                    throw new APIError(response, url);
                 } else return json;
             });
     }
