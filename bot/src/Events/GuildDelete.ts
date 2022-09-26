@@ -1,9 +1,8 @@
-import { NReaderEvent, NReaderInterface } from "nreader-framework/lib";
-import { Guild } from "oceanic.js";
+import { NReaderEvent, NReaderInterface, NReaderOceanic } from "nreader-framework/lib";
 
 export const event: NReaderInterface.IEvent = {
     name: "guildDelete",
-    run: async (client, guild: Guild) => {
-        return new NReaderEvent<Guild, any, any, any>(client, guild).guildDeleteEvent();
+    run: async (client, guild: NReaderOceanic.Guild) => {
+        return new NReaderEvent<NReaderOceanic.Guild, any, any, any>(client, guild).guildDeleteEvent();
     }
 };
