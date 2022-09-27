@@ -1,0 +1,19 @@
+{
+    "general.help.description": "Saluton, **{user}**! Ĉu vi unuafoje uzas tiun roboton? Bonvolu legi plu por pli da informo! Ĉu vi bezonas helpon? Aliĝu al [NReader Diskorda Servilo]({server}) \n\n > ***Tiu roboto nur estas por 18+*",
+    "general.help.nsfw": "Tiu ordono enhavas NSFW vortojn, bonvolu ordoni tion en NSFW babilejo!",
+    "general.help.search.name": "Kiel Serĉi Etikedojn kaj Fervolularojn",
+    "general.help.search.value": "Uzante la `/search query:*` oblikvan ordonon, oni povas vidi plejmultajn fervolularojn (fervolularojn kiu enhavas limigitajn etikedojn ne estos montrita). Se vi ne kutimas specifajn etikedojn, sed deziras scii pli, vi povas viziti {doujin} por pli",
+    "general.help.title": "Helpa Menuo",
+    "general.help.usage.name": "Kiel Uzi",
+    "general.help.usage.value": "**{bot}** estas Diskorda roboto kiu ebligas al vi legi {doujin} facile sen reklamoj kaj limigoj. Por uzi tiun roboton, vi bezonos la identigilon de {doujin}, kiu estas 6-cifera numero (ekzemple `233905`, `390492`, ktp). Ne ĉiu identigilo estas 6-cifera numero. Ili estas sinsekve alŝutitaj fervolularoj, sed plej multaj el ili estas 6-ciferaj numeroj nun. \n\n Krom havado de identigilo, oni povas esplori ilin per serĉi specifajn etikedojn",
+    "general.ping": "Respondo! | {latency}ms",
+    "general.register__": "You've been registered to the database. Please run the command again to continue.",
+    "general.register": "Vi estas registrita en la datumbazon. Bonvolu reordoni por pluiri",
+    "general.stats.cpu": "Uzo de Ĉefprocesoro",
+    "general.stats.memory": "Uzo de Memorilo",
+    "general.stats.platform": "Bazo",
+    "general.stats.server": "Serviloj",
+    "general.stats.title": "Statistiko de {bot}",
+    "general.stats.uptime": "Daŭro de Funkciado",
+    "general.stats.user": "Uzantoj"
+}
