@@ -1,0 +1,5 @@
+{
+    "developer.premium.config": "**Premio de {user}** estas agordita al **{premium}**!",
+    "developer.temporaryPremium.config": "**Premio** estas agordita al **{premium}** por ĉiuj uzantoj!",
+    "developer.user.notfound": "Uzanton Ne Trovis!"
+}
