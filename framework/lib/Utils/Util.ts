@@ -125,6 +125,9 @@ export class Util {
             case "en":
                 output = "English";
                 break;
+            case "eo":
+                output = "Esperanto";
+                break;
             case "id":
                 output = "Bahasa Indonesia";
                 break;
