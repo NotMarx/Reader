@@ -16,7 +16,6 @@ export const command: NReaderInterface.ICommand = {
                     description: "The language to set",
                     type: 3,
                     required: true,
-                    /* @ts-ignore */
                     choices: [
                         {
                             name: "Bahasa Indonesia",
@@ -25,6 +24,10 @@ export const command: NReaderInterface.ICommand = {
                         {
                             name: "English",
                             value: "en"
+                        },
+                        {
+                            name: "Esperanto",
+                            value: "eo"
                         },
                         {
                             name: "日本語",
