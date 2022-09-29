@@ -15,6 +15,7 @@ import localeEN from "./Locales/en.json";
 import localeID from "./Locales/id.json";
 import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
+import localeEO from "./Locales/eo.json";
 
 export class NReaderClient extends Client {
     /**
@@ -132,6 +133,9 @@ export class NReaderClient extends Client {
             resources: {
                 en: {
                     translation: localeEN,
+                },
+                eo: {
+                    translation: localeEO,
                 },
                 id: {
                     translation: localeID,
