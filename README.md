@@ -1,6 +1,8 @@
 # NReader (Discord Bot)
 
+[![CodeFactor](https://www.codefactor.io/repository/github/reinhello/nreader/badge)](https://www.codefactor.io/repository/github/reinhello/nreader)
 [![GitHub Release](https://img.shields.io/github/v/release/reinhello/NReader?color=%237289DA&include_prereleases)](https://github.com/reinhello/NReader/releases)
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/reinhello/NReader)](https://github.com/reinhello/NReader)
 [![Crowdin](https://badges.crowdin.net/nreader/localized.svg)](https://crowdin.com/project/nreader)
 [![Discord Server](https://canary.discord.com/api/guilds/763678230976659466/widget.png?style=shield)](https://discord.gg/b7AW2Zkcsw)
 
@@ -23,6 +25,7 @@ A Discord bot.
 
 - Chinese
 - English
+- Esperanto
 - Indonesian
 - Japanese
 
