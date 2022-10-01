@@ -665,6 +665,10 @@ export class BookmarkPaginator {
     public runPaginator() {
         this.client.on("interactionCreate", this.onSearch);
         this.running = true;
+
+        setTimeout(() => {
+            this.client.off("interactionCreate", this.onSearch);
+        }, 7200 * 1000);
     }
 
     /**
