@@ -39,6 +39,13 @@ export async function interactionCreateEvent(
                 premium: false,
                 temporaryPremium: client.config.API.TEMPORARY_PREMIUM,
             },
+            stats: {
+                commands: 0,
+                history: {
+                    read: [],
+                    searched: [],
+                },
+            },
         } as IUserSchema);
 
         return interaction.createMessage({
@@ -49,6 +56,9 @@ export async function interactionCreateEvent(
 
     if (interaction.type === 2) {
         if (command) {
+            userData.stats.commands += 1;
+            userData.save();
+
             return Util.checkCommandPerms(client, interaction);
         }
     }

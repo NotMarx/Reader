@@ -26,6 +26,25 @@ const userSchema = new Schema<IUserSchema>({
             type: Schema.Types.Boolean,
         },
     },
+    stats: {
+        commands: {
+            default: 0,
+            required: true,
+            type: Schema.Types.Number,
+        },
+        history: {
+            read: {
+                default: [],
+                required: true,
+                type: Schema.Types.Mixed,
+            },
+            searched: {
+                default: [],
+                required: true,
+                type: Schema.Types.Mixed,
+            },
+        },
+    },
 });
 
 export const UserModel: Model<IUserSchema> = model("users", userSchema);
