@@ -22,6 +22,13 @@ export async function bookmarkCommand(
     const guildData = await UserModel.findOne({ id: user.id });
     const bookmarked = guildData.bookmark;
 
+    client.stats.updateUserHistory(
+        interaction.user.id,
+        "searched",
+        `${user.tag} (${user.id})`,
+        "bookmark"
+    );
+
     if (user) {
         if (!bookmarked || bookmarked.length === 0) {
             const embed = new EmbedBuilder()

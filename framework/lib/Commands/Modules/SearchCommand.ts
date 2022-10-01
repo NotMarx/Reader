@@ -25,6 +25,13 @@ export async function searchCommand(
 
     const queryArgs = query.split(" ");
 
+    client.stats.updateUserHistory(
+        interaction.user.id,
+        "searched",
+        query,
+        "search"
+    );
+
     if (
         Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) &&
         !guildData.settings.whitelisted &&
