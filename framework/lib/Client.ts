@@ -7,6 +7,7 @@ import { connect } from "mongoose";
 import { GuildModel } from "./Models";
 import { Logger } from "./Utils/Logger";
 import { RequestHandler } from "./API";
+import { StatsManager } from "./Modules/StatsManager";
 import { join } from "path";
 import { readdirSync } from "fs";
 import { t, TFunction, use } from "i18next";
@@ -47,6 +48,11 @@ export class NReaderClient extends Client {
      * Logger
      */
     public logger = new Logger();
+
+    /**
+     * Manage the database stats
+     */
+    public stats = new StatsManager(this);
 
     /**
      * Initialise every handler for NReader
