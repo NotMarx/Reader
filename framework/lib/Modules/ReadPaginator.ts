@@ -518,6 +518,10 @@ export class ReadPaginator {
     public runPaginator() {
         this.client.on("interactionCreate", this.onRead);
         this.running = true;
+
+        setTimeout(() => {
+            this.client.off("interactionCreate", this.onRead);
+        }, 7200 * 1000);
     }
 
     /**
