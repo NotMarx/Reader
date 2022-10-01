@@ -34,6 +34,7 @@ type TMainKey =
     | "main.characters"
     | "main.cover.hide"
     | "main.cover.show"
+    | "main.denied"
     | "main.detail"
     | "main.error"
     | "main.home"
