@@ -8,29 +8,32 @@ export async function profileCommand(
     client: NReaderClient,
     interaction: CommandInteraction<TextChannel>
 ) {
-    const user =
-        interaction.data.options.resolved !== null
-            ? interaction.data.options.getUser("user")
-            : interaction.member;
+    const user = interaction.data.options.getUser("user") || interaction.user;
     const userData: IUserSchema = await UserModel.findOne({ id: user.id });
-    const readHistory = userData.stats.history.read
-        .reverse()
-        .map(
-            (read) =>
-                `<t:${Math.round(read.date.getTime() / 1000)}:R> - \`${
-                    read.id
-                }\``
-        )
-        .join("\n");
-    const searchHistory = userData.stats.history.searched
-        .reverse()
-        .map(
-            (search) =>
-                `<t:${Math.round(search.date.getTime() / 1000)}:R> - \`${
-                    search.query
-                }\``
-        )
-        .join("\n");
+    const readHistory =
+        userData.stats.history.read.length !== 0
+            ? userData.stats.history.read
+                  .reverse()
+                  .map(
+                      (read) =>
+                          `<t:${Math.round(
+                              read.date.getTime() / 1000
+                          )}:R> - \`${read.id}\``
+                  )
+                  .join("\n")
+            : client.translate("general.profile.history.empty");
+    const searchHistory =
+        userData.stats.history.read.length !== 0
+            ? userData.stats.history.searched
+                  .reverse()
+                  .map(
+                      (search) =>
+                          `<t:${Math.round(
+                              search.date.getTime() / 1000
+                          )}:R> - \`${search.query}\``
+                  )
+                  .join("\n")
+            : client.translate("general.profile.history.empty");
 
     const embed = new EmbedBuilder()
         .setColor(client.config.BOT.COLOUR)
