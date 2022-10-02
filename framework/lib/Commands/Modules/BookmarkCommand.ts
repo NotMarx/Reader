@@ -15,12 +15,16 @@ export async function bookmarkCommand(
     client: NReaderClient,
     interaction: CommandInteraction<TextChannel>
 ) {
-    const user =
-        interaction.data.options.resolved !== null
-            ? interaction.data.options.getUser("user")
-            : interaction.user;
+    const user = interaction.data.options.getUser("user") || interaction.user;
     const guildData = await UserModel.findOne({ id: user.id });
     const bookmarked = guildData.bookmark;
+
+    client.stats.updateUserHistory(
+        interaction.user.id,
+        "searched",
+        `${user.tag} (${user.id})`,
+        "bookmark"
+    );
 
     if (user) {
         if (!bookmarked || bookmarked.length === 0) {

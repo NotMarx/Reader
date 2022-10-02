@@ -150,6 +150,12 @@ export class ReadSearchPaginator {
             embeds: [this.embeds[this.embed - 1]],
         };
 
+        this.client.stats.updateUserHistory(
+            this.interaction.user.id,
+            "read",
+            this.gallery.id
+        );
+
         this.message = await this.interaction.editOriginal(messageContent);
     }
 

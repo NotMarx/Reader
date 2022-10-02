@@ -17,6 +17,13 @@ export async function readCommand(
 ) {
     const galleryID = interaction.data.options.getInteger("id").toString();
 
+    client.stats.updateUserHistory(
+        interaction.user.id,
+        "searched",
+        galleryID,
+        "read"
+    );
+
     await interaction.defer();
     await setTimeout(2000);
 
