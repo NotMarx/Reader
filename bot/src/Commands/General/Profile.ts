@@ -22,4 +22,4 @@ export const command: NReaderInterface.ICommand = {
     run: async (payload) => {
         return new NReaderCommand(payload).profileCommand();
     }
-}
+};
