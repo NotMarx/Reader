@@ -15,10 +15,7 @@ export async function bookmarkCommand(
     client: NReaderClient,
     interaction: CommandInteraction<TextChannel>
 ) {
-    const user =
-        interaction.data.options.resolved !== null
-            ? interaction.data.options.getUser("user")
-            : interaction.user;
+    const user = interaction.data.options.getUser("user") || interaction.user;
     const guildData = await UserModel.findOne({ id: user.id });
     const bookmarked = guildData.bookmark;
 
