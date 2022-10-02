@@ -22,6 +22,13 @@ export async function searchSimilarCommand(
     const gallery = await client.api.getGallery(galleryID);
     const tags = gallery.tags.tags.map((tag) => tag.name);
 
+    client.stats.updateUserHistory(
+        interaction.user.id,
+        "searched",
+        galleryID,
+        "search-similar"
+    );
+
     if (
         Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) &&
         !guildData.settings.whitelisted &&

@@ -4,6 +4,7 @@ export * from "./EvalCommand";
 export * from "./HelpCommand";
 export * from "./PingCommand";
 export * from "./PremiumCommand";
+export * from "./ProfileCommand";
 export * from "./ReadCommand";
 export * from "./SearchCommand";
 export * from "./SearchSimilarCommand";

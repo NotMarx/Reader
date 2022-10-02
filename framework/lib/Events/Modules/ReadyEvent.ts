@@ -4,6 +4,18 @@ export function readyEvent(client: NReaderClient) {
     if (client.ready) {
         const commands = client.commands.map((command) => command);
 
+        client.logger.success({
+            message: `Loaded ${client.commands.size} Commands`,
+            subTitle: "NReaderFramework::Collections::Commands",
+            title: "COLLECTION",
+        });
+
+        client.logger.success({
+            message: `Loaded ${client.events.size} Events`,
+            subTitle: "NReaderFramework::Collections::Events",
+            title: "COLLECTION",
+        });
+
         if (commands) {
             commands
                 .filter((command) => command.adminOnly !== true)
