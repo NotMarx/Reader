@@ -13,6 +13,7 @@ type TGeneralKey =
     | "general.help.usage.value"
     | "general.ping"
     | "general.profile.history.read"
+    | "general.profile.history.empty"
     | "general.profile.history.searched"
     | "general.profile.title"
     | "general.register"
