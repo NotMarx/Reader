@@ -14,6 +14,7 @@ export async function profileCommand(
         userData.stats.history.read.length !== 0
             ? userData.stats.history.read
                   .reverse()
+                  .slice(0, 25)
                   .map(
                       (read) =>
                           `<t:${Math.round(
@@ -26,6 +27,7 @@ export async function profileCommand(
         userData.stats.history.read.length !== 0
             ? userData.stats.history.searched
                   .reverse()
+                  .slice(0, 25)
                   .map(
                       (search) =>
                           `<t:${Math.round(
