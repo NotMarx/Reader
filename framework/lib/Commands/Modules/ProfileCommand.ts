@@ -24,7 +24,7 @@ export async function profileCommand(
                   .join("\n")
             : client.translate("general.profile.history.empty");
     const searchHistory =
-        userData.stats.history.read.length !== 0
+        userData.stats.history.searched.length !== 0
             ? userData.stats.history.searched
                   .reverse()
                   .slice(0, 25)
