@@ -18,5 +18,6 @@
     "general.stats.server": "Servers",
     "general.stats.title": "{bot}'s Statistics",
     "general.stats.uptime": "Uptime",
-    "general.stats.user": "Users"
+    "general.stats.user": "Users",
+    "general.user.notfound": "Unable to find the following user in our database: {user}"
 }

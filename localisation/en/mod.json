@@ -1,4 +1,8 @@
 {
+    "mod.disabled": "Disabled",
+    "mod.enabled": "Enabled",
     "mod.language.set": "Language has been set to `{language}`",
-    "mod.noperms": "You don't have the right permission to run this command!"
+    "mod.noperms": "You don't have the right permission to run this command!",
+    "mod.profile.history": "History",
+    "mod.profile.title": "{user}'s Profile Settings"
 }
