@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "ts-node-dev ./src/NReader.ts",
     "start": "ts-node ./src/NReader.ts",
-    "lint": "eslint --ext \".ts\" --ignore-path .gitignore . && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\"",
-    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix && echo \"\u001b[1m\u001b[32mSUCCESS\u001b[39m\u001b[22m\" || echo \"\u001b[1m\u001b[31mFAILED\u001b[39m\u001b[22m\""
+    "lint": "eslint --ext \".ts\" --ignore-path .gitignore .",
+    "lint:fix": "eslint --ext \".ts\" --ignore-path .gitignore . --fix"
   },
   "keywords": [
     "reader"
