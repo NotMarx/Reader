@@ -16,8 +16,7 @@ export async function bookmarkCommand(
     interaction: CommandInteraction<TextChannel>
 ) {
     const user = interaction.data.options.getUser("user") || interaction.user;
-    const guildData = await UserModel.findOne({ id: user.id });
-    const bookmarked = guildData.bookmark;
+    const userData = await UserModel.findOne({ id: user.id });
 
     client.stats.updateUserHistory(
         interaction.user.id,
@@ -25,6 +24,20 @@ export async function bookmarkCommand(
         `${user.tag} (${user.id})`,
         "bookmark"
     );
+
+    if (!userData) {
+        const embed = new EmbedBuilder()
+            .setColor(client.config.BOT.COLOUR)
+            .setDescription(client.translate("general.user.notfound", { user: user.mention }))
+            .toJSON();
+
+        return interaction.createMessage({
+            embeds: [embed],
+            flags: Constants.MessageFlags.EPHEMERAL,
+        });
+    }
+
+    const bookmarked = userData.bookmark;
 
     if (user) {
         if (!bookmarked || bookmarked.length === 0) {
