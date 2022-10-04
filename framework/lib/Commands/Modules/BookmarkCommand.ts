@@ -28,7 +28,11 @@ export async function bookmarkCommand(
     if (!userData) {
         const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)
-            .setDescription(client.translate("general.user.notfound", { user: user.mention }))
+            .setDescription(
+                client.translate("general.user.notfound", {
+                    user: user.mention,
+                })
+            )
             .toJSON();
 
         return interaction.createMessage({
