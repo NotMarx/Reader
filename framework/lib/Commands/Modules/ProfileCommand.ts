@@ -1,5 +1,5 @@
 import { NReaderClient } from "../../Client";
-import { CommandInteraction, TextChannel } from "oceanic.js";
+import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { UserModel } from "../../Models";
 import { IUserSchema } from "../../Interfaces";
@@ -10,8 +10,21 @@ export async function profileCommand(
 ) {
     const user = interaction.data.options.getUser("user") || interaction.user;
     const userData: IUserSchema = await UserModel.findOne({ id: user.id });
-    const readHistory =
-        userData.stats.history.read.length !== 0
+
+    if (!userData) {
+        const embed = new EmbedBuilder()
+            .setColor(client.config.BOT.COLOUR)
+            .setDescription(client.translate("general.user.notfound", { user: user.mention }))
+            .toJSON();
+
+        return interaction.createMessage({
+            embeds: [embed],
+            flags: Constants.MessageFlags.EPHEMERAL,
+        });
+    }
+
+    const readHistory = userData.settings.history
+        ? userData.stats.history.read.length !== 0
             ? userData.stats.history.read
                   .reverse()
                   .slice(0, 25)
@@ -22,9 +35,10 @@ export async function profileCommand(
                           )}:R> - \`${read.id}\``
                   )
                   .join("\n")
-            : client.translate("general.profile.history.empty");
-    const searchHistory =
-        userData.stats.history.searched.length !== 0
+            : client.translate("general.profile.history.empty")
+        : client.translate("general.profile.history.empty");
+    const searchHistory = userData.settings.history
+        ? userData.stats.history.searched.length !== 0
             ? userData.stats.history.searched
                   .reverse()
                   .slice(0, 25)
@@ -35,7 +49,8 @@ export async function profileCommand(
                           )}:R> - \`${search.query}\``
                   )
                   .join("\n")
-            : client.translate("general.profile.history.empty");
+            : client.translate("general.profile.history.empty")
+        : client.translate("general.profile.history.empty");
 
     const embed = new EmbedBuilder()
         .setColor(client.config.BOT.COLOUR)
@@ -55,5 +70,6 @@ export async function profileCommand(
 
     return interaction.createMessage({
         embeds: [embed],
+        flags: Constants.MessageFlags.EPHEMERAL,
     });
 }
