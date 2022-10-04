@@ -52,7 +52,7 @@ export class NReaderClient extends Client {
     /**
      * Manage the database stats
      */
-    public stats = new StatsManager(this);
+    public stats = new StatsManager(this)
 
     /**
      * Initialise every handler for NReader
