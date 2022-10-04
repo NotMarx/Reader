@@ -22,13 +22,13 @@ export class StatsManager {
      * @param userID The ID of the user
      * @param history History type
      * @param query History query
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    public updateUserHistory(
+    public async updateUserHistory(
         userID: string,
         history: "read",
         query: string
-    ): void;
+    ): Promise<void>;
 
     /**
      * Update the history of the user
@@ -36,22 +36,22 @@ export class StatsManager {
      * @param history History type
      * @param query History query
      * @param searched Searched type
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    public updateUserHistory(
+    public async updateUserHistory(
         userID: string,
         history: "searched",
         query: string,
         searched: TUserHistorySearched
-    ): void;
+    ): Promise<void>;
 
-    public updateUserHistory(
+    public async updateUserHistory(
         userID: string,
         history: TUserHistory,
         query: string,
         searched?: TUserHistorySearched
-    ): void {
-        const user = UserModel.findOne({ id: userID });
+    ): Promise<void> {
+        const user = await UserModel.findOne({ id: userID });
 
         if (!user) {
             return this.client.logger.error({
@@ -60,6 +60,9 @@ export class StatsManager {
                 title: "ERROR",
             });
         }
+
+        // Ignore if the user has disabled the history
+        if (!user.settings.history) return;
 
         switch (history) {
             case "read":
