@@ -14,6 +14,7 @@ export interface IUserSchemaHistory {
 }
 
 export interface IUserSchemaSettings {
+    history: boolean;
     premium: boolean;
     temporaryPremium: boolean;
 }

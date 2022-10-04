@@ -76,6 +76,14 @@ export class NReaderCommand {
     }
 
     /**
+     * Executes a `profile-edit` command
+     * @returns {Promise<void>}
+     */
+    public profileEditCommand() {
+        return CommandModules.profileEditCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `read` command
      * @returns {Promise<void>}
      */

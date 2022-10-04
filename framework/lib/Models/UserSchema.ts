@@ -16,6 +16,11 @@ const userSchema = new Schema<IUserSchema>({
         type: Schema.Types.String,
     },
     settings: {
+        history: {
+            default: true,
+            required: true,
+            type: Schema.Types.Boolean,
+        },
         premium: {
             default: false,
             required: true,
