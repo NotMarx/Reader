@@ -36,6 +36,7 @@ export async function interactionCreateEvent(
             createdAt: new Date(),
             id: interaction.member.id,
             settings: {
+                history: true,
                 premium: false,
                 temporaryPremium: client.config.API.TEMPORARY_PREMIUM,
             },

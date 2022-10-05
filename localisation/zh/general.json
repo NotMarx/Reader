@@ -18,5 +18,6 @@
     "general.stats.server": "服务器",
     "general.stats.title": "{bot}的统计",
     "general.stats.uptime": "开机时间",
-    "general.stats.user": "用户"
+    "general.stats.user": "用户",
+    "general.user.notfound": "无法在我们的数据库中找到以下用户: {user}"
 }

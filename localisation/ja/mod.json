@@ -1,4 +1,8 @@
 {
+    "mod.disabled": "無効",
+    "mod.enabled": "有効",
     "mod.language.set": "言語が`{language}`に設定されました",
-    "mod.noperms": "このコマンドを実行するのに必要な権限がありません！"
+    "mod.noperms": "このコマンドを実行するのに必要な権限がありません！",
+    "mod.profile.history": "履歴情報",
+    "mod.profile.title": "{user} のプロフィール設定"
 }
