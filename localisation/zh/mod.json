@@ -1,4 +1,8 @@
 {
+    "mod.disabled": "停用",
+    "mod.enabled": "启用",
     "mod.language.set": "语言已设置为 `{language}`",
-    "mod.noperms": "你没有足够的权限来执行该指令。"
+    "mod.noperms": "你没有足够的权限来执行该指令。",
+    "mod.profile.history": "历史",
+    "mod.profile.title": "{user} 的个人资料设置"
 }

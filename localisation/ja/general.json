@@ -18,5 +18,6 @@
     "general.stats.server": "サーバー",
     "general.stats.title": "{bot}の統計",
     "general.stats.uptime": "アップタイム",
-    "general.stats.user": "ユーザー"
+    "general.stats.user": "ユーザー",
+    "general.user.notfound": "データベースに次のユーザーが見つかりません: {user}"
 }
