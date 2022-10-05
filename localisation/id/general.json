@@ -18,5 +18,6 @@
     "general.stats.server": "Server",
     "general.stats.title": "Statistik {bot}",
     "general.stats.uptime": "Waktu Aktif",
-    "general.stats.user": "User"
+    "general.stats.user": "User",
+    "general.user.notfound": "Tidak dapat menemukan user dalam database kami: {user}"
 }

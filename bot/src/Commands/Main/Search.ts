@@ -1,5 +1,7 @@
 import { NReaderCommand, NReaderInterface, NReaderOceanic } from "nreader-framework/lib";
 
+type TSubCommand = "query" | "similar";
+
 export const command: NReaderInterface.ICommand = {
     name: "search",
     description: "Search for NHentai doujins",
@@ -64,16 +66,15 @@ export const command: NReaderInterface.ICommand = {
     type: 1,
     run: (payload) => {
         const command = new NReaderCommand(payload);
-        const interaction = payload.interaction;
-        const query = interaction.data.options.getString("query");
-        const id = interaction.data.options.getInteger("id");
+        const subCommand = payload.interaction.data.options.getSubCommand()[0] as TSubCommand;
 
-        if (query) {
-            return command.searchCommand();
-        }
-
-        if (id) {
-            return command.searchSimilarCommand();
+        switch (subCommand) {
+            case "query":
+                command.searchCommand();
+                break;
+            case "similar":
+                command.searchSimilarCommand();
+                break;
         }
     }
 };

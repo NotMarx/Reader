@@ -23,7 +23,8 @@ type TGeneralKey =
     | "general.stats.server"
     | "general.stats.title"
     | "general.stats.uptime"
-    | "general.stats.user";
+    | "general.stats.user"
+    | "general.user.notfound";
 
 type TMainKey =
     | "main.artist"
@@ -79,6 +80,12 @@ type TMainKey =
     | "main.timeout"
     | "main.title";
 
-type TModKey = "mod.language.set" | "mod.noperms";
+type TModKey =
+    | "mod.disabled"
+    | "mod.enabled"
+    | "mod.language.set"
+    | "mod.noperms"
+    | "mod.profile.history"
+    | "mod.profile.title";
 
 export type TranslationKey = TDeveloperKey | TGeneralKey | TMainKey | TModKey;
