@@ -32,6 +32,8 @@ export async function searchCommand(
         "search"
     );
 
+    client.stats.logActivities(interaction.user.id, "search", query);
+
     if (
         Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) &&
         !guildData.settings.whitelisted &&

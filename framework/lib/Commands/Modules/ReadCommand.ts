@@ -24,6 +24,8 @@ export async function readCommand(
         "read"
     );
 
+    client.stats.logActivities(interaction.user.id, "read", galleryID);
+
     await interaction.defer();
     await setTimeout(2000);
 

@@ -572,6 +572,16 @@ export class SearchPaginator {
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
+                        this.client.stats.logActivities(
+                            this.interaction.user.id,
+                            "bookmarked",
+                            embed.toJSON().author.name,
+                            undefined,
+                            undefined,
+                            undefined,
+                            "removed"
+                        );
+
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
                             { $pull: { bookmark: embed.toJSON().author.name } }
@@ -613,6 +623,16 @@ export class SearchPaginator {
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
+
+                        this.client.stats.logActivities(
+                            this.interaction.user.id,
+                            "bookmarked",
+                            embed.toJSON().author.name,
+                            undefined,
+                            undefined,
+                            undefined,
+                            "added"
+                        );
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
@@ -953,6 +973,7 @@ export class SearchPaginator {
                                     }
                                 );
 
+                                this.search = search;
                                 this.embeds = embeds.map((embed) =>
                                     embed.toJSON()
                                 );
@@ -1234,6 +1255,7 @@ export class SearchPaginator {
                                     }
                                 );
 
+                                this.search = search;
                                 this.embeds = embeds.map((embed) =>
                                     embed.toJSON()
                                 );
@@ -1462,6 +1484,7 @@ export class SearchPaginator {
                                 }
                             );
 
+                            this.search = search;
                             this.embeds = embeds.map((embed) => embed.toJSON());
                             this.embed = 1;
                             this.updatePaginator();
@@ -1690,6 +1713,7 @@ export class SearchPaginator {
                                 }
                             );
 
+                            this.search = search;
                             this.embeds = embeds.map((embed) => embed.toJSON());
                             this.embed = 1;
                             this.updatePaginator();
@@ -2039,6 +2063,7 @@ export class SearchPaginator {
                                 }
                             );
 
+                            this.search = search;
                             this.embeds = embeds.map((embed) => embed.toJSON());
                             this.embed = 1;
                             this.updatePaginator();
@@ -2149,6 +2174,15 @@ export class SearchPaginator {
                 this.client.translate("main.cover.show")
             )
             .toJSON();
+
+        this.client.stats.logActivities(
+            this.interaction.user.id,
+            "search-paginator",
+            this.search.query,
+            this.search.page,
+            this.embed,
+            this.embeds[this.embed - 1].author.name
+        );
 
         this.message.edit({
             components,

@@ -146,6 +146,15 @@ export class ReadPaginator {
             this.gallery.id
         );
 
+        this.client.stats.logActivities(
+            this.interaction.user.id,
+            "read-paginator",
+            this.gallery.id,
+            this.embed,
+            undefined,
+            undefined
+        );
+
         this.message = await this.interaction.editOriginal(messageContent);
     }
 
@@ -354,6 +363,16 @@ export class ReadPaginator {
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
+                        this.client.stats.logActivities(
+                            this.interaction.user.id,
+                            "bookmarked",
+                            this.embeds[0].author.name,
+                            undefined,
+                            undefined,
+                            undefined,
+                            "removed"
+                        );
+
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
                             { $pull: { bookmark: this.embeds[0].author.name } }
@@ -395,6 +414,16 @@ export class ReadPaginator {
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
+
+                        this.client.stats.logActivities(
+                            this.interaction.user.id,
+                            "bookmarked",
+                            this.embeds[0].author.name,
+                            undefined,
+                            undefined,
+                            undefined,
+                            "added"
+                        );
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
@@ -586,6 +615,15 @@ export class ReadPaginator {
                 this.client.translate("main.home")
             )
             .toJSON();
+
+        this.client.stats.logActivities(
+            this.interaction.user.id,
+            "read-paginator",
+            this.gallery.id,
+            this.embed,
+            undefined,
+            undefined
+        );
 
         this.message.edit({
             components,
