@@ -25,6 +25,8 @@ export async function bookmarkCommand(
         "bookmark"
     );
 
+    client.stats.logActivities(interaction.user.id, "bookmark", user.id);
+
     if (!userData) {
         const embed = new EmbedBuilder()
             .setColor(client.config.BOT.COLOUR)

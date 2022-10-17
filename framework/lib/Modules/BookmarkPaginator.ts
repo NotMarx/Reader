@@ -495,6 +495,16 @@ export class BookmarkPaginator {
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
 
+                        this.client.stats.logActivities(
+                            this.interaction.user.id,
+                            "bookmarked",
+                            embed.toJSON().author.name,
+                            undefined,
+                            undefined,
+                            undefined,
+                            "removed"
+                        );
+
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
                             { $pull: { bookmark: embed.toJSON().author.name } }
@@ -536,6 +546,16 @@ export class BookmarkPaginator {
                             ],
                             flags: Constants.MessageFlags.EPHEMERAL,
                         });
+
+                        this.client.stats.logActivities(
+                            this.interaction.user.id,
+                            "bookmarked",
+                            embed.toJSON().author.name,
+                            undefined,
+                            undefined,
+                            undefined,
+                            "added"
+                        );
 
                         UserModel.findOneAndUpdate(
                             { id: interaction.member.id },
@@ -733,6 +753,15 @@ export class BookmarkPaginator {
                 this.client.translate("main.cover.show")
             )
             .toJSON();
+
+        this.client.stats.logActivities(
+            this.interaction.user.id,
+            "bookmark-paginator",
+            this.user.id,
+            1,
+            this.embed,
+            this.embeds[this.embed - 1].author.name
+        );
 
         this.message.edit({
             components,
