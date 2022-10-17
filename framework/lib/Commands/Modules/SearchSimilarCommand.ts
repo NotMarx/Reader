@@ -29,6 +29,12 @@ export async function searchSimilarCommand(
         "search-similar"
     );
 
+    client.stats.logActivities(
+        interaction.user.id,
+        "search-similar",
+        galleryID
+    );
+
     if (
         Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) &&
         !guildData.settings.whitelisted &&
