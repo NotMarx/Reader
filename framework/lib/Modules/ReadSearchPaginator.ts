@@ -169,27 +169,8 @@ export class ReadSearchPaginator {
             | ModalSubmitInteraction<TextChannel>
     ) {
         const userData = await UserModel.findOne({ id: interaction.member.id });
-        const authorData = await UserModel.findOne({
-            id: this.interaction.member.id,
-        });
 
         if (interaction.member.bot) return;
-
-        if (
-            (authorData.settings.premium ||
-                authorData.settings.temporaryPremium) &&
-            interaction.member.id !== this.interaction.member.id
-        ) {
-            const embed = new EmbedBuilder()
-                .setColor(this.client.config.BOT.COLOUR)
-                .setDescription(this.client.translate("main.denied"))
-                .toJSON();
-
-            return interaction.createMessage({
-                embeds: [embed],
-                flags: Constants.MessageFlags.EPHEMERAL,
-            });
-        }
 
         if (interaction instanceof ComponentInteraction) {
             switch (interaction.data.customID) {
