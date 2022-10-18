@@ -15,6 +15,7 @@
     "main.detail": "查看更多",
     "main.error": "发生错误，请稍后重试！",
     "main.home": "主页",
+    "main.invalid": "找不到[任何[结果]({result})。请再试一次 ！",
     "main.language": "语言",
     "main.languages": "语言",
     "main.none": "未提供",

@@ -15,6 +15,7 @@
     "main.detail": "Lihat Lebih",
     "main.error": "Ada sesuatu yang salah, silakan coba lagi nanti!",
     "main.home": "Beranda",
+    "main.invalid": "Tidak dapat menemukan [hasil apa pun]({result}). Mohon dicoba lagi!",
     "main.language": "Bahasa",
     "main.languages": "Bahasa",
     "main.none": "Tidak Tersedia",

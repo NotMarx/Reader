@@ -43,6 +43,7 @@ type TMainKey =
     | "main.detail"
     | "main.error"
     | "main.home"
+    | "main.invalid"
     | "main.language"
     | "main.languages"
     | "main.none"

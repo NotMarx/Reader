@@ -8,6 +8,7 @@ const BHBotList = {
 const Source = {
     BASE: "https://nhentai.net",
     ID: (id: string) => `https://nhentai.net/g/${id}`,
+    SEARCH: (query: string) => `https://nhentai.net/search/?q=${query}`,
     TAGS: "https://nhentai.net/tags/",
 };
 

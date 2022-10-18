@@ -10,6 +10,7 @@ import { Util } from "../../Utils";
 import { GuildModel, UserModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { setTimeout } from "node:timers/promises";
+import { NReaderConstant } from "../../Constant";
 
 export async function readCommand(
     client: NReaderClient,
@@ -183,7 +184,11 @@ export async function readCommand(
         .catch((err: Error) => {
             const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.error"));
+                .setDescription(
+                    client.translate("main.invalid", {
+                        result: NReaderConstant.Source.ID(galleryID),
+                    })
+                );
 
             interaction.createFollowup({
                 embeds: [embed.toJSON()],
