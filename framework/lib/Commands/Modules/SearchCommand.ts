@@ -134,7 +134,11 @@ export async function searchCommand(
                 const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(
-                        client.translate("main.invalid", { result: NReaderConstant.Source.SEARCH(encodeURIComponent(query)) })
+                        client.translate("main.invalid", {
+                            result: NReaderConstant.Source.SEARCH(
+                                encodeURIComponent(query)
+                            ),
+                        })
                     );
 
                 interaction.createFollowup({
