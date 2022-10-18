@@ -6,8 +6,6 @@ import {
     TextChannel,
 } from "oceanic.js";
 import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
-import { Util } from "../../Utils";
-import { GuildModel, UserModel } from "../../Models";
 import { createReadPaginator } from "../../Modules/ReadPaginator";
 import { setTimeout } from "node:timers/promises";
 import { NReaderConstant } from "../../Constant";
@@ -33,12 +31,6 @@ export async function readCommand(
     client.api
         .getGallery(galleryID)
         .then(async (gallery) => {
-            const guildData = await GuildModel.findOne({
-                id: interaction.guildID,
-            });
-            const userData = await UserModel.findOne({
-                id: interaction.user.id,
-            });
             const artistTags: string[] = gallery.tags.artists.map(
                 (tag) => tag.name
             );
@@ -55,32 +47,6 @@ export async function readCommand(
                 (tag) => tag.name
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
-            const tags = gallery.tags.tags.map((tag) => tag.name);
-
-            if (
-                Util.findCommonElement(
-                    tags,
-                    client.config.API.RESTRICTED_TAGS
-                ) &&
-                !guildData.settings.whitelisted &&
-                !userData.settings.temporaryPremium &&
-                !userData.settings.premium
-            ) {
-                const embed = new EmbedBuilder()
-                    .setColor(client.config.BOT.COLOUR)
-                    .setDescription(
-                        client.translate("main.tags.restricted", {
-                            channel:
-                                "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)",
-                            server: "https://discord.gg/b7AW2Zkcsw",
-                        })
-                    );
-
-                return interaction.createFollowup({
-                    embeds: [embed.toJSON()],
-                    flags: Constants.MessageFlags.EPHEMERAL,
-                });
-            }
 
             const embed = new EmbedBuilder()
                 .setAuthor(gallery.id, undefined, gallery.url)
