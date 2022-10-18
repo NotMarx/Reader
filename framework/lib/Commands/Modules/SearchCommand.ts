@@ -7,9 +7,7 @@ import {
     TextChannel,
 } from "oceanic.js";
 import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
-import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
-import { GuildModel, UserModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 import { NReaderConstant } from "../../Constant";
 
@@ -21,10 +19,6 @@ export async function searchCommand(
     const query = interaction.data.options.getString("query");
     const sort =
         interaction.data.options.getString<Constant.TSearchSort>("sort");
-    const guildData = await GuildModel.findOne({ id: interaction.guildID });
-    const userData = await UserModel.findOne({ id: interaction.user.id });
-
-    const queryArgs = query.split(" ");
 
     client.stats.updateUserHistory(
         interaction.user.id,
@@ -35,45 +29,11 @@ export async function searchCommand(
 
     client.stats.logActivities(interaction.user.id, "search", query);
 
-    if (
-        Util.findCommonElement(queryArgs, client.config.API.RESTRICTED_TAGS) &&
-        !guildData.settings.whitelisted &&
-        !userData.settings.temporaryPremium &&
-        !userData.settings.premium
-    ) {
-        const embed = new EmbedBuilder()
-            .setColor(client.config.BOT.COLOUR)
-            .setDescription(
-                client.translate("main.tags.restricted", {
-                    channel:
-                        "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)",
-                    server: "https://discord.gg/b7AW2Zkcsw",
-                })
-            );
-
-        return interaction.createFollowup({
-            embeds: [embed.toJSON()],
-            flags: Constants.MessageFlags.EPHEMERAL,
-        });
-    }
-
     await interaction.defer();
     await setTimeout(2000);
 
     client.api
-        .searchGalleries(
-            encodeURIComponent(
-                guildData.settings.whitelisted
-                    ? query
-                    : userData.settings.temporaryPremium
-                    ? query
-                    : userData.settings.premium
-                    ? query
-                    : `${query} -lolicon -shotacon`
-            ),
-            page || 1,
-            sort || ""
-        )
+        .searchGalleries(encodeURIComponent(query), page || 1, sort || "")
         .then(async (search) => {
             if (search.result.length === 0) {
                 const embed = new EmbedBuilder()

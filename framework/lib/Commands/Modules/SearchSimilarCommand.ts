@@ -6,9 +6,7 @@ import {
     TextChannel,
 } from "oceanic.js";
 import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
-import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
-import { GuildModel, UserModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
 
 export async function searchSimilarCommand(
@@ -16,11 +14,6 @@ export async function searchSimilarCommand(
     interaction: CommandInteraction<TextChannel>
 ) {
     const galleryID = interaction.data.options.getInteger("id").toString();
-    const guildData = await GuildModel.findOne({ id: interaction.guildID });
-    const userData = await UserModel.findOne({ id: interaction.user.id });
-
-    const gallery = await client.api.getGallery(galleryID);
-    const tags = gallery.tags.tags.map((tag) => tag.name);
 
     client.stats.updateUserHistory(
         interaction.user.id,
@@ -34,27 +27,6 @@ export async function searchSimilarCommand(
         "search-similar",
         galleryID
     );
-
-    if (
-        Util.findCommonElement(tags, client.config.API.RESTRICTED_TAGS) &&
-        !guildData.settings.whitelisted &&
-        !userData.settings.premium
-    ) {
-        const embed = new EmbedBuilder()
-            .setColor(client.config.BOT.COLOUR)
-            .setDescription(
-                client.translate("main.tags.restricted", {
-                    channel:
-                        "[#info](https://discord.com/channels/763678230976659466/1005030227174490214)",
-                    server: "https://discord.gg/b7AW2Zkcsw",
-                })
-            );
-
-        return interaction.createMessage({
-            embeds: [embed.toJSON()],
-            flags: Constants.MessageFlags.EPHEMERAL,
-        });
-    }
 
     await interaction.defer();
     await setTimeout(2000);
