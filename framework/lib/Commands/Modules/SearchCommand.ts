@@ -11,6 +11,7 @@ import { Util } from "../../Utils";
 import { createSearchPaginator } from "../../Modules/SearchPaginator";
 import { GuildModel, UserModel } from "../../Models";
 import { setTimeout } from "node:timers/promises";
+import { NReaderConstant } from "../../Constant";
 
 export async function searchCommand(
     client: NReaderClient,
@@ -132,7 +133,9 @@ export async function searchCommand(
             if (err) {
                 const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
-                    .setDescription(client.translate("main.error"));
+                    .setDescription(
+                        client.translate("main.invalid", { result: NReaderConstant.Source.SEARCH(encodeURIComponent(query)) })
+                    );
 
                 interaction.createFollowup({
                     embeds: [embed.toJSON()],
