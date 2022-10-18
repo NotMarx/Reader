@@ -2178,7 +2178,7 @@ export class SearchPaginator {
         this.client.stats.logActivities(
             this.interaction.user.id,
             "search-paginator",
-            this.search.query,
+            decodeURIComponent(this.search.query),
             this.search.page,
             this.embed,
             this.embeds[this.embed - 1].author.name
