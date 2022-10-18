@@ -15,6 +15,7 @@
     "main.detail": "See More",
     "main.error": "Something went wrong, please try again later!",
     "main.home": "Home",
+    "main.invalid": "Unable to find any [results]({result}). Please try again!",
     "main.language": "Language",
     "main.languages": "Languages",
     "main.none": "Not Provided",

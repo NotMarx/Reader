@@ -117,7 +117,9 @@ export async function searchSimilarCommand(
         .catch((err: Error) => {
             const embed = new EmbedBuilder()
                 .setColor(client.config.BOT.COLOUR)
-                .setDescription(client.translate("main.error"));
+                .setDescription(
+                    client.translate("main.invalid", { result: galleryID })
+                );
 
             interaction.createFollowup({
                 embeds: [embed.toJSON()],

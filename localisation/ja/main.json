@@ -15,6 +15,7 @@
     "main.detail": "もっと見る",
     "main.error": "エラーが発生しました。再試行してください！",
     "main.home": "ホーム",
+    "main.invalid": "[结果]({result})を見つけることができません。もう一度やり直してください。",
     "main.language": "言語",
     "main.languages": "言語",
     "main.none": "未提供です",
