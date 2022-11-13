@@ -111,7 +111,7 @@ export class BookmarkPaginator {
      * @param page The index page
      * @returns {Promise<void>}
      */
-    private async getBookmarkPage(interaction: ComponentInteraction<TextChannel>, page: number) {
+    private async getBookmarkPage() {
         const galleries: Gallery[] = [];
             const bookmarked = this.bookmarkChunks[this.page - 1];
 
@@ -882,13 +882,12 @@ export class BookmarkPaginator {
                     });
 
                     break;
-
                 case `next_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
 
                     if (this.page < this.bookmarkChunks.length) {
                         this.page++;
-                        this.getBookmarkPage(interaction, this.page);
+                        this.getBookmarkPage();
                     }
 
                     break;
@@ -897,20 +896,32 @@ export class BookmarkPaginator {
 
                     if (this.page > 1) {
                         this.page--;
-                        this.getBookmarkPage(interaction, this.page);
+                        this.getBookmarkPage();
                     }
 
+                    break;
+                case `first_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
+                    this.page = 1;
+                    this.getBookmarkPage();
+                    break;
+                case `last_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
+                    this.page = this.bookmarkChunks.length;
+                    this.getBookmarkPage();
                     break;
             }
         } else {
             switch (interaction.data.customID) {
                 case `jumpto_result_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
-                    const page = parseInt(
+                    const pageResult = parseInt(
                         Util.getModalID(interaction, "result_number")
                     );
 
-                    if (isNaN(page)) {
+                    if (isNaN(pageResult)) {
                         return interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()
@@ -926,7 +937,7 @@ export class BookmarkPaginator {
                         });
                     }
 
-                    if (page > this.embeds.length) {
+                    if (pageResult > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()
@@ -934,6 +945,70 @@ export class BookmarkPaginator {
                                     .setDescription(
                                         this.client.translate(
                                             "main.result.enter.unknown",
+                                            {
+                                                index: pageResult.toLocaleString(),
+                                            }
+                                        )
+                                    )
+                                    .toJSON(),
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL,
+                        });
+                    }
+
+                    if (pageResult <= 0) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        this.client.translate(
+                                            "main.result.enter.unknown",
+                                            {
+                                                index: pageResult.toLocaleString(),
+                                            }
+                                        )
+                                    )
+                                    .toJSON(),
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL,
+                        });
+                    }
+
+                    this.embed = pageResult;
+                    this.updatePaginator();
+                    interaction.deferUpdate();
+                    break;
+                    case `jumpto_result_page_modal_${this.interaction.id}`:
+                    /* eslint-disable-next-line */
+                    const page = parseInt(
+                        Util.getModalID(interaction, "result_page_number")
+                    );
+
+                    if (isNaN(page)) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        this.client.translate(
+                                            "main.page.enter.invalid"
+                                        )
+                                    )
+                                    .toJSON(),
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL,
+                        });
+                    }
+
+                    if (page > this.bookmarkChunks.length) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        this.client.translate(
+                                            "main.page.enter.unknown",
                                             {
                                                 index: page.toLocaleString(),
                                             }
@@ -952,7 +1027,7 @@ export class BookmarkPaginator {
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
-                                            "main.result.enter.unknown",
+                                            "main.page.enter.unknown",
                                             {
                                                 index: page.toLocaleString(),
                                             }
@@ -964,8 +1039,8 @@ export class BookmarkPaginator {
                         });
                     }
 
-                    this.embed = page;
-                    this.updatePaginator();
+                    this.page = page;
+                    this.getBookmarkPage();
                     interaction.deferUpdate();
                     break;
             }
