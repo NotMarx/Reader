@@ -762,7 +762,7 @@ export class BookmarkPaginator {
                             { $pull: { bookmark: embed.toJSON().author.name } }
                         ).exec();
                     } else {
-                        if (userData.bookmark.length === 25) {
+                        if (!userData.settings.premium && userData.bookmark.length === 25) {
                             return interaction.createMessage({
                                 embeds: [
                                     new EmbedBuilder()
