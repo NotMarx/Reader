@@ -17,6 +17,28 @@ interface IByteSize {
 
 export class Util {
     /**
+     * Split array into chunks
+     * @param array The array to be split into chunks
+     * @param chunkSize Elements per chunk
+     * @returns {T[]}
+     */
+    public static arrayToChunks<T>(array: T[], chunkSize: number): T[][] {
+        const result = array.reduce((resultArray, item, index) => {
+            const chunkIndex = Math.floor(index / chunkSize);
+
+            if (!resultArray[chunkIndex]) {
+                resultArray[chunkIndex] = [];
+            }
+
+            resultArray[chunkIndex].push(item);
+
+            return resultArray;
+        }, []);
+
+        return result;
+    }
+
+    /**
      * Convert a number to a readable size
      * @param bytes The bytes to convert
      * @returns {IByteSize}

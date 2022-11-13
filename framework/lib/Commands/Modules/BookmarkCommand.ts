@@ -10,6 +10,7 @@ import { Gallery } from "../../API";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 import { setTimeout } from "node:timers/promises";
+import { Util } from "../../Utils";
 
 export async function bookmarkCommand(
     client: NReaderClient,
@@ -43,7 +44,8 @@ export async function bookmarkCommand(
         });
     }
 
-    const bookmarked = userData.bookmark;
+    const bookmarkChunks = Util.arrayToChunks(userData.bookmark, 5);
+    const bookmarked = bookmarkChunks[0];
 
     if (user) {
         if (!bookmarked || bookmarked.length === 0) {
@@ -123,7 +125,10 @@ export async function bookmarkCommand(
             .setColor(client.config.BOT.COLOUR)
             .setDescription(bookmarkedTitle.join("\n"))
             .setTitle(
-                client.translate("main.bookmark.title", { user: user.username })
+                client.translate("main.page", {
+                    firstIndex: 1,
+                    lastIndex: bookmarkChunks.length,
+                })
             );
 
         createBookmarkPaginator(client, galleries, interaction, user);

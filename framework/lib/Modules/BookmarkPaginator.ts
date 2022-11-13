@@ -18,12 +18,18 @@ import { UserModel } from "../Models";
 import { ReadSearchPaginator } from "./ReadSearchPaginator";
 import { NReaderConstant } from "../Constant";
 import { Util } from "../Utils";
+import { IUserSchema } from "../Interfaces";
 
 export class BookmarkPaginator {
     /**
      * NHentai API
      */
     api: RequestHandler;
+
+    /**
+     * An array of bookmark chunks
+     */
+    bookmarkChunks: string[][];
 
     /**
      * NReader client
@@ -56,6 +62,11 @@ export class BookmarkPaginator {
     message: Message<TextChannel>;
 
     /**
+     * Current page index of the bookmark chunks
+     */
+    page: number;
+
+    /**
      * The read paginator
      */
     paginationEmbed: ReadSearchPaginator;
@@ -85,6 +96,7 @@ export class BookmarkPaginator {
         this.api = client.api;
         this.client = client;
         this.embed = 1;
+        this.page = 1;
         this.embeds = [];
         this.galleries = galleries;
         this.interaction = interaction;
@@ -94,10 +106,24 @@ export class BookmarkPaginator {
     }
 
     /**
-     * Initialise the paginator class
+     * Get the index page of the bookmark chunks
+     * @param interaction Component interaction
+     * @param page The index page
+     * @returns {Promise<void>}
      */
-    public async initialisePaginator() {
-        const title = this.galleries.map(
+    private async getBookmarkPage() {
+        const galleries: Gallery[] = [];
+        const bookmarked = this.bookmarkChunks[this.page - 1];
+
+        for (let i = 0; i < bookmarked.length; i++) {
+            const gallery: Gallery = await this.client.api.getGallery(
+                bookmarked[i]
+            );
+
+            galleries.push(gallery);
+        }
+
+        const title = galleries.map(
             (gallery, index) =>
                 `\`⬛ ${
                     (index + 1).toString().length > 1
@@ -107,7 +133,7 @@ export class BookmarkPaginator {
                     gallery.title.pretty
                 }\``
         );
-        const embeds = this.galleries.map((gallery, index) => {
+        const embeds = galleries.map((gallery, index) => {
             const artistTags: string[] = gallery.tags.artists.map(
                 (tag) => tag.name
             );
@@ -150,8 +176,9 @@ export class BookmarkPaginator {
                 )
                 .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
                 .setTitle(
-                    this.client.translate("main.bookmark.title", {
-                        user: this.user.username,
+                    this.client.translate("main.page", {
+                        firstIndex: this.page,
+                        lastIndex: this.bookmarkChunks.length,
                     })
                 )
                 .setThumbnail(gallery.cover.url)
@@ -220,10 +247,155 @@ export class BookmarkPaginator {
                             ? contentTags.join("`, `")
                             : this.client.translate("main.none")
                     }\``
-                );
+                )
+                .toJSON();
         });
 
-        this.embeds = embeds.map((embed) => embed.toJSON());
+        this.embeds = embeds;
+        this.embed = 1;
+        this.galleries = galleries;
+        this.updatePaginator();
+    }
+
+    /**
+     * Initialise the paginator class
+     */
+    public async initialisePaginator() {
+        const userData: IUserSchema = await UserModel.findOne({
+            id: this.user.id,
+        });
+        const title = this.galleries.map(
+            (gallery, index) =>
+                `\`⬛ ${
+                    (index + 1).toString().length > 1
+                        ? `${index + 1}`
+                        : `${index + 1} `
+                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                    gallery.title.pretty
+                }\``
+        );
+
+        this.bookmarkChunks = Util.arrayToChunks(userData.bookmark, 5);
+
+        const embeds = this.galleries.map((gallery, index) => {
+            const artistTags: string[] = gallery.tags.artists.map(
+                (tag) => tag.name
+            );
+            const characterTags: string[] = gallery.tags.characters.map(
+                (tag) => tag.name
+            );
+            const contentTags: string[] = gallery.tags.tags.map(
+                (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+            );
+            const languageTags: string[] = gallery.tags.languages.map(
+                (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+            );
+            const parodyTags: string[] = gallery.tags.parodies.map(
+                (tag) => tag.name
+            );
+            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+
+            return new EmbedBuilder()
+                .setAuthor(gallery.id, undefined, gallery.url)
+                .setColor(this.client.config.BOT.COLOUR)
+                .setDescription(
+                    title
+                        .join("\n")
+                        .replace(
+                            `\`⬛ ${
+                                (index + 1).toString().length > 1
+                                    ? `${index + 1}`
+                                    : `${index + 1} `
+                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                gallery.title.pretty
+                            }\``,
+                            `**\`🟥 ${
+                                (index + 1).toString().length > 1
+                                    ? `${index + 1}`
+                                    : `${index + 1} `
+                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                gallery.title.pretty
+                            }\`**`
+                        )
+                )
+                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                .setTitle(
+                    this.client.translate("main.page", {
+                        firstIndex: this.page,
+                        lastIndex: this.bookmarkChunks.length,
+                    })
+                )
+                .setThumbnail(gallery.cover.url)
+                .addField(
+                    this.client.translate("main.title"),
+                    `\`${gallery.title.pretty}\``
+                )
+                .addField(
+                    this.client.translate("main.pages"),
+                    `\`${gallery.pages.length}\``
+                )
+                .addField(this.client.translate("main.released"), uploadedAt)
+                .addField(
+                    languageTags.length > 1
+                        ? this.client.translate("main.languages")
+                        : this.client.translate("main.language"),
+                    `\`${
+                        languageTags.length !== 0
+                            ? languageTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    artistTags.length > 1
+                        ? this.client.translate("main.artists")
+                        : this.client.translate("main.artist"),
+                    `\`${
+                        artistTags.length !== 0
+                            ? artistTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    characterTags.length > 1
+                        ? this.client.translate("main.characters")
+                        : this.client.translate("main.character"),
+                    `\`${
+                        characterTags.length !== 0
+                            ? characterTags.join("`, `")
+                            : this.client.translate("main.original")
+                    }\``
+                )
+                .addField(
+                    parodyTags.length > 1
+                        ? this.client.translate("main.parodies")
+                        : this.client.translate("main.parody"),
+                    `\`${
+                        parodyTags.length !== 0
+                            ? parodyTags
+                                  .join("`, `")
+                                  .replace(
+                                      "original",
+                                      `${this.client.translate(
+                                          "main.original"
+                                      )}`
+                                  )
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    contentTags.length > 1
+                        ? this.client.translate("main.tags")
+                        : this.client.translate("main.tag"),
+                    `\`${
+                        contentTags.length !== 0
+                            ? contentTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .toJSON();
+        });
+
+        this.embeds = embeds;
 
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -254,8 +426,34 @@ export class BookmarkPaginator {
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
                 `jumpto_result_${this.interaction.id}`,
                 this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
             )
             .addRow()
             .addInteractionButton(
@@ -293,7 +491,9 @@ export class BookmarkPaginator {
             | ComponentInteraction<TextChannel>
             | ModalSubmitInteraction<TextChannel>
     ) {
-        const userData = await UserModel.findOne({ id: interaction.user.id });
+        const userData: IUserSchema = await UserModel.findOne({
+            id: interaction.user.id,
+        });
 
         if (interaction.member.bot) return;
 
@@ -333,8 +533,34 @@ export class BookmarkPaginator {
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
                 `jumpto_result_${this.interaction.id}`,
                 this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
             )
             .addRow()
             .addInteractionButton(
@@ -383,8 +609,34 @@ export class BookmarkPaginator {
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
                 `jumpto_result_${this.interaction.id}`,
                 this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
             )
             .addRow()
             .addInteractionButton(
@@ -510,7 +762,10 @@ export class BookmarkPaginator {
                             { $pull: { bookmark: embed.toJSON().author.name } }
                         ).exec();
                     } else {
-                        if (userData.bookmark.length === 25) {
+                        if (
+                            !userData.settings.premium &&
+                            userData.bookmark.length === 25
+                        ) {
                             return interaction.createMessage({
                                 embeds: [
                                     new EmbedBuilder()
@@ -609,16 +864,61 @@ export class BookmarkPaginator {
                     });
 
                     break;
+                case `jumpto_result_page_${this.interaction.id}`:
+                    interaction.createModal({
+                        components: new ComponentBuilder<ModalActionRow>()
+                            .addTextInput(
+                                Constants.TextInputStyles.SHORT,
+                                this.client.translate("main.page.enter"),
+                                "result_page_number",
+                                "5"
+                            )
+                            .toJSON(),
+                        customID: `jumpto_result_page_modal_${this.interaction.id}`,
+                        title: this.client.translate("main.page.enter"),
+                    });
+
+                    break;
+                case `next_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
+                    if (this.page < this.bookmarkChunks.length) {
+                        this.page++;
+                        this.getBookmarkPage();
+                    }
+
+                    break;
+                case `previous_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
+                    if (this.page > 1) {
+                        this.page--;
+                        this.getBookmarkPage();
+                    }
+
+                    break;
+                case `first_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
+                    this.page = 1;
+                    this.getBookmarkPage();
+                    break;
+                case `last_result_page_${this.interaction.id}`:
+                    interaction.deferUpdate();
+
+                    this.page = this.bookmarkChunks.length;
+                    this.getBookmarkPage();
+                    break;
             }
         } else {
             switch (interaction.data.customID) {
                 case `jumpto_result_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
-                    const page = parseInt(
+                    const pageResult = parseInt(
                         Util.getModalID(interaction, "result_number")
                     );
 
-                    if (isNaN(page)) {
+                    if (isNaN(pageResult)) {
                         return interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()
@@ -634,7 +934,7 @@ export class BookmarkPaginator {
                         });
                     }
 
-                    if (page > this.embeds.length) {
+                    if (pageResult > this.embeds.length) {
                         return interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()
@@ -642,6 +942,70 @@ export class BookmarkPaginator {
                                     .setDescription(
                                         this.client.translate(
                                             "main.result.enter.unknown",
+                                            {
+                                                index: pageResult.toLocaleString(),
+                                            }
+                                        )
+                                    )
+                                    .toJSON(),
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL,
+                        });
+                    }
+
+                    if (pageResult <= 0) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        this.client.translate(
+                                            "main.result.enter.unknown",
+                                            {
+                                                index: pageResult.toLocaleString(),
+                                            }
+                                        )
+                                    )
+                                    .toJSON(),
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL,
+                        });
+                    }
+
+                    this.embed = pageResult;
+                    this.updatePaginator();
+                    interaction.deferUpdate();
+                    break;
+                case `jumpto_result_page_modal_${this.interaction.id}`:
+                    /* eslint-disable-next-line */
+                    const page = parseInt(
+                        Util.getModalID(interaction, "result_page_number")
+                    );
+
+                    if (isNaN(page)) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        this.client.translate(
+                                            "main.page.enter.invalid"
+                                        )
+                                    )
+                                    .toJSON(),
+                            ],
+                            flags: Constants.MessageFlags.EPHEMERAL,
+                        });
+                    }
+
+                    if (page > this.bookmarkChunks.length) {
+                        return interaction.createMessage({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor(this.client.config.BOT.COLOUR)
+                                    .setDescription(
+                                        this.client.translate(
+                                            "main.page.enter.unknown",
                                             {
                                                 index: page.toLocaleString(),
                                             }
@@ -660,7 +1024,7 @@ export class BookmarkPaginator {
                                     .setColor(this.client.config.BOT.COLOUR)
                                     .setDescription(
                                         this.client.translate(
-                                            "main.result.enter.unknown",
+                                            "main.page.enter.unknown",
                                             {
                                                 index: page.toLocaleString(),
                                             }
@@ -672,8 +1036,8 @@ export class BookmarkPaginator {
                         });
                     }
 
-                    this.embed = page;
-                    this.updatePaginator();
+                    this.page = page;
+                    this.getBookmarkPage();
                     interaction.deferUpdate();
                     break;
             }
@@ -733,8 +1097,34 @@ export class BookmarkPaginator {
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
+                `first_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.first")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `previous_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.previous")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `next_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.next")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `last_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.last")
+            )
+            .addRow()
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
                 `jumpto_result_${this.interaction.id}`,
                 this.client.translate("main.result.enter")
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.PRIMARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                this.client.translate("main.page.enter")
             )
             .addRow()
             .addInteractionButton(
@@ -758,7 +1148,7 @@ export class BookmarkPaginator {
             this.interaction.user.id,
             "bookmark-paginator",
             this.user.id,
-            1,
+            this.page,
             this.embed,
             this.embeds[this.embed - 1].author.name
         );

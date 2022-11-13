@@ -157,9 +157,9 @@ export class NReaderClient extends Client {
     }
 
     /**
-     * Translate keys
+     * Translate keys based on the localisation set in the guild
      * @param key The translation key
-     * @param format Key format
+     * @param format Translate variable keys
      */
     public translate(key: TranslationKey, format?: object): string;
 
