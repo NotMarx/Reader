@@ -113,154 +113,148 @@ export class BookmarkPaginator {
      */
     private async getBookmarkPage() {
         const galleries: Gallery[] = [];
-            const bookmarked = this.bookmarkChunks[this.page - 1];
+        const bookmarked = this.bookmarkChunks[this.page - 1];
 
-            for (let i = 0; i < bookmarked.length; i++) {
-                const gallery: Gallery = await this.client.api.getGallery(
-                    bookmarked[i]
-                );
-
-                galleries.push(gallery);
-            }
-
-            const title = galleries.map(
-                (gallery, index) =>
-                    `\`⬛ ${
-                        (index + 1).toString().length > 1
-                            ? `${index + 1}`
-                            : `${index + 1} `
-                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
-                        gallery.title.pretty
-                    }\``
+        for (let i = 0; i < bookmarked.length; i++) {
+            const gallery: Gallery = await this.client.api.getGallery(
+                bookmarked[i]
             );
-            const embeds = galleries.map((gallery, index) => {
-                const artistTags: string[] = gallery.tags.artists.map(
-                    (tag) => tag.name
-                );
-                const characterTags: string[] = gallery.tags.characters.map(
-                    (tag) => tag.name
-                );
-                const contentTags: string[] = gallery.tags.tags.map(
-                    (tag) => `${tag.name} (${tag.count.toLocaleString()})`
-                );
-                const languageTags: string[] = gallery.tags.languages.map(
-                    (tag) =>
-                        tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
-                );
-                const parodyTags: string[] = gallery.tags.parodies.map(
-                    (tag) => tag.name
-                );
-                const uploadedAt = `<t:${
-                    gallery.uploadDate.getTime() / 1000
-                }:F>`;
 
-                return new EmbedBuilder()
-                    .setAuthor(gallery.id, undefined, gallery.url)
-                    .setColor(this.client.config.BOT.COLOUR)
-                    .setDescription(
-                        title
-                            .join("\n")
-                            .replace(
-                                `\`⬛ ${
-                                    (index + 1).toString().length > 1
-                                        ? `${index + 1}`
-                                        : `${index + 1} `
-                                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
-                                    gallery.title.pretty
-                                }\``,
-                                `**\`🟥 ${
-                                    (index + 1).toString().length > 1
-                                        ? `${index + 1}`
-                                        : `${index + 1} `
-                                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
-                                    gallery.title.pretty
-                                }\`**`
-                            )
-                    )
-                    .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                    .setTitle(
-                        this.client.translate("main.page", {
-                            firstIndex: this.page,
-                            lastIndex: this.bookmarkChunks.length,
-                        })
-                    )
-                    .setThumbnail(gallery.cover.url)
-                    .addField(
-                        this.client.translate("main.title"),
-                        `\`${gallery.title.pretty}\``
-                    )
-                    .addField(
-                        this.client.translate("main.pages"),
-                        `\`${gallery.pages.length}\``
-                    )
-                    .addField(
-                        this.client.translate("main.released"),
-                        uploadedAt
-                    )
-                    .addField(
-                        languageTags.length > 1
-                            ? this.client.translate("main.languages")
-                            : this.client.translate("main.language"),
-                        `\`${
-                            languageTags.length !== 0
-                                ? languageTags.join("`, `")
-                                : this.client.translate("main.none")
-                        }\``
-                    )
-                    .addField(
-                        artistTags.length > 1
-                            ? this.client.translate("main.artists")
-                            : this.client.translate("main.artist"),
-                        `\`${
-                            artistTags.length !== 0
-                                ? artistTags.join("`, `")
-                                : this.client.translate("main.none")
-                        }\``
-                    )
-                    .addField(
-                        characterTags.length > 1
-                            ? this.client.translate("main.characters")
-                            : this.client.translate("main.character"),
-                        `\`${
-                            characterTags.length !== 0
-                                ? characterTags.join("`, `")
-                                : this.client.translate("main.original")
-                        }\``
-                    )
-                    .addField(
-                        parodyTags.length > 1
-                            ? this.client.translate("main.parodies")
-                            : this.client.translate("main.parody"),
-                        `\`${
-                            parodyTags.length !== 0
-                                ? parodyTags
-                                      .join("`, `")
-                                      .replace(
-                                          "original",
-                                          `${this.client.translate(
-                                              "main.original"
-                                          )}`
-                                      )
-                                : this.client.translate("main.none")
-                        }\``
-                    )
-                    .addField(
-                        contentTags.length > 1
-                            ? this.client.translate("main.tags")
-                            : this.client.translate("main.tag"),
-                        `\`${
-                            contentTags.length !== 0
-                                ? contentTags.join("`, `")
-                                : this.client.translate("main.none")
-                        }\``
-                    )
-                    .toJSON();
-            });
+            galleries.push(gallery);
+        }
 
-            this.embeds = embeds;
-            this.embed = 1;
-            this.galleries = galleries;
-            this.updatePaginator();
+        const title = galleries.map(
+            (gallery, index) =>
+                `\`⬛ ${
+                    (index + 1).toString().length > 1
+                        ? `${index + 1}`
+                        : `${index + 1} `
+                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                    gallery.title.pretty
+                }\``
+        );
+        const embeds = galleries.map((gallery, index) => {
+            const artistTags: string[] = gallery.tags.artists.map(
+                (tag) => tag.name
+            );
+            const characterTags: string[] = gallery.tags.characters.map(
+                (tag) => tag.name
+            );
+            const contentTags: string[] = gallery.tags.tags.map(
+                (tag) => `${tag.name} (${tag.count.toLocaleString()})`
+            );
+            const languageTags: string[] = gallery.tags.languages.map(
+                (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
+            );
+            const parodyTags: string[] = gallery.tags.parodies.map(
+                (tag) => tag.name
+            );
+            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+
+            return new EmbedBuilder()
+                .setAuthor(gallery.id, undefined, gallery.url)
+                .setColor(this.client.config.BOT.COLOUR)
+                .setDescription(
+                    title
+                        .join("\n")
+                        .replace(
+                            `\`⬛ ${
+                                (index + 1).toString().length > 1
+                                    ? `${index + 1}`
+                                    : `${index + 1} `
+                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                gallery.title.pretty
+                            }\``,
+                            `**\`🟥 ${
+                                (index + 1).toString().length > 1
+                                    ? `${index + 1}`
+                                    : `${index + 1} `
+                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                                gallery.title.pretty
+                            }\`**`
+                        )
+                )
+                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                .setTitle(
+                    this.client.translate("main.page", {
+                        firstIndex: this.page,
+                        lastIndex: this.bookmarkChunks.length,
+                    })
+                )
+                .setThumbnail(gallery.cover.url)
+                .addField(
+                    this.client.translate("main.title"),
+                    `\`${gallery.title.pretty}\``
+                )
+                .addField(
+                    this.client.translate("main.pages"),
+                    `\`${gallery.pages.length}\``
+                )
+                .addField(this.client.translate("main.released"), uploadedAt)
+                .addField(
+                    languageTags.length > 1
+                        ? this.client.translate("main.languages")
+                        : this.client.translate("main.language"),
+                    `\`${
+                        languageTags.length !== 0
+                            ? languageTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    artistTags.length > 1
+                        ? this.client.translate("main.artists")
+                        : this.client.translate("main.artist"),
+                    `\`${
+                        artistTags.length !== 0
+                            ? artistTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    characterTags.length > 1
+                        ? this.client.translate("main.characters")
+                        : this.client.translate("main.character"),
+                    `\`${
+                        characterTags.length !== 0
+                            ? characterTags.join("`, `")
+                            : this.client.translate("main.original")
+                    }\``
+                )
+                .addField(
+                    parodyTags.length > 1
+                        ? this.client.translate("main.parodies")
+                        : this.client.translate("main.parody"),
+                    `\`${
+                        parodyTags.length !== 0
+                            ? parodyTags
+                                  .join("`, `")
+                                  .replace(
+                                      "original",
+                                      `${this.client.translate(
+                                          "main.original"
+                                      )}`
+                                  )
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .addField(
+                    contentTags.length > 1
+                        ? this.client.translate("main.tags")
+                        : this.client.translate("main.tag"),
+                    `\`${
+                        contentTags.length !== 0
+                            ? contentTags.join("`, `")
+                            : this.client.translate("main.none")
+                    }\``
+                )
+                .toJSON();
+        });
+
+        this.embeds = embeds;
+        this.embed = 1;
+        this.galleries = galleries;
+        this.updatePaginator();
     }
 
     /**
@@ -979,7 +973,7 @@ export class BookmarkPaginator {
                     this.updatePaginator();
                     interaction.deferUpdate();
                     break;
-                    case `jumpto_result_page_modal_${this.interaction.id}`:
+                case `jumpto_result_page_modal_${this.interaction.id}`:
                     /* eslint-disable-next-line */
                     const page = parseInt(
                         Util.getModalID(interaction, "result_page_number")
