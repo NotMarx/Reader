@@ -96,7 +96,7 @@ export class BookmarkPaginator {
         this.api = client.api;
         this.client = client;
         this.embed = 1;
-        this.page = 0;
+        this.page = 1;
         this.embeds = [];
         this.galleries = galleries;
         this.interaction = interaction;
@@ -119,10 +119,10 @@ export class BookmarkPaginator {
         );
 
         if (currentPage < this.bookmarkChunks.length) {
-            let page = this.page++;
+            this.page++
+
             const galleries: Gallery[] = [];
-            const bookmarked = this.bookmarkChunks[page++];
-            console.log(page);
+            const bookmarked = this.bookmarkChunks[this.page - 1];
 
             for (let i = 0; i < bookmarked.length; i++) {
                 const gallery: Gallery = await this.client.api.getGallery(
@@ -189,7 +189,7 @@ export class BookmarkPaginator {
                     .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
                     .setTitle(
                         this.client.translate("main.page", {
-                            firstIndex: page + 1,
+                            firstIndex: this.page,
                             lastIndex: this.bookmarkChunks.length,
                         })
                     )
@@ -282,9 +282,10 @@ export class BookmarkPaginator {
                 .split("/")[0]
         );
 
-        if (currentPage > 0) {
-            let page = this.page--;
-            const bookmarked = this.bookmarkChunks[page--];
+        if (currentPage > 1) {
+            this.page--
+
+            const bookmarked = this.bookmarkChunks[this.page - 1];
             const galleries: Gallery[] = [];
 
             for (let i = 0; i < bookmarked.length; i++) {
@@ -352,7 +353,7 @@ export class BookmarkPaginator {
                     .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
                     .setTitle(
                         this.client.translate("main.page", {
-                            firstIndex: page + 1,
+                            firstIndex: this.page,
                             lastIndex: this.bookmarkChunks.length,
                         })
                     )
@@ -500,7 +501,7 @@ export class BookmarkPaginator {
                 .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
                 .setTitle(
                     this.client.translate("main.page", {
-                        firstIndex: this.page + 1,
+                        firstIndex: this.page,
                         lastIndex: this.bookmarkChunks.length,
                     })
                 )
