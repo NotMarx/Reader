@@ -233,7 +233,10 @@ export class ReadSearchPaginator {
                             { $pull: { bookmark: this.embeds[0].author.name } }
                         ).exec();
                     } else {
-                        if (!userData.settings.premium && userData.bookmark.length === 25) {
+                        if (
+                            !userData.settings.premium &&
+                            userData.bookmark.length === 25
+                        ) {
                             return interaction.createMessage({
                                 embeds: [
                                     new EmbedBuilder()
