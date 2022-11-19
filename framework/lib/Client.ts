@@ -163,6 +163,12 @@ export class NReaderClient extends Client {
      */
     public translate(key: TranslationKey, format?: object): string;
 
+    /**
+     * Translate keys from requested locale
+     * @param key The translation key
+     * @param format Key format
+     * @returns {string}
+     */
     /* @ts-ignore */
     public translateLocale(
         locale: TLocale,
@@ -173,11 +179,4 @@ export class NReaderClient extends Client {
 
         return t(key, format);
     }
-
-    /**
-     * Translate keys from requested locale
-     * @param key The translation key
-     * @param format Key format
-     * @returns {string}
-     */
 }
