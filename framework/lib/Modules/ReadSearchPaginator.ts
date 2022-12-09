@@ -2,6 +2,7 @@ import { Gallery } from "../API";
 import {
     CommandInteraction,
     ComponentInteraction,
+    ComponentTypes,
     Constants,
     EmbedOptions,
     InteractionContent,
@@ -174,7 +175,7 @@ export class ReadSearchPaginator {
      */
     public async onRead(
         interaction:
-            | ComponentInteraction<TextChannel>
+            | ComponentInteraction<ComponentTypes.BUTTON>
             | ModalSubmitInteraction<TextChannel>
     ) {
         const userData = await UserModel.findOne({ id: interaction.member.id });

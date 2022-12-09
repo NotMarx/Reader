@@ -2,6 +2,7 @@ import { RequestHandler, Search } from "../API";
 import {
     CommandInteraction,
     ComponentInteraction,
+    ComponentTypes,
     Constants,
     EmbedOptions,
     InteractionContent,
@@ -315,7 +316,7 @@ export class SearchPaginator {
      */
     public async onSearch(
         interaction:
-            | ComponentInteraction<TextChannel>
+            | ComponentInteraction<ComponentTypes.BUTTON>
             | ModalSubmitInteraction<TextChannel>
     ) {
         const userData = await UserModel.findOne({ id: interaction.user.id });
@@ -323,8 +324,8 @@ export class SearchPaginator {
         if (interaction.member.bot) return;
 
         const embed = EmbedBuilder.loadFromJSON(
-            (interaction as ComponentInteraction<TextChannel>).message
-                ? (interaction as ComponentInteraction<TextChannel>).message
+            (interaction as ComponentInteraction<ComponentTypes.BUTTON>).message
+                ? (interaction as ComponentInteraction<ComponentTypes.BUTTON>).message
                       .embeds[0]
                 : undefined
         );

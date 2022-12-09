@@ -2,6 +2,7 @@ import { RequestHandler, Gallery } from "../API";
 import {
     CommandInteraction,
     ComponentInteraction,
+    ComponentTypes,
     Constants,
     EmbedOptions,
     InteractionContent,
@@ -488,7 +489,7 @@ export class BookmarkPaginator {
      */
     public async onSearch(
         interaction:
-            | ComponentInteraction<TextChannel>
+            | ComponentInteraction<ComponentTypes.BUTTON>
             | ModalSubmitInteraction<TextChannel>
     ) {
         const userData: IUserSchema = await UserModel.findOne({
@@ -498,8 +499,8 @@ export class BookmarkPaginator {
         if (interaction.member.bot) return;
 
         const embed = EmbedBuilder.loadFromJSON(
-            (interaction as ComponentInteraction<TextChannel>).message
-                ? (interaction as ComponentInteraction<TextChannel>).message
+            (interaction as ComponentInteraction<ComponentTypes.BUTTON>).message
+                ? (interaction as ComponentInteraction<ComponentTypes.BUTTON>).message
                       .embeds[0]
                 : undefined
         );
