@@ -500,8 +500,8 @@ export class BookmarkPaginator {
 
         const embed = EmbedBuilder.loadFromJSON(
             (interaction as ComponentInteraction<ComponentTypes.BUTTON>).message
-                ? (interaction as ComponentInteraction<ComponentTypes.BUTTON>).message
-                      .embeds[0]
+                ? (interaction as ComponentInteraction<ComponentTypes.BUTTON>)
+                      .message.embeds[0]
                 : undefined
         );
 
