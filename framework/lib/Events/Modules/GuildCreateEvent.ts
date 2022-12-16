@@ -27,6 +27,7 @@ export async function guildCreateEvent(client: NReaderClient, guild: Guild) {
                 id: guild.id,
                 settings: {
                     blacklisted: false,
+                    emojiText: false,
                     locale: "en",
                     whitelisted: false,
                 } as IGuildSchemaSettings,
