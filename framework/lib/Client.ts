@@ -77,6 +77,7 @@ export class NReaderClient extends Client {
                         id: guilds[i],
                         settings: {
                             blacklisted: false,
+                            emojiText: false,
                             locale: "en",
                             whitelisted: false,
                         } as IGuildSchemaSettings,
