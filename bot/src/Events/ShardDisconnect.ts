@@ -5,4 +5,4 @@ export const event: NReaderInterface.IEvent = {
     run: (client, err: Error, id: number) => {
         return new NReaderEvent(client, err, id).shardDisconnectEvent();
     }
-}
+};
