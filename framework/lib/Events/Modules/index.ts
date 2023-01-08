@@ -4,3 +4,6 @@ export * from "./GuildCreateEvent";
 export * from "./GuildDeleteEvent";
 export * from "./InteractionCreateEvent";
 export * from "./ReadyEvent";
+export * from "./ShardDisconnectEvent";
+export * from "./ShardPreReadyEvent";
+export * from "./ShardReadyEvent";
