@@ -106,6 +106,34 @@ export class NReaderEvent<F, S, T, L> {
     }
 
     /**
+     * Fires a `shardDisconnect` event
+     * @returns {void}
+     */
+    public shardDisconnectEvent(): void {
+        return EventModules.shardDisconnectEvent(
+            this.client,
+            this.firstParam,
+            this.secondParam
+        );
+    }
+
+    /**
+     * Fires a `shardPreReady` event
+     * @returns {void}
+     */
+    public shardPreReadyEvent(): void {
+        return EventModules.shardPreReadyEvent(this.client, this.firstParam);
+    }
+
+    /**
+     * Fires a `shardReady` event
+     * @returns {void}
+     */
+    public shardReadyEvent(): void {
+        return EventModules.shardReadyEvent(this.client, this.firstParam);
+    }
+
+    /**
      * Handle TypeScript unhandled rejection error
      * @returns {void}
      */
