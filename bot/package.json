@@ -1,6 +1,6 @@
 {
   "name": "nreader-bot",
-  "version": "0.2.1",
+  "version": "0.4.6",
   "description": "NReader",
   "scripts": {
     "dev": "ts-node-dev ./src/NReader.ts",
