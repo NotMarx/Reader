@@ -188,6 +188,10 @@ export class ReadPaginator {
             (tag) => tag.name
         );
         const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
+        const stringTag =
+            contentTags.join("`, `").length >= 1024
+                ? `${contentTags.join("`, `").slice(0, 1010)}...`
+                : contentTags.join("`, `");
 
         const resultEmbed = new EmbedBuilder()
             .setAuthor(this.gallery.id, undefined, this.gallery.url)
@@ -252,7 +256,7 @@ export class ReadPaginator {
                     : this.client.translate("main.tag"),
                 `\`${
                     contentTags.length !== 0
-                        ? contentTags.join("`, `")
+                        ? stringTag
                         : this.client.translate("main.none")
                 }\``
             )

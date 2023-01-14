@@ -119,6 +119,10 @@ export class SearchPaginator {
                 (tag) => tag.name
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+            const stringTag =
+                contentTags.join("`, `").length >= 1024
+                    ? `${contentTags.join("`, `").slice(0, 1010)}...`
+                    : contentTags.join("`, `");
 
             return new EmbedBuilder()
                 .setAuthor(gallery.id, undefined, gallery.url)
@@ -190,7 +194,7 @@ export class SearchPaginator {
                         : this.client.translate("main.character"),
                     `\`${
                         characterTags.length !== 0
-                            ? characterTags.join("`, `")
+                            ? stringTag
                             : this.client.translate("main.original")
                     }\``
                 )
@@ -784,6 +788,13 @@ export class SearchPaginator {
                                         const uploadedAt = `<t:${
                                             gallery.uploadDate.getTime() / 1000
                                         }:F>`;
+                                        const stringTag =
+                                            contentTags.join("`, `").length >=
+                                            1024
+                                                ? `${contentTags
+                                                      .join("`, `")
+                                                      .slice(0, 1010)}...`
+                                                : contentTags.join("`, `");
 
                                         return new EmbedBuilder()
                                             .setAuthor(
@@ -966,9 +977,7 @@ export class SearchPaginator {
                                                       ),
                                                 `\`${
                                                     contentTags.length !== 0
-                                                        ? contentTags.join(
-                                                              "`, `"
-                                                          )
+                                                        ? stringTag
                                                         : this.client.translate(
                                                               "main.none"
                                                           )
@@ -1066,6 +1075,13 @@ export class SearchPaginator {
                                         const uploadedAt = `<t:${
                                             gallery.uploadDate.getTime() / 1000
                                         }:F>`;
+                                        const stringTag =
+                                            contentTags.join("`, `").length >=
+                                            1024
+                                                ? `${contentTags
+                                                      .join("`, `")
+                                                      .slice(0, 1010)}...`
+                                                : contentTags.join("`, `");
 
                                         return new EmbedBuilder()
                                             .setAuthor(
@@ -1248,9 +1264,7 @@ export class SearchPaginator {
                                                       ),
                                                 `\`${
                                                     contentTags.length !== 0
-                                                        ? contentTags.join(
-                                                              "`, `"
-                                                          )
+                                                        ? stringTag
                                                         : this.client.translate(
                                                               "main.none"
                                                           )
@@ -1324,6 +1338,12 @@ export class SearchPaginator {
                                     const uploadedAt = `<t:${
                                         gallery.uploadDate.getTime() / 1000
                                     }:F>`;
+                                    const stringTag =
+                                        contentTags.join("`, `").length >= 1024
+                                            ? `${contentTags
+                                                  .join("`, `")
+                                                  .slice(0, 1010)}...`
+                                            : contentTags.join("`, `");
 
                                     return new EmbedBuilder()
                                         .setAuthor(
@@ -1479,7 +1499,7 @@ export class SearchPaginator {
                                                   ),
                                             `\`${
                                                 contentTags.length !== 0
-                                                    ? contentTags.join("`, `")
+                                                    ? stringTag
                                                     : this.client.translate(
                                                           "main.none"
                                                       )
@@ -1553,6 +1573,12 @@ export class SearchPaginator {
                                     const uploadedAt = `<t:${
                                         gallery.uploadDate.getTime() / 1000
                                     }:F>`;
+                                    const stringTag =
+                                        contentTags.join("`, `").length >= 1024
+                                            ? `${contentTags
+                                                  .join("`, `")
+                                                  .slice(0, 1010)}...`
+                                            : contentTags.join("`, `");
 
                                     return new EmbedBuilder()
                                         .setAuthor(
@@ -1708,7 +1734,7 @@ export class SearchPaginator {
                                                   ),
                                             `\`${
                                                 contentTags.length !== 0
-                                                    ? contentTags.join("`, `")
+                                                    ? stringTag
                                                     : this.client.translate(
                                                           "main.none"
                                                       )
@@ -1903,6 +1929,12 @@ export class SearchPaginator {
                                     const uploadedAt = `<t:${
                                         gallery.uploadDate.getTime() / 1000
                                     }:F>`;
+                                    const stringTag =
+                                        contentTags.join("`, `").length >= 1024
+                                            ? `${contentTags
+                                                  .join("`, `")
+                                                  .slice(0, 1010)}...`
+                                            : contentTags.join("`, `");
 
                                     return new EmbedBuilder()
                                         .setAuthor(
@@ -2058,7 +2090,7 @@ export class SearchPaginator {
                                                   ),
                                             `\`${
                                                 contentTags.length !== 0
-                                                    ? contentTags.join("`, `")
+                                                    ? stringTag
                                                     : this.client.translate(
                                                           "main.none"
                                                       )
