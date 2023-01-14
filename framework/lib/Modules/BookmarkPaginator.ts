@@ -151,6 +151,10 @@ export class BookmarkPaginator {
                 (tag) => tag.name
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+            const stringTag =
+                contentTags.join("`, `").length >= 1024
+                    ? `${contentTags.join("`, `").slice(0, 1010)}...`
+                    : contentTags.join("`, `");
 
             return new EmbedBuilder()
                 .setAuthor(gallery.id, undefined, gallery.url)
@@ -245,7 +249,7 @@ export class BookmarkPaginator {
                         : this.client.translate("main.tag"),
                     `\`${
                         contentTags.length !== 0
-                            ? contentTags.join("`, `")
+                            ? stringTag
                             : this.client.translate("main.none")
                     }\``
                 )
@@ -295,6 +299,10 @@ export class BookmarkPaginator {
                 (tag) => tag.name
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+            const stringTag =
+                contentTags.join("`, `").length >= 1024
+                    ? `${contentTags.join("`, `").slice(0, 1010)}...`
+                    : contentTags.join("`, `");
 
             return new EmbedBuilder()
                 .setAuthor(gallery.id, undefined, gallery.url)
@@ -389,7 +397,7 @@ export class BookmarkPaginator {
                         : this.client.translate("main.tag"),
                     `\`${
                         contentTags.length !== 0
-                            ? contentTags.join("`, `")
+                            ? stringTag
                             : this.client.translate("main.none")
                     }\``
                 )
