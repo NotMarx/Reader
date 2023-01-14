@@ -47,6 +47,10 @@ export async function readCommand(
                 (tag) => tag.name
             );
             const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+            const stringTag =
+                contentTags.join("`, `").length >= 1024
+                    ? `${contentTags.join("`, `").slice(0, 1010)}...`
+                    : contentTags.join("`, `");
 
             const embed = new EmbedBuilder()
                 .setAuthor(gallery.id, undefined, gallery.url)
@@ -111,7 +115,7 @@ export async function readCommand(
                         : client.translate("main.tag"),
                     `\`${
                         contentTags.length !== 0
-                            ? contentTags.join("`, `")
+                            ? stringTag
                             : client.translate("main.none")
                     }\``
                 )
