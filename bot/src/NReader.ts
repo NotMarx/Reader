@@ -3,9 +3,6 @@ import * as Config from "../../config/config.json";
 
 const client = new NReaderClient({
     auth: Config.BOT.TOKEN,
-    collectionLimits: {
-        messages: 0
-    },
     defaultImageFormat: "png",
     gateway: {
         intents: ["GUILDS"],
