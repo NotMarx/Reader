@@ -1,4 +1,8 @@
 {
+    "mod.disabled": "Malebligita",
+    "mod.enabled": "Ebligita",
     "mod.language.set": "Lingvo estas agordita al `{language}`",
-    "mod.noperms": "Vi ne havas la ĝustan permeson por ordoni tion!"
+    "mod.noperms": "Vi ne havas la ĝustan permeson por ordoni tion!",
+    "mod.profile.history": "Historio",
+    "mod.profile.title": "Profilagordoj de {user}"
 }

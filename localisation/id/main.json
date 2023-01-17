@@ -15,7 +15,7 @@
     "main.detail": "Lihat Lebih",
     "main.error": "Ada sesuatu yang salah, silakan coba lagi nanti!",
     "main.home": "Beranda",
-    "main.invalid": "Tidak dapat menemukan [hasil apa pun]({result}). Mohon dicoba lagi!",
+    "main.invalid": "Tidak dapat mencari [hasil]({results}). Mohon dicoba lagi! \n\n> Jika anda melihat pesan ini tapi hasil anda ada, ada kemungkingan bahwa bot sedang mengalami masalah di luar perbaikan kami. Karena itu, mohon dicoba dalam beberap jam.",
     "main.language": "Bahasa",
     "main.languages": "Bahasa",
     "main.none": "Tidak Tersedia",
