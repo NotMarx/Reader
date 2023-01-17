@@ -7,7 +7,10 @@
     "general.help.usage.name": "Kiel Uzi",
     "general.help.usage.value": "**{bot}** estas Diskorda roboto kiu ebligas al vi legi {doujin} facile sen reklamoj kaj limigoj. Por uzi tiun roboton, vi bezonos la identigilon de {doujin}, kiu estas 6-cifera numero (ekzemple `233905`, `390492`, ktp). Ne ĉiu identigilo estas 6-cifera numero. Ili estas sinsekve alŝutitaj fervolularoj, sed plej multaj el ili estas 6-ciferaj numeroj nun. \n\n Krom havado de identigilo, oni povas esplori ilin per serĉi specifajn etikedojn",
     "general.ping": "Respondo! | {latency}ms",
-    "general.register__": "You've been registered to the database. Please run the command again to continue.",
+    "general.profile.history.empty": "Neniu pasinta historio",
+    "general.profile.history.read": "Legu Historion",
+    "general.profile.history.searched": "Serĉhistorio",
+    "general.profile.title": "Profilo de {user}",
     "general.register": "Vi estas registrita en la datumbazon. Bonvolu reordoni por pluiri",
     "general.stats.cpu": "Uzo de Ĉefprocesoro",
     "general.stats.memory": "Uzo de Memorilo",
@@ -15,5 +18,6 @@
     "general.stats.server": "Serviloj",
     "general.stats.title": "Statistiko de {bot}",
     "general.stats.uptime": "Daŭro de Funkciado",
-    "general.stats.user": "Uzantoj"
+    "general.stats.user": "Uzantoj",
+    "general.user.notfound": "Ne eblas trovi la sekvan uzanton en nia datumbazo: {user}"
 }
