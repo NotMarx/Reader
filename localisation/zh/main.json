@@ -15,7 +15,7 @@
     "main.detail": "查看更多",
     "main.error": "发生错误，请稍后重试！",
     "main.home": "主页",
-    "main.invalid": "找不到[任何[结果]({result})。请再试一次 ！",
+    "main.invalid": "找不到[结果]({result})。 请重试！ \n\n> 如果您看到此消息，但您的结果确实存在，那么机器人可能会遇到超越我们修复范围的问题。 因此，请几个小时后重试。",
     "main.language": "语言",
     "main.languages": "语言",
     "main.none": "未提供",

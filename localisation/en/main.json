@@ -15,7 +15,7 @@
     "main.detail": "See More",
     "main.error": "Something went wrong, please try again later!",
     "main.home": "Home",
-    "main.invalid": "Unable to find any [results]({result}). Please try again!",
+    "main.invalid": "Unable to find any [results]({result}). Please try again! \n\n> If you see this message but your results do exists, it's possible that the bot is experiencing issues beyond our fixes. Therefore, please retry in a few hours.",
     "main.language": "Language",
     "main.languages": "Languages",
     "main.none": "Not Provided",
