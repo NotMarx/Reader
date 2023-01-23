@@ -194,7 +194,7 @@ export class SearchPaginator {
                         : this.client.translate("main.character"),
                     `\`${
                         characterTags.length !== 0
-                            ? stringTag
+                            ? characterTags.join("`, `")
                             : this.client.translate("main.original")
                     }\``
                 )
@@ -221,7 +221,7 @@ export class SearchPaginator {
                         : this.client.translate("main.tag"),
                     `\`${
                         contentTags.length !== 0
-                            ? contentTags.join("`, `")
+                            ? stringTag
                             : this.client.translate("main.none")
                     }\``
                 );
