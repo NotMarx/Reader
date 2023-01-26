@@ -36,6 +36,14 @@ export class NReaderCommand {
     }
 
     /**
+     * Executes a `donate` command
+     * @returns {Proise<void>}
+     */
+    public donateCommand() {
+        return CommandModules.donateCommand(this.client, this.interaction);
+    }
+
+    /**
      * Executes a `eval` command
      * @returns {Promise<void>}
      */
