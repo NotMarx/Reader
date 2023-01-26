@@ -4,6 +4,7 @@ type TDeveloperKey =
     | "developer.user.notfound";
 
 type TGeneralKey =
+    | "general.donation"
     | "general.help.description"
     | "general.help.nsfw"
     | "general.help.search.name"

@@ -1,4 +1,5 @@
 {
+    "general.donation": "If you enjoy using **NReader**, consider supporting the development by donating a small amount of money to the developers! With your small donations, we're able to keep the bot running and improved. \n\n- [Ko-fi](https://ko-fi.com/reinhello/goal?g=0)",
     "general.help.description": "Hey there, **{user}**! First time using this bot? Please read further for more information! Need help? Join [NReader Discord Server]({server}) \n\n > **This bot is only for 18+**",
     "general.help.nsfw": "This command contains NSFW words, please run this on a NSFW channel!",
     "general.help.search.name": "How to Search for Tags and Doujins",
