@@ -1,4 +1,4 @@
-import { CommandInteraction, Constants, TextChannel } from "oceanic.js";
+import { CommandInteraction, TextChannel } from "oceanic.js";
 import { EmbedBuilder } from "@oceanicjs/builders";
 import { NReaderClient } from "../../Client";
 
