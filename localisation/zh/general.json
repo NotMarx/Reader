@@ -1,4 +1,5 @@
 {
+    "general.donation": "如果您喜欢使用 **NReader**，考虑通过向开发者捐赠少量钱来支持开发！ 凭借您的小额捐款，我们能够保持机器人的运行和改进。 \n\n- [Ko-fi]({kofi})",
     "general.help.description": "嘿，**{user}**！第一次使用这个机器人吗？请进一步阅读以了解更多信息！ 需要帮助？加入 [NReader Discord 服务器]({server}) \n\n > **这个机器人只适用于 18+**",
     "general.help.nsfw": "此命令包含 NSFW 字，请在NSFW 频道上运行！",
     "general.help.search.name": "如何搜索标签和 Doujins",

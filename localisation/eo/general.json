@@ -1,4 +1,5 @@
 {
+    "general.donation": "Se vi ŝatas uzi **NReader**, konsideru subteni la disvolviĝon donacante malgrandan monsumon al la programistoj! Kun viaj malgrandaj donacoj, ni povas pluigi la roboton funkcianta kaj plibonigita. \n\n - [Ko-fi]({kofi})",
     "general.help.description": "Saluton, **{user}**! Ĉu vi unuafoje uzas tiun roboton? Bonvolu legi plu por pli da informo! Ĉu vi bezonas helpon? Aliĝu al [NReader Diskorda Servilo]({server}) \n\n > ***Tiu roboto nur estas por 18+*",
     "general.help.nsfw": "Tiu ordono enhavas NSFW vortojn, bonvolu ordoni tion en NSFW babilejo!",
     "general.help.search.name": "Kiel Serĉi Etikedojn kaj Fervolularojn",
