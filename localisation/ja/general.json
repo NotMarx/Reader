@@ -1,4 +1,5 @@
 {
+    "general.donation": "**NReader**を使うのが好きなら、開発者に少額のお金を寄付することで開発をサポートすることを検討してください！ あなたの小さな寄付により、ボットの実行を維持し、改善することができます。 \n\n- [Ko-fi]({kofi})",
     "general.help.description": "こんにちは、**{user}**! 初めてこのボットを使用しましたか？詳細については、更に読んでください！[NReader Discord サーバー]({server})に参加する \n\n > **このボットは18以上のものです**",
     "general.help.nsfw": "このコマンドはNSFW単語を含んでいます。NSFWチャンネルで実行してください！",
     "general.help.search.name": "タグや同人を検索する方法",

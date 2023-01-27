@@ -1,4 +1,5 @@
 {
+    "general.donation": "Jika anda menyukai **NReader**, silahkan support development dengan mendonasikan uang kepada para developer! Dengan donasi tersebut, kami dapat menjalankan dan tingkatkan bot. \n\n- [Ko-fi]({kofi})",
     "general.help.description": "Halo, **{user}**! Pertama kali menggunakan bot ini? Silakan membaca informasi berikut! Butuh bantuan? Silakan join [NReader Discord Server]({server}) \n\n > **Bot ini hanya untuk 18+**",
     "general.help.nsfw": "Perintah ini mengandung kata-kata NSFW, mohon menggunakannya pada NSFW channel!",
     "general.help.search.name": "Cara Mencari Tags dan Doujins",
