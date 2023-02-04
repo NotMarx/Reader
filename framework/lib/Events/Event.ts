@@ -99,9 +99,9 @@ export class NReaderEvent<F, S, T, L> {
 
     /**
      * Fires a `ready` event
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    public readyEvent(): void {
+    public readyEvent(): Promise<void> {
         return EventModules.readyEvent(this.client);
     }
 
