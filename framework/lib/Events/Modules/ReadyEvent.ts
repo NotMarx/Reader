@@ -1,6 +1,8 @@
 import { NReaderClient } from "../../Client";
+import { IGuildSchemaSettings } from "../../Interfaces";
+import { GuildModel } from "../../Models";
 
-export function readyEvent(client: NReaderClient) {
+export async function readyEvent(client: NReaderClient) {
     if (client.ready) {
         const commands = client.commands.map((command) => command);
 
@@ -15,6 +17,25 @@ export function readyEvent(client: NReaderClient) {
             subTitle: "NReaderFramework::Collections::Events",
             title: "COLLECTION",
         });
+
+        const guilds = client.guilds.map((guild) => guild.id);
+
+        for (let i = 0; i < guilds.length; i++) {
+            const guildData = await GuildModel.findOne({ id: guilds[i] });
+
+            if (!guildData) {
+                GuildModel.create({
+                    createdAt: new Date(),
+                    id: guilds[i],
+                    settings: {
+                        blacklisted: false,
+                        emojiText: false,
+                        locale: "en",
+                        whitelisted: false,
+                    } as IGuildSchemaSettings,
+                });
+            }
+        }
 
         if (commands) {
             commands
