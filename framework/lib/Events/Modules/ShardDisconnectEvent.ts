@@ -5,11 +5,15 @@ export function shardDisconnectEvent(
     err: string,
     id: number
 ) {
-    if (client.shards.get(id)) {
+    const shard = client.shards.get(id);
+
+    if (shard && shard.status === "disconnected") {
         client.logger.error({
             message: err,
             subTitle: "NReaderFramework::Events::ShardDisconnect",
             title: `SHARD ${id}`,
         });
+
+        shard.resume();
     }
 }

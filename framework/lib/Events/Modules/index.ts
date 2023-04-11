@@ -7,3 +7,4 @@ export * from "./ReadyEvent";
 export * from "./ShardDisconnectEvent";
 export * from "./ShardPreReadyEvent";
 export * from "./ShardReadyEvent";
+export * from "./ShardResumeEvent";

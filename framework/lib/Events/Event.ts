@@ -133,6 +133,10 @@ export class NReaderEvent<F, S, T, L> {
         return EventModules.shardReadyEvent(this.client, this.firstParam);
     }
 
+    public shardResumeEvent(): void {
+        return EventModules.shardResumeEvent(this.client, this.firstParam);
+    }
+
     /**
      * Handle TypeScript unhandled rejection error
      * @returns {void}
