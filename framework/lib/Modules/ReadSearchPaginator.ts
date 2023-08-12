@@ -1,4 +1,4 @@
-import { Gallery } from "../API";
+import { Book } from "nhentai-api";
 import {
     CommandInteraction,
     ComponentInteraction,
@@ -39,7 +39,7 @@ export class ReadSearchPaginator {
     /**
      * Current NHentai gallery
      */
-    gallery: Gallery;
+    gallery: Book;
 
     /**
      * Oceanic command interaction
@@ -70,7 +70,7 @@ export class ReadSearchPaginator {
      */
     constructor(
         client: NReaderClient,
-        gallery: Gallery,
+        gallery: Book,
         interaction: CommandInteraction<TextChannel>,
         mainPaginator: SearchPaginator | BookmarkPaginator
     ) {
@@ -78,7 +78,7 @@ export class ReadSearchPaginator {
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
             return new EmbedBuilder()
-                .setAuthor(gallery.id, undefined, page.url)
+                .setAuthor(gallery.id.toString(), undefined, this.client.api.getImageURL(page))
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
                     client.translate("main.page", {
@@ -86,9 +86,9 @@ export class ReadSearchPaginator {
                         lastIndex: gallery.pages.length,
                     })
                 )
-                .setImage(page.url)
+                .setImage(this.client.api.getImageURL(page))
                 .setTitle(gallery.title.pretty)
-                .setURL(gallery.url)
+                .setURL(`https://nhentai.net/g/${gallery.id}`)
                 .toJSON();
         });
         this.gallery = gallery;
@@ -154,13 +154,13 @@ export class ReadSearchPaginator {
         this.client.stats.updateUserHistory(
             this.interaction.user.id,
             "read",
-            this.gallery.id
+            this.gallery.id.toString()
         );
 
         this.client.stats.logActivities(
             this.interaction.user.id,
             "read-paginator",
-            this.gallery.id,
+            this.gallery.id.toString(),
             this.embed,
             undefined,
             undefined
@@ -478,7 +478,7 @@ export class ReadSearchPaginator {
         this.client.stats.logActivities(
             this.interaction.user.id,
             "read-paginator",
-            this.gallery.id,
+            this.gallery.id.toString(),
             this.embed,
             undefined,
             undefined
@@ -493,7 +493,7 @@ export class ReadSearchPaginator {
 
 export async function createReadSearchPaginator(
     client: NReaderClient,
-    gallery: Gallery,
+    gallery: Book,
     interaction: CommandInteraction<TextChannel>,
     mainPaginator: SearchPaginator | BookmarkPaginator
 ) {

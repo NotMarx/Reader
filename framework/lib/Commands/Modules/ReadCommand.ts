@@ -29,31 +29,31 @@ export async function readCommand(
     await setTimeout(2000);
 
     client.api
-        .getGallery(galleryID)
+        .getBook(parseInt(galleryID))
         .then(async (gallery) => {
-            const artistTags: string[] = gallery.tags.artists.map(
+            const artistTags: string[] = gallery.artists.map(
                 (tag) => tag.name
             );
-            const characterTags: string[] = gallery.tags.characters.map(
+            const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
-            const contentTags: string[] = gallery.tags.tags.map(
+            const contentTags: string[] = gallery.pureTags.map(
                 (tag) => `${tag.name} (${tag.count.toLocaleString()})`
             );
-            const languageTags: string[] = gallery.tags.languages.map(
+            const languageTags: string[] = gallery.languages.map(
                 (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
             );
-            const parodyTags: string[] = gallery.tags.parodies.map(
+            const parodyTags: string[] = gallery.parodies.map(
                 (tag) => tag.name
             );
-            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+            const uploadedAt = `<t:${gallery.uploaded.getTime() / 1000}:F>`;
             const stringTag =
                 contentTags.join("`, `").length >= 1024
                     ? `${contentTags.join("`, `").slice(0, 1010)}...`
                     : contentTags.join("`, `");
 
             const embed = new EmbedBuilder()
-                .setAuthor(gallery.id, undefined, gallery.url)
+                .setAuthor(gallery.id.toString(), undefined, `https://nhentai.net/g/${gallery.id}`)
                 .setColor(client.config.BOT.COLOUR)
                 .addField(
                     client.translate("main.title"),
@@ -119,8 +119,8 @@ export async function readCommand(
                             : client.translate("main.none")
                     }\``
                 )
-                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
-                .setThumbnail(gallery.cover.url);
+                .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
+                .setThumbnail(client.api.getImageURL(gallery.cover));
 
             const components = new ComponentBuilder<MessageActionRow>()
                 .addInteractionButton(

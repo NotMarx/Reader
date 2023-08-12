@@ -23,6 +23,7 @@
     "@types/byte-size": "^8.1.0",
     "@types/node-fetch": "^2.6.2",
     "@types/os-utils": "^0.0.1",
+    "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "eslint": "^8.11.0",
@@ -39,12 +40,15 @@
     "@oceanicjs/builders": "^1.0.2",
     "byte-size": "^8.1.0",
     "chalk": "^4.1.2",
+    "http-cookie-agent": "^5.0.4",
     "i18next": "^21.8.13",
     "i18next-icu": "^2.0.3",
     "moment": "^2.29.4",
     "mongoose": "^6.0.12",
+    "nhentai-api": "^3.4.3",
     "node-fetch": "^2.6.7",
     "oceanic.js": "^1.5.1",
-    "os-utils": "^0.0.14"
+    "os-utils": "^0.0.14",
+    "tough-cookie": "^4.1.3"
   }
 }

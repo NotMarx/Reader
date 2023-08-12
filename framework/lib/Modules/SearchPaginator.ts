@@ -1,4 +1,4 @@
-import { RequestHandler, Search } from "../API";
+import { API, Search } from "nhentai-api";
 import {
     CommandInteraction,
     ComponentInteraction,
@@ -23,7 +23,7 @@ export class SearchPaginator {
     /**
      * NHentai API
      */
-    api: RequestHandler;
+    api: API;
 
     /**
      * NReader client
@@ -90,42 +90,42 @@ export class SearchPaginator {
      * Initialise the paginator class
      */
     public async initialisePaginator() {
-        const title = this.search.result.map(
+        const title = this.search.books.map(
             (gallery, index) =>
                 `\`⬛ ${
                     (index + 1).toString().length > 1
                         ? `${index + 1}`
                         : `${index + 1} `
-                }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                     gallery.title.pretty.length >= 30
                         ? `${gallery.title.pretty.slice(0, 30)}...`
                         : gallery.title.pretty
                 }\``
         );
-        const embeds = this.search.result.map((gallery, index) => {
-            const artistTags: string[] = gallery.tags.artists.map(
+        const embeds = this.search.books.map((gallery, index) => {
+            const artistTags: string[] = gallery.artists.map(
                 (tag) => tag.name
             );
-            const characterTags: string[] = gallery.tags.characters.map(
+            const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
-            const contentTags: string[] = gallery.tags.tags.map(
+            const contentTags: string[] = gallery.tags.map(
                 (tag) => `${tag.name} (${tag.count.toLocaleString()})`
             );
-            const languageTags: string[] = gallery.tags.languages.map(
+            const languageTags: string[] = gallery.languages.map(
                 (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
             );
-            const parodyTags: string[] = gallery.tags.parodies.map(
+            const parodyTags: string[] = gallery.parodies.map(
                 (tag) => tag.name
             );
-            const uploadedAt = `<t:${gallery.uploadDate.getTime() / 1000}:F>`;
+            const uploadedAt = `<t:${gallery.uploaded.getTime() / 1000}:F>`;
             const stringTag =
                 contentTags.join("`, `").length >= 1024
                     ? `${contentTags.join("`, `").slice(0, 1010)}...`
                     : contentTags.join("`, `");
 
             return new EmbedBuilder()
-                .setAuthor(gallery.id, undefined, gallery.url)
+                .setAuthor(gallery.id.toString(), undefined, `https://nhentai.net/g/${gallery.id}`)
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
                     title
@@ -135,7 +135,7 @@ export class SearchPaginator {
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                 gallery.title.pretty.length >= 30
                                     ? `${gallery.title.pretty.slice(0, 30)}...`
                                     : gallery.title.pretty
@@ -144,21 +144,21 @@ export class SearchPaginator {
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                 gallery.title.pretty.length >= 30
                                     ? `${gallery.title.pretty.slice(0, 30)}...`
                                     : gallery.title.pretty
                             }\`**`
                         )
                 )
-                .setFooter(`⭐ ${gallery.favourites.toLocaleString()}`)
+                .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
                 .setTitle(
                     this.client.translate("main.page", {
                         firstIndex: this.search.page.toLocaleString(),
-                        lastIndex: this.search.numPages.toLocaleString(),
+                        lastIndex: this.search.pages.toLocaleString(),
                     })
                 )
-                .setThumbnail(gallery.cover.url)
+                .setThumbnail(this.client.api.getImageURL(gallery.cover))
                 .addField(
                     this.client.translate("main.title"),
                     `\`${gallery.title.pretty}\``
@@ -492,7 +492,7 @@ export class SearchPaginator {
                     interaction.deferUpdate();
 
                     this.api
-                        .getGallery(embed.toJSON().author.name)
+                        .getBook(parseInt(embed.toJSON().author.name))
                         .then(async (gallery) => {
                             this.paginationEmbed = new ReadSearchPaginator(
                                 this.client,
@@ -510,10 +510,10 @@ export class SearchPaginator {
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    embed.setImage(
-                        (await this.api.getGallery(embed.toJSON().author.name))
-                            .cover.url
-                    );
+                    embed.setImage(this.client.api.getImageURL(
+                        (await this.api.getBook(parseInt(embed.toJSON().author.name)))
+                            .cover
+                    ));
                     this.interaction.editOriginal({
                         components: hideComponent,
                         embeds: [embed.toJSON()],
@@ -722,10 +722,10 @@ export class SearchPaginator {
                                         .split(" ")[0]
                                 )[1]
                                 .split("/")[0]
-                        ) < this.search.numPages
+                        ) < this.search.pages
                     ) {
                         this.api
-                            .searchGalleries(
+                            .search(
                                 this.search.query,
                                 parseInt(
                                     embed
@@ -739,15 +739,13 @@ export class SearchPaginator {
                                 ) + 1
                             )
                             .then((search) => {
-                                const title = search.result.map(
+                                const title = search.books.map(
                                     (gallery, index) =>
                                         `\`⬛ ${
                                             (index + 1).toString().length > 1
                                                 ? `${index + 1}`
                                                 : `${index + 1} `
-                                        }\` - [\`${gallery.id}\`](${
-                                            gallery.url
-                                        }) - \`${
+                                        }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                             gallery.title.pretty.length >= 30
                                                 ? `${gallery.title.pretty.slice(
                                                       0,
@@ -756,25 +754,25 @@ export class SearchPaginator {
                                                 : gallery.title.pretty
                                         }\``
                                 );
-                                const embeds = search.result.map(
+                                const embeds = search.books.map(
                                     (gallery, index) => {
                                         const artistTags: string[] =
-                                            gallery.tags.artists.map(
+                                            gallery.artists.map(
                                                 (tag) => tag.name
                                             );
                                         const characterTags: string[] =
-                                            gallery.tags.characters.map(
+                                            gallery.characters.map(
                                                 (tag) => tag.name
                                             );
                                         const contentTags: string[] =
-                                            gallery.tags.tags.map(
+                                            gallery.tags.map(
                                                 (tag) =>
                                                     `${
                                                         tag.name
                                                     } (${tag.count.toLocaleString()})`
                                             );
                                         const languageTags: string[] =
-                                            gallery.tags.languages.map(
+                                            gallery.languages.map(
                                                 (tag) =>
                                                     tag.name
                                                         .charAt(0)
@@ -782,11 +780,11 @@ export class SearchPaginator {
                                                     tag.name.slice(1)
                                             );
                                         const parodyTags: string[] =
-                                            gallery.tags.parodies.map(
+                                            gallery.parodies.map(
                                                 (tag) => tag.name
                                             );
                                         const uploadedAt = `<t:${
-                                            gallery.uploadDate.getTime() / 1000
+                                            gallery.uploaded.getTime() / 1000
                                         }:F>`;
                                         const stringTag =
                                             contentTags.join("`, `").length >=
@@ -798,9 +796,9 @@ export class SearchPaginator {
 
                                         return new EmbedBuilder()
                                             .setAuthor(
-                                                gallery.id,
+                                                gallery.id.toString(),
                                                 undefined,
-                                                gallery.url
+                                                `https://nhentai.net/g/${gallery.id}`
                                             )
                                             .setColor(
                                                 this.client.config.BOT.COLOUR
@@ -820,9 +818,7 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](${
-                                                            gallery.url
-                                                        }) - \`${
+                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -843,9 +839,7 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](${
-                                                            gallery.url
-                                                        }) - \`${
+                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -858,7 +852,7 @@ export class SearchPaginator {
                                                     )
                                             )
                                             .setFooter(
-                                                `⭐ ${gallery.favourites.toLocaleString()}`
+                                                `⭐ ${gallery.favorites.toLocaleString()}`
                                             )
                                             .setTitle(
                                                 this.client.translate(
@@ -867,11 +861,11 @@ export class SearchPaginator {
                                                         firstIndex:
                                                             search.page.toLocaleString(),
                                                         lastIndex:
-                                                            search.numPages.toLocaleString(),
+                                                            search.pages.toLocaleString(),
                                                     }
                                                 )
                                             )
-                                            .setThumbnail(gallery.cover.url)
+                                            .setThumbnail(this.client.api.getImageURL(gallery.cover))
                                             .addField(
                                                 this.client.translate(
                                                     "main.title"
@@ -1012,7 +1006,7 @@ export class SearchPaginator {
                         ) > 1
                     ) {
                         this.api
-                            .searchGalleries(
+                            .search(
                                 this.search.query,
                                 parseInt(
                                     embed
@@ -1026,15 +1020,13 @@ export class SearchPaginator {
                                 ) - 1
                             )
                             .then((search) => {
-                                const title = search.result.map(
+                                const title = search.books.map(
                                     (gallery, index) =>
                                         `\`⬛ ${
                                             (index + 1).toString().length > 1
                                                 ? `${index + 1}`
                                                 : `${index + 1} `
-                                        }\` - [\`${gallery.id}\`](${
-                                            gallery.url
-                                        }) - \`${
+                                        }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                             gallery.title.pretty.length >= 30
                                                 ? `${gallery.title.pretty.slice(
                                                       0,
@@ -1043,25 +1035,25 @@ export class SearchPaginator {
                                                 : gallery.title.pretty
                                         }\``
                                 );
-                                const embeds = search.result.map(
+                                const embeds = search.books.map(
                                     (gallery, index) => {
                                         const artistTags: string[] =
-                                            gallery.tags.artists.map(
+                                            gallery.artists.map(
                                                 (tag) => tag.name
                                             );
                                         const characterTags: string[] =
-                                            gallery.tags.characters.map(
+                                            gallery.characters.map(
                                                 (tag) => tag.name
                                             );
                                         const contentTags: string[] =
-                                            gallery.tags.tags.map(
+                                            gallery.tags.map(
                                                 (tag) =>
                                                     `${
                                                         tag.name
                                                     } (${tag.count.toLocaleString()})`
                                             );
                                         const languageTags: string[] =
-                                            gallery.tags.languages.map(
+                                            gallery.languages.map(
                                                 (tag) =>
                                                     tag.name
                                                         .charAt(0)
@@ -1069,11 +1061,11 @@ export class SearchPaginator {
                                                     tag.name.slice(1)
                                             );
                                         const parodyTags: string[] =
-                                            gallery.tags.parodies.map(
+                                            gallery.parodies.map(
                                                 (tag) => tag.name
                                             );
                                         const uploadedAt = `<t:${
-                                            gallery.uploadDate.getTime() / 1000
+                                            gallery.uploaded.getTime() / 1000
                                         }:F>`;
                                         const stringTag =
                                             contentTags.join("`, `").length >=
@@ -1085,9 +1077,9 @@ export class SearchPaginator {
 
                                         return new EmbedBuilder()
                                             .setAuthor(
-                                                gallery.id,
+                                                gallery.id.toString(),
                                                 undefined,
-                                                gallery.url
+                                                `https://nhentai.net/g/${gallery.id}`
                                             )
                                             .setColor(
                                                 this.client.config.BOT.COLOUR
@@ -1107,9 +1099,7 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](${
-                                                            gallery.url
-                                                        }) - \`${
+                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -1130,9 +1120,7 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](${
-                                                            gallery.url
-                                                        }) - \`${
+                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -1145,7 +1133,7 @@ export class SearchPaginator {
                                                     )
                                             )
                                             .setFooter(
-                                                `⭐ ${gallery.favourites.toLocaleString()}`
+                                                `⭐ ${gallery.favorites.toLocaleString()}`
                                             )
                                             .setTitle(
                                                 this.client.translate(
@@ -1154,11 +1142,11 @@ export class SearchPaginator {
                                                         firstIndex:
                                                             search.page.toLocaleString(),
                                                         lastIndex:
-                                                            search.numPages.toLocaleString(),
+                                                            search.pages.toLocaleString(),
                                                     }
                                                 )
                                             )
-                                            .setThumbnail(gallery.cover.url)
+                                            .setThumbnail(this.client.api.getImageURL(gallery.cover))
                                             .addField(
                                                 this.client.translate(
                                                     "main.title"
@@ -1287,17 +1275,15 @@ export class SearchPaginator {
                     interaction.deferUpdate();
 
                     this.api
-                        .searchGalleries(this.search.query, 1)
+                        .search(this.search.query, 1)
                         .then((search) => {
-                            const title = search.result.map(
+                            const title = search.books.map(
                                 (gallery, index) =>
                                     `\`⬛ ${
                                         (index + 1).toString().length > 1
                                             ? `${index + 1}`
                                             : `${index + 1} `
-                                    }\` - [\`${gallery.id}\`](${
-                                        gallery.url
-                                    }) - \`${
+                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                         gallery.title.pretty.length >= 30
                                             ? `${gallery.title.pretty.slice(
                                                   0,
@@ -1306,25 +1292,25 @@ export class SearchPaginator {
                                             : gallery.title.pretty
                                     }\``
                             );
-                            const embeds = search.result.map(
+                            const embeds = search.books.map(
                                 (gallery, index) => {
                                     const artistTags: string[] =
-                                        gallery.tags.artists.map(
+                                        gallery.artists.map(
                                             (tag) => tag.name
                                         );
                                     const characterTags: string[] =
-                                        gallery.tags.characters.map(
+                                        gallery.characters.map(
                                             (tag) => tag.name
                                         );
                                     const contentTags: string[] =
-                                        gallery.tags.tags.map(
+                                        gallery.tags.map(
                                             (tag) =>
                                                 `${
                                                     tag.name
                                                 } (${tag.count.toLocaleString()})`
                                         );
                                     const languageTags: string[] =
-                                        gallery.tags.languages.map(
+                                        gallery.languages.map(
                                             (tag) =>
                                                 tag.name
                                                     .charAt(0)
@@ -1332,11 +1318,11 @@ export class SearchPaginator {
                                                 tag.name.slice(1)
                                         );
                                     const parodyTags: string[] =
-                                        gallery.tags.parodies.map(
+                                        gallery.parodies.map(
                                             (tag) => tag.name
                                         );
                                     const uploadedAt = `<t:${
-                                        gallery.uploadDate.getTime() / 1000
+                                        gallery.uploaded.getTime() / 1000
                                     }:F>`;
                                     const stringTag =
                                         contentTags.join("`, `").length >= 1024
@@ -1347,9 +1333,9 @@ export class SearchPaginator {
 
                                     return new EmbedBuilder()
                                         .setAuthor(
-                                            gallery.id,
+                                            gallery.id.toString(),
                                             undefined,
-                                            gallery.url
+                                            `https://nhentai.net/g/${gallery.id}`
                                         )
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
@@ -1361,9 +1347,7 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](${
-                                                        gallery.url
-                                                    }) - \`${
+                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1378,9 +1362,7 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](${
-                                                        gallery.url
-                                                    }) - \`${
+                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1393,17 +1375,17 @@ export class SearchPaginator {
                                                 )
                                         )
                                         .setFooter(
-                                            `⭐ ${gallery.favourites.toLocaleString()}`
+                                            `⭐ ${gallery.favorites.toLocaleString()}`
                                         )
                                         .setTitle(
                                             this.client.translate("main.page", {
                                                 firstIndex:
                                                     search.page.toLocaleString(),
                                                 lastIndex:
-                                                    search.numPages.toLocaleString(),
+                                                    search.pages.toLocaleString(),
                                             })
                                         )
-                                        .setThumbnail(gallery.cover.url)
+                                        .setThumbnail(this.client.api.getImageURL(gallery.cover))
                                         .addField(
                                             this.client.translate("main.title"),
                                             `\`${gallery.title.pretty}\``
@@ -1519,20 +1501,18 @@ export class SearchPaginator {
                     interaction.deferUpdate();
 
                     this.api
-                        .searchGalleries(
+                        .search(
                             this.search.query,
-                            this.search.numPages
+                            this.search.pages
                         )
                         .then((search) => {
-                            const title = search.result.map(
+                            const title = search.books.map(
                                 (gallery, index) =>
                                     `\`⬛ ${
                                         (index + 1).toString().length > 1
                                             ? `${index + 1}`
                                             : `${index + 1} `
-                                    }\` - [\`${gallery.id}\`](${
-                                        gallery.url
-                                    }) - \`${
+                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                         gallery.title.pretty.length >= 30
                                             ? `${gallery.title.pretty.slice(
                                                   0,
@@ -1541,25 +1521,25 @@ export class SearchPaginator {
                                             : gallery.title.pretty
                                     }\``
                             );
-                            const embeds = search.result.map(
+                            const embeds = search.books.map(
                                 (gallery, index) => {
                                     const artistTags: string[] =
-                                        gallery.tags.artists.map(
+                                        gallery.artists.map(
                                             (tag) => tag.name
                                         );
                                     const characterTags: string[] =
-                                        gallery.tags.characters.map(
+                                        gallery.characters.map(
                                             (tag) => tag.name
                                         );
                                     const contentTags: string[] =
-                                        gallery.tags.tags.map(
+                                        gallery.tags.map(
                                             (tag) =>
                                                 `${
                                                     tag.name
                                                 } (${tag.count.toLocaleString()})`
                                         );
                                     const languageTags: string[] =
-                                        gallery.tags.languages.map(
+                                        gallery.languages.map(
                                             (tag) =>
                                                 tag.name
                                                     .charAt(0)
@@ -1567,11 +1547,11 @@ export class SearchPaginator {
                                                 tag.name.slice(1)
                                         );
                                     const parodyTags: string[] =
-                                        gallery.tags.parodies.map(
+                                        gallery.parodies.map(
                                             (tag) => tag.name
                                         );
                                     const uploadedAt = `<t:${
-                                        gallery.uploadDate.getTime() / 1000
+                                        gallery.uploaded.getTime() / 1000
                                     }:F>`;
                                     const stringTag =
                                         contentTags.join("`, `").length >= 1024
@@ -1582,9 +1562,9 @@ export class SearchPaginator {
 
                                     return new EmbedBuilder()
                                         .setAuthor(
-                                            gallery.id,
+                                            gallery.id.toString(),
                                             undefined,
-                                            gallery.url
+                                            `https://nhentai.net/g/${gallery.id}`
                                         )
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
@@ -1596,9 +1576,7 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](${
-                                                        gallery.url
-                                                    }) - \`${
+                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1613,9 +1591,7 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](${
-                                                        gallery.url
-                                                    }) - \`${
+                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1628,17 +1604,17 @@ export class SearchPaginator {
                                                 )
                                         )
                                         .setFooter(
-                                            `⭐ ${gallery.favourites.toLocaleString()}`
+                                            `⭐ ${gallery.favorites.toLocaleString()}`
                                         )
                                         .setTitle(
                                             this.client.translate("main.page", {
                                                 firstIndex:
                                                     search.page.toLocaleString(),
                                                 lastIndex:
-                                                    search.numPages.toLocaleString(),
+                                                    search.pages.toLocaleString(),
                                             })
                                         )
-                                        .setThumbnail(gallery.cover.url)
+                                        .setThumbnail(this.client.api.getImageURL(gallery.cover))
                                         .addField(
                                             this.client.translate("main.title"),
                                             `\`${gallery.title.pretty}\``
@@ -1839,7 +1815,7 @@ export class SearchPaginator {
                         });
                     }
 
-                    if (page > this.search.numPages) {
+                    if (page > this.search.pages) {
                         return interaction.createMessage({
                             embeds: [
                                 new EmbedBuilder()
@@ -1878,17 +1854,15 @@ export class SearchPaginator {
                     }
 
                     this.api
-                        .searchGalleries(this.search.query, page)
+                        .search(this.search.query, page)
                         .then((search) => {
-                            const title = search.result.map(
+                            const title = search.books.map(
                                 (gallery, index) =>
                                     `\`⬛ ${
                                         (index + 1).toString().length > 1
                                             ? `${index + 1}`
                                             : `${index + 1} `
-                                    }\` - [\`${gallery.id}\`](${
-                                        gallery.url
-                                    }) - \`${
+                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                         gallery.title.pretty.length >= 30
                                             ? `${gallery.title.pretty.slice(
                                                   0,
@@ -1897,25 +1871,25 @@ export class SearchPaginator {
                                             : gallery.title.pretty
                                     }\``
                             );
-                            const embeds = search.result.map(
+                            const embeds = search.books.map(
                                 (gallery, index) => {
                                     const artistTags: string[] =
-                                        gallery.tags.artists.map(
+                                        gallery.artists.map(
                                             (tag) => tag.name
                                         );
                                     const characterTags: string[] =
-                                        gallery.tags.characters.map(
+                                        gallery.characters.map(
                                             (tag) => tag.name
                                         );
                                     const contentTags: string[] =
-                                        gallery.tags.tags.map(
+                                        gallery.tags.map(
                                             (tag) =>
                                                 `${
                                                     tag.name
                                                 } (${tag.count.toLocaleString()})`
                                         );
                                     const languageTags: string[] =
-                                        gallery.tags.languages.map(
+                                        gallery.languages.map(
                                             (tag) =>
                                                 tag.name
                                                     .charAt(0)
@@ -1923,11 +1897,11 @@ export class SearchPaginator {
                                                 tag.name.slice(1)
                                         );
                                     const parodyTags: string[] =
-                                        gallery.tags.parodies.map(
+                                        gallery.parodies.map(
                                             (tag) => tag.name
                                         );
                                     const uploadedAt = `<t:${
-                                        gallery.uploadDate.getTime() / 1000
+                                        gallery.uploaded.getTime() / 1000
                                     }:F>`;
                                     const stringTag =
                                         contentTags.join("`, `").length >= 1024
@@ -1938,9 +1912,9 @@ export class SearchPaginator {
 
                                     return new EmbedBuilder()
                                         .setAuthor(
-                                            gallery.id,
+                                            gallery.id.toString(),
                                             undefined,
-                                            gallery.url
+                                            `https://nhentai.net/g/${gallery.id}`
                                         )
                                         .setColor(this.client.config.BOT.COLOUR)
                                         .setDescription(
@@ -1952,9 +1926,7 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](${
-                                                        gallery.url
-                                                    }) - \`${
+                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1969,9 +1941,7 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](${
-                                                        gallery.url
-                                                    }) - \`${
+                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1984,17 +1954,17 @@ export class SearchPaginator {
                                                 )
                                         )
                                         .setFooter(
-                                            `⭐ ${gallery.favourites.toLocaleString()}`
+                                            `⭐ ${gallery.favorites.toLocaleString()}`
                                         )
                                         .setTitle(
                                             this.client.translate("main.page", {
                                                 firstIndex:
                                                     search.page.toLocaleString(),
                                                 lastIndex:
-                                                    search.numPages.toLocaleString(),
+                                                    search.pages.toLocaleString(),
                                             })
                                         )
-                                        .setThumbnail(gallery.cover.url)
+                                        .setThumbnail(this.client.api.getImageURL(gallery.cover))
                                         .addField(
                                             this.client.translate("main.title"),
                                             `\`${gallery.title.pretty}\``
