@@ -141,7 +141,7 @@ export class BookmarkPaginator {
             const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
-            const contentTags: string[] = gallery.tags.map(
+            const contentTags: string[] = gallery.pureTags.map(
                 (tag) => `${tag.name} (${tag.count.toLocaleString()})`
             );
             const languageTags: string[] = gallery.languages.map(
@@ -289,7 +289,7 @@ export class BookmarkPaginator {
             const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
-            const contentTags: string[] = gallery.tags.map(
+            const contentTags: string[] = gallery.pureTags.map(
                 (tag) => `${tag.name} (${tag.count.toLocaleString()})`
             );
             const languageTags: string[] = gallery.languages.map(

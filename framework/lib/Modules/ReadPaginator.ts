@@ -178,7 +178,7 @@ export class ReadPaginator {
         const characterTags: string[] = this.gallery.characters.map(
             (tag) => tag.name
         );
-        const contentTags: string[] = this.gallery.tags.map(
+        const contentTags: string[] = this.gallery.pureTags.map(
             (tag) => `${tag.name} (${tag.count.toLocaleString()})`
         );
         const languageTags: string[] = this.gallery.languages.map(
