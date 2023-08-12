@@ -96,16 +96,16 @@ export class SearchPaginator {
                     (index + 1).toString().length > 1
                         ? `${index + 1}`
                         : `${index + 1} `
-                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                    gallery.id
+                }) - \`${
                     gallery.title.pretty.length >= 30
                         ? `${gallery.title.pretty.slice(0, 30)}...`
                         : gallery.title.pretty
                 }\``
         );
         const embeds = this.search.books.map((gallery, index) => {
-            const artistTags: string[] = gallery.artists.map(
-                (tag) => tag.name
-            );
+            const artistTags: string[] = gallery.artists.map((tag) => tag.name);
             const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
@@ -125,7 +125,11 @@ export class SearchPaginator {
                     : contentTags.join("`, `");
 
             return new EmbedBuilder()
-                .setAuthor(gallery.id.toString(), undefined, `https://nhentai.net/g/${gallery.id}`)
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    `https://nhentai.net/g/${gallery.id}`
+                )
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
                     title
@@ -135,7 +139,9 @@ export class SearchPaginator {
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${
                                 gallery.title.pretty.length >= 30
                                     ? `${gallery.title.pretty.slice(0, 30)}...`
                                     : gallery.title.pretty
@@ -144,7 +150,9 @@ export class SearchPaginator {
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${
                                 gallery.title.pretty.length >= 30
                                     ? `${gallery.title.pretty.slice(0, 30)}...`
                                     : gallery.title.pretty
@@ -510,10 +518,15 @@ export class SearchPaginator {
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    embed.setImage(this.client.api.getImageURL(
-                        (await this.api.getBook(parseInt(embed.toJSON().author.name)))
-                            .cover
-                    ));
+                    embed.setImage(
+                        this.client.api.getImageURL(
+                            (
+                                await this.api.getBook(
+                                    parseInt(embed.toJSON().author.name)
+                                )
+                            ).cover
+                        )
+                    );
                     this.interaction.editOriginal({
                         components: hideComponent,
                         embeds: [embed.toJSON()],
@@ -745,7 +758,11 @@ export class SearchPaginator {
                                             (index + 1).toString().length > 1
                                                 ? `${index + 1}`
                                                 : `${index + 1} `
-                                        }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                        }\` - [\`${
+                                            gallery.id
+                                        }\`](https://nhentai.net/g/${
+                                            gallery.id
+                                        }) - \`${
                                             gallery.title.pretty.length >= 30
                                                 ? `${gallery.title.pretty.slice(
                                                       0,
@@ -818,7 +835,9 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                                        }\`](https://nhentai.net/g/${
+                                                            gallery.id
+                                                        }) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -839,7 +858,9 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                                        }\`](https://nhentai.net/g/${
+                                                            gallery.id
+                                                        }) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -865,7 +886,11 @@ export class SearchPaginator {
                                                     }
                                                 )
                                             )
-                                            .setThumbnail(this.client.api.getImageURL(gallery.cover))
+                                            .setThumbnail(
+                                                this.client.api.getImageURL(
+                                                    gallery.cover
+                                                )
+                                            )
                                             .addField(
                                                 this.client.translate(
                                                     "main.title"
@@ -1026,7 +1051,11 @@ export class SearchPaginator {
                                             (index + 1).toString().length > 1
                                                 ? `${index + 1}`
                                                 : `${index + 1} `
-                                        }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                        }\` - [\`${
+                                            gallery.id
+                                        }\`](https://nhentai.net/g/${
+                                            gallery.id
+                                        }) - \`${
                                             gallery.title.pretty.length >= 30
                                                 ? `${gallery.title.pretty.slice(
                                                       0,
@@ -1099,7 +1128,9 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                                        }\`](https://nhentai.net/g/${
+                                                            gallery.id
+                                                        }) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -1120,7 +1151,9 @@ export class SearchPaginator {
                                                                   } `
                                                         }\` - [\`${
                                                             gallery.id
-                                                        }\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                                        }\`](https://nhentai.net/g/${
+                                                            gallery.id
+                                                        }) - \`${
                                                             gallery.title.pretty
                                                                 .length >= 30
                                                                 ? `${gallery.title.pretty.slice(
@@ -1146,7 +1179,11 @@ export class SearchPaginator {
                                                     }
                                                 )
                                             )
-                                            .setThumbnail(this.client.api.getImageURL(gallery.cover))
+                                            .setThumbnail(
+                                                this.client.api.getImageURL(
+                                                    gallery.cover
+                                                )
+                                            )
                                             .addField(
                                                 this.client.translate(
                                                     "main.title"
@@ -1274,237 +1311,211 @@ export class SearchPaginator {
                 case `first_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
 
-                    this.api
-                        .search(this.search.query, 1)
-                        .then((search) => {
-                            const title = search.books.map(
-                                (gallery, index) =>
-                                    `\`⬛ ${
-                                        (index + 1).toString().length > 1
-                                            ? `${index + 1}`
-                                            : `${index + 1} `
-                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                        gallery.title.pretty.length >= 30
-                                            ? `${gallery.title.pretty.slice(
-                                                  0,
-                                                  30
-                                              )}...`
-                                            : gallery.title.pretty
+                    this.api.search(this.search.query, 1).then((search) => {
+                        const title = search.books.map(
+                            (gallery, index) =>
+                                `\`⬛ ${
+                                    (index + 1).toString().length > 1
+                                        ? `${index + 1}`
+                                        : `${index + 1} `
+                                }\` - [\`${
+                                    gallery.id
+                                }\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                    gallery.title.pretty.length >= 30
+                                        ? `${gallery.title.pretty.slice(
+                                              0,
+                                              30
+                                          )}...`
+                                        : gallery.title.pretty
+                                }\``
+                        );
+                        const embeds = search.books.map((gallery, index) => {
+                            const artistTags: string[] = gallery.artists.map(
+                                (tag) => tag.name
+                            );
+                            const characterTags: string[] =
+                                gallery.characters.map((tag) => tag.name);
+                            const contentTags: string[] = gallery.pureTags.map(
+                                (tag) =>
+                                    `${
+                                        tag.name
+                                    } (${tag.count.toLocaleString()})`
+                            );
+                            const languageTags: string[] =
+                                gallery.languages.map(
+                                    (tag) =>
+                                        tag.name.charAt(0).toUpperCase() +
+                                        tag.name.slice(1)
+                                );
+                            const parodyTags: string[] = gallery.parodies.map(
+                                (tag) => tag.name
+                            );
+                            const uploadedAt = `<t:${
+                                gallery.uploaded.getTime() / 1000
+                            }:F>`;
+                            const stringTag =
+                                contentTags.join("`, `").length >= 1024
+                                    ? `${contentTags
+                                          .join("`, `")
+                                          .slice(0, 1010)}...`
+                                    : contentTags.join("`, `");
+
+                            return new EmbedBuilder()
+                                .setAuthor(
+                                    gallery.id.toString(),
+                                    undefined,
+                                    `https://nhentai.net/g/${gallery.id}`
+                                )
+                                .setColor(this.client.config.BOT.COLOUR)
+                                .setDescription(
+                                    title
+                                        .join("\n")
+                                        .replace(
+                                            `\`⬛ ${
+                                                (index + 1).toString().length >
+                                                1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${
+                                                gallery.id
+                                            }\`](https://nhentai.net/g/${
+                                                gallery.id
+                                            }) - \`${
+                                                gallery.title.pretty.length >=
+                                                30
+                                                    ? `${gallery.title.pretty.slice(
+                                                          0,
+                                                          30
+                                                      )}...`
+                                                    : gallery.title.pretty
+                                            }\``,
+                                            `**\`🟥 ${
+                                                (index + 1).toString().length >
+                                                1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${
+                                                gallery.id
+                                            }\`](https://nhentai.net/g/${
+                                                gallery.id
+                                            }) - \`${
+                                                gallery.title.pretty.length >=
+                                                30
+                                                    ? `${gallery.title.pretty.slice(
+                                                          0,
+                                                          30
+                                                      )}...`
+                                                    : gallery.title.pretty
+                                            }\`**`
+                                        )
+                                )
+                                .setFooter(
+                                    `⭐ ${gallery.favorites.toLocaleString()}`
+                                )
+                                .setTitle(
+                                    this.client.translate("main.page", {
+                                        firstIndex:
+                                            search.page.toLocaleString(),
+                                        lastIndex:
+                                            search.pages.toLocaleString(),
+                                    })
+                                )
+                                .setThumbnail(
+                                    this.client.api.getImageURL(gallery.cover)
+                                )
+                                .addField(
+                                    this.client.translate("main.title"),
+                                    `\`${gallery.title.pretty}\``
+                                )
+                                .addField(
+                                    this.client.translate("main.pages"),
+                                    `\`${gallery.pages.length}\``
+                                )
+                                .addField(
+                                    this.client.translate("main.released"),
+                                    uploadedAt
+                                )
+                                .addField(
+                                    languageTags.length > 1
+                                        ? this.client.translate(
+                                              "main.languages"
+                                          )
+                                        : this.client.translate(
+                                              "main.language"
+                                          ),
+                                    `\`${
+                                        languageTags.length !== 0
+                                            ? languageTags.join("`, `")
+                                            : this.client.translate("main.none")
                                     }\``
-                            );
-                            const embeds = search.books.map(
-                                (gallery, index) => {
-                                    const artistTags: string[] =
-                                        gallery.artists.map(
-                                            (tag) => tag.name
-                                        );
-                                    const characterTags: string[] =
-                                        gallery.characters.map(
-                                            (tag) => tag.name
-                                        );
-                                    const contentTags: string[] =
-                                        gallery.pureTags.map(
-                                            (tag) =>
-                                                `${
-                                                    tag.name
-                                                } (${tag.count.toLocaleString()})`
-                                        );
-                                    const languageTags: string[] =
-                                        gallery.languages.map(
-                                            (tag) =>
-                                                tag.name
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                tag.name.slice(1)
-                                        );
-                                    const parodyTags: string[] =
-                                        gallery.parodies.map(
-                                            (tag) => tag.name
-                                        );
-                                    const uploadedAt = `<t:${
-                                        gallery.uploaded.getTime() / 1000
-                                    }:F>`;
-                                    const stringTag =
-                                        contentTags.join("`, `").length >= 1024
-                                            ? `${contentTags
+                                )
+                                .addField(
+                                    artistTags.length > 1
+                                        ? this.client.translate("main.artists")
+                                        : this.client.translate("main.artist"),
+                                    `\`${
+                                        artistTags.length !== 0
+                                            ? artistTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    characterTags.length > 1
+                                        ? this.client.translate(
+                                              "main.characters"
+                                          )
+                                        : this.client.translate(
+                                              "main.character"
+                                          ),
+                                    `\`${
+                                        characterTags.length !== 0
+                                            ? characterTags.join("`, `")
+                                            : this.client.translate(
+                                                  "main.original"
+                                              )
+                                    }\``
+                                )
+                                .addField(
+                                    parodyTags.length > 1
+                                        ? this.client.translate("main.parodies")
+                                        : this.client.translate("main.parody"),
+                                    `\`${
+                                        parodyTags.length !== 0
+                                            ? parodyTags
                                                   .join("`, `")
-                                                  .slice(0, 1010)}...`
-                                            : contentTags.join("`, `");
-
-                                    return new EmbedBuilder()
-                                        .setAuthor(
-                                            gallery.id.toString(),
-                                            undefined,
-                                            `https://nhentai.net/g/${gallery.id}`
-                                        )
-                                        .setColor(this.client.config.BOT.COLOUR)
-                                        .setDescription(
-                                            title
-                                                .join("\n")
-                                                .replace(
-                                                    `\`⬛ ${
-                                                        (index + 1).toString()
-                                                            .length > 1
-                                                            ? `${index + 1}`
-                                                            : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                                        gallery.title.pretty
-                                                            .length >= 30
-                                                            ? `${gallery.title.pretty.slice(
-                                                                  0,
-                                                                  30
-                                                              )}...`
-                                                            : gallery.title
-                                                                  .pretty
-                                                    }\``,
-                                                    `**\`🟥 ${
-                                                        (index + 1).toString()
-                                                            .length > 1
-                                                            ? `${index + 1}`
-                                                            : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                                        gallery.title.pretty
-                                                            .length >= 30
-                                                            ? `${gallery.title.pretty.slice(
-                                                                  0,
-                                                                  30
-                                                              )}...`
-                                                            : gallery.title
-                                                                  .pretty
-                                                    }\`**`
-                                                )
-                                        )
-                                        .setFooter(
-                                            `⭐ ${gallery.favorites.toLocaleString()}`
-                                        )
-                                        .setTitle(
-                                            this.client.translate("main.page", {
-                                                firstIndex:
-                                                    search.page.toLocaleString(),
-                                                lastIndex:
-                                                    search.pages.toLocaleString(),
-                                            })
-                                        )
-                                        .setThumbnail(this.client.api.getImageURL(gallery.cover))
-                                        .addField(
-                                            this.client.translate("main.title"),
-                                            `\`${gallery.title.pretty}\``
-                                        )
-                                        .addField(
-                                            this.client.translate("main.pages"),
-                                            `\`${gallery.pages.length}\``
-                                        )
-                                        .addField(
-                                            this.client.translate(
-                                                "main.released"
-                                            ),
-                                            uploadedAt
-                                        )
-                                        .addField(
-                                            languageTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.languages"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.language"
-                                                  ),
-                                            `\`${
-                                                languageTags.length !== 0
-                                                    ? languageTags.join("`, `")
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            artistTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.artists"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.artist"
-                                                  ),
-                                            `\`${
-                                                artistTags.length !== 0
-                                                    ? artistTags.join("`, `")
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            characterTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.characters"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.character"
-                                                  ),
-                                            `\`${
-                                                characterTags.length !== 0
-                                                    ? characterTags.join("`, `")
-                                                    : this.client.translate(
+                                                  .replace(
+                                                      "original",
+                                                      `${this.client.translate(
                                                           "main.original"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            parodyTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.parodies"
+                                                      )}`
                                                   )
-                                                : this.client.translate(
-                                                      "main.parody"
-                                                  ),
-                                            `\`${
-                                                parodyTags.length !== 0
-                                                    ? parodyTags
-                                                          .join("`, `")
-                                                          .replace(
-                                                              "original",
-                                                              `${this.client.translate(
-                                                                  "main.original"
-                                                              )}`
-                                                          )
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            contentTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.tags"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.tag"
-                                                  ),
-                                            `\`${
-                                                contentTags.length !== 0
-                                                    ? stringTag
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        );
-                                }
-                            );
-
-                            this.search = search;
-                            this.embeds = embeds.map((embed) => embed.toJSON());
-                            this.embed = 1;
-                            this.updatePaginator();
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    contentTags.length > 1
+                                        ? this.client.translate("main.tags")
+                                        : this.client.translate("main.tag"),
+                                    `\`${
+                                        contentTags.length !== 0
+                                            ? stringTag
+                                            : this.client.translate("main.none")
+                                    }\``
+                                );
                         });
+
+                        this.search = search;
+                        this.embeds = embeds.map((embed) => embed.toJSON());
+                        this.embed = 1;
+                        this.updatePaginator();
+                    });
 
                     break;
                 case `last_result_page_${this.interaction.id}`:
                     interaction.deferUpdate();
 
                     this.api
-                        .search(
-                            this.search.query,
-                            this.search.pages
-                        )
+                        .search(this.search.query, this.search.pages)
                         .then((search) => {
                             const title = search.books.map(
                                 (gallery, index) =>
@@ -1512,7 +1523,11 @@ export class SearchPaginator {
                                         (index + 1).toString().length > 1
                                             ? `${index + 1}`
                                             : `${index + 1} `
-                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                    }\` - [\`${
+                                        gallery.id
+                                    }\`](https://nhentai.net/g/${
+                                        gallery.id
+                                    }) - \`${
                                         gallery.title.pretty.length >= 30
                                             ? `${gallery.title.pretty.slice(
                                                   0,
@@ -1524,9 +1539,7 @@ export class SearchPaginator {
                             const embeds = search.books.map(
                                 (gallery, index) => {
                                     const artistTags: string[] =
-                                        gallery.artists.map(
-                                            (tag) => tag.name
-                                        );
+                                        gallery.artists.map((tag) => tag.name);
                                     const characterTags: string[] =
                                         gallery.characters.map(
                                             (tag) => tag.name
@@ -1547,9 +1560,7 @@ export class SearchPaginator {
                                                 tag.name.slice(1)
                                         );
                                     const parodyTags: string[] =
-                                        gallery.parodies.map(
-                                            (tag) => tag.name
-                                        );
+                                        gallery.parodies.map((tag) => tag.name);
                                     const uploadedAt = `<t:${
                                         gallery.uploaded.getTime() / 1000
                                     }:F>`;
@@ -1576,7 +1587,11 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                                    }\` - [\`${
+                                                        gallery.id
+                                                    }\`](https://nhentai.net/g/${
+                                                        gallery.id
+                                                    }) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1591,7 +1606,11 @@ export class SearchPaginator {
                                                             .length > 1
                                                             ? `${index + 1}`
                                                             : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                                    }\` - [\`${
+                                                        gallery.id
+                                                    }\`](https://nhentai.net/g/${
+                                                        gallery.id
+                                                    }) - \`${
                                                         gallery.title.pretty
                                                             .length >= 30
                                                             ? `${gallery.title.pretty.slice(
@@ -1614,7 +1633,11 @@ export class SearchPaginator {
                                                     search.pages.toLocaleString(),
                                             })
                                         )
-                                        .setThumbnail(this.client.api.getImageURL(gallery.cover))
+                                        .setThumbnail(
+                                            this.client.api.getImageURL(
+                                                gallery.cover
+                                            )
+                                        )
                                         .addField(
                                             this.client.translate("main.title"),
                                             `\`${gallery.title.pretty}\``
@@ -1853,227 +1876,204 @@ export class SearchPaginator {
                         });
                     }
 
-                    this.api
-                        .search(this.search.query, page)
-                        .then((search) => {
-                            const title = search.books.map(
-                                (gallery, index) =>
-                                    `\`⬛ ${
-                                        (index + 1).toString().length > 1
-                                            ? `${index + 1}`
-                                            : `${index + 1} `
-                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                        gallery.title.pretty.length >= 30
-                                            ? `${gallery.title.pretty.slice(
-                                                  0,
-                                                  30
-                                              )}...`
-                                            : gallery.title.pretty
+                    this.api.search(this.search.query, page).then((search) => {
+                        const title = search.books.map(
+                            (gallery, index) =>
+                                `\`⬛ ${
+                                    (index + 1).toString().length > 1
+                                        ? `${index + 1}`
+                                        : `${index + 1} `
+                                }\` - [\`${
+                                    gallery.id
+                                }\`](https://nhentai.net/g/${gallery.id}) - \`${
+                                    gallery.title.pretty.length >= 30
+                                        ? `${gallery.title.pretty.slice(
+                                              0,
+                                              30
+                                          )}...`
+                                        : gallery.title.pretty
+                                }\``
+                        );
+                        const embeds = search.books.map((gallery, index) => {
+                            const artistTags: string[] = gallery.artists.map(
+                                (tag) => tag.name
+                            );
+                            const characterTags: string[] =
+                                gallery.characters.map((tag) => tag.name);
+                            const contentTags: string[] = gallery.pureTags.map(
+                                (tag) =>
+                                    `${
+                                        tag.name
+                                    } (${tag.count.toLocaleString()})`
+                            );
+                            const languageTags: string[] =
+                                gallery.languages.map(
+                                    (tag) =>
+                                        tag.name.charAt(0).toUpperCase() +
+                                        tag.name.slice(1)
+                                );
+                            const parodyTags: string[] = gallery.parodies.map(
+                                (tag) => tag.name
+                            );
+                            const uploadedAt = `<t:${
+                                gallery.uploaded.getTime() / 1000
+                            }:F>`;
+                            const stringTag =
+                                contentTags.join("`, `").length >= 1024
+                                    ? `${contentTags
+                                          .join("`, `")
+                                          .slice(0, 1010)}...`
+                                    : contentTags.join("`, `");
+
+                            return new EmbedBuilder()
+                                .setAuthor(
+                                    gallery.id.toString(),
+                                    undefined,
+                                    `https://nhentai.net/g/${gallery.id}`
+                                )
+                                .setColor(this.client.config.BOT.COLOUR)
+                                .setDescription(
+                                    title
+                                        .join("\n")
+                                        .replace(
+                                            `\`⬛ ${
+                                                (index + 1).toString().length >
+                                                1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${
+                                                gallery.id
+                                            }\`](https://nhentai.net/g/${
+                                                gallery.id
+                                            }) - \`${
+                                                gallery.title.pretty.length >=
+                                                30
+                                                    ? `${gallery.title.pretty.slice(
+                                                          0,
+                                                          30
+                                                      )}...`
+                                                    : gallery.title.pretty
+                                            }\``,
+                                            `**\`🟥 ${
+                                                (index + 1).toString().length >
+                                                1
+                                                    ? `${index + 1}`
+                                                    : `${index + 1} `
+                                            }\` - [\`${
+                                                gallery.id
+                                            }\`](https://nhentai.net/g/${
+                                                gallery.id
+                                            }) - \`${
+                                                gallery.title.pretty.length >=
+                                                30
+                                                    ? `${gallery.title.pretty.slice(
+                                                          0,
+                                                          30
+                                                      )}...`
+                                                    : gallery.title.pretty
+                                            }\`**`
+                                        )
+                                )
+                                .setFooter(
+                                    `⭐ ${gallery.favorites.toLocaleString()}`
+                                )
+                                .setTitle(
+                                    this.client.translate("main.page", {
+                                        firstIndex:
+                                            search.page.toLocaleString(),
+                                        lastIndex:
+                                            search.pages.toLocaleString(),
+                                    })
+                                )
+                                .setThumbnail(
+                                    this.client.api.getImageURL(gallery.cover)
+                                )
+                                .addField(
+                                    this.client.translate("main.title"),
+                                    `\`${gallery.title.pretty}\``
+                                )
+                                .addField(
+                                    this.client.translate("main.pages"),
+                                    `\`${gallery.pages.length}\``
+                                )
+                                .addField(
+                                    this.client.translate("main.released"),
+                                    uploadedAt
+                                )
+                                .addField(
+                                    languageTags.length > 1
+                                        ? this.client.translate(
+                                              "main.languages"
+                                          )
+                                        : this.client.translate(
+                                              "main.language"
+                                          ),
+                                    `\`${
+                                        languageTags.length !== 0
+                                            ? languageTags.join("`, `")
+                                            : this.client.translate("main.none")
                                     }\``
-                            );
-                            const embeds = search.books.map(
-                                (gallery, index) => {
-                                    const artistTags: string[] =
-                                        gallery.artists.map(
-                                            (tag) => tag.name
-                                        );
-                                    const characterTags: string[] =
-                                        gallery.characters.map(
-                                            (tag) => tag.name
-                                        );
-                                    const contentTags: string[] =
-                                        gallery.pureTags.map(
-                                            (tag) =>
-                                                `${
-                                                    tag.name
-                                                } (${tag.count.toLocaleString()})`
-                                        );
-                                    const languageTags: string[] =
-                                        gallery.languages.map(
-                                            (tag) =>
-                                                tag.name
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                tag.name.slice(1)
-                                        );
-                                    const parodyTags: string[] =
-                                        gallery.parodies.map(
-                                            (tag) => tag.name
-                                        );
-                                    const uploadedAt = `<t:${
-                                        gallery.uploaded.getTime() / 1000
-                                    }:F>`;
-                                    const stringTag =
-                                        contentTags.join("`, `").length >= 1024
-                                            ? `${contentTags
+                                )
+                                .addField(
+                                    artistTags.length > 1
+                                        ? this.client.translate("main.artists")
+                                        : this.client.translate("main.artist"),
+                                    `\`${
+                                        artistTags.length !== 0
+                                            ? artistTags.join("`, `")
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    characterTags.length > 1
+                                        ? this.client.translate(
+                                              "main.characters"
+                                          )
+                                        : this.client.translate(
+                                              "main.character"
+                                          ),
+                                    `\`${
+                                        characterTags.length !== 0
+                                            ? characterTags.join("`, `")
+                                            : this.client.translate(
+                                                  "main.original"
+                                              )
+                                    }\``
+                                )
+                                .addField(
+                                    parodyTags.length > 1
+                                        ? this.client.translate("main.parodies")
+                                        : this.client.translate("main.parody"),
+                                    `\`${
+                                        parodyTags.length !== 0
+                                            ? parodyTags
                                                   .join("`, `")
-                                                  .slice(0, 1010)}...`
-                                            : contentTags.join("`, `");
-
-                                    return new EmbedBuilder()
-                                        .setAuthor(
-                                            gallery.id.toString(),
-                                            undefined,
-                                            `https://nhentai.net/g/${gallery.id}`
-                                        )
-                                        .setColor(this.client.config.BOT.COLOUR)
-                                        .setDescription(
-                                            title
-                                                .join("\n")
-                                                .replace(
-                                                    `\`⬛ ${
-                                                        (index + 1).toString()
-                                                            .length > 1
-                                                            ? `${index + 1}`
-                                                            : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                                        gallery.title.pretty
-                                                            .length >= 30
-                                                            ? `${gallery.title.pretty.slice(
-                                                                  0,
-                                                                  30
-                                                              )}...`
-                                                            : gallery.title
-                                                                  .pretty
-                                                    }\``,
-                                                    `**\`🟥 ${
-                                                        (index + 1).toString()
-                                                            .length > 1
-                                                            ? `${index + 1}`
-                                                            : `${index + 1} `
-                                                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                                        gallery.title.pretty
-                                                            .length >= 30
-                                                            ? `${gallery.title.pretty.slice(
-                                                                  0,
-                                                                  30
-                                                              )}...`
-                                                            : gallery.title
-                                                                  .pretty
-                                                    }\`**`
-                                                )
-                                        )
-                                        .setFooter(
-                                            `⭐ ${gallery.favorites.toLocaleString()}`
-                                        )
-                                        .setTitle(
-                                            this.client.translate("main.page", {
-                                                firstIndex:
-                                                    search.page.toLocaleString(),
-                                                lastIndex:
-                                                    search.pages.toLocaleString(),
-                                            })
-                                        )
-                                        .setThumbnail(this.client.api.getImageURL(gallery.cover))
-                                        .addField(
-                                            this.client.translate("main.title"),
-                                            `\`${gallery.title.pretty}\``
-                                        )
-                                        .addField(
-                                            this.client.translate("main.pages"),
-                                            `\`${gallery.pages.length}\``
-                                        )
-                                        .addField(
-                                            this.client.translate(
-                                                "main.released"
-                                            ),
-                                            uploadedAt
-                                        )
-                                        .addField(
-                                            languageTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.languages"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.language"
-                                                  ),
-                                            `\`${
-                                                languageTags.length !== 0
-                                                    ? languageTags.join("`, `")
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            artistTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.artists"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.artist"
-                                                  ),
-                                            `\`${
-                                                artistTags.length !== 0
-                                                    ? artistTags.join("`, `")
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            characterTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.characters"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.character"
-                                                  ),
-                                            `\`${
-                                                characterTags.length !== 0
-                                                    ? characterTags.join("`, `")
-                                                    : this.client.translate(
+                                                  .replace(
+                                                      "original",
+                                                      `${this.client.translate(
                                                           "main.original"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            parodyTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.parodies"
+                                                      )}`
                                                   )
-                                                : this.client.translate(
-                                                      "main.parody"
-                                                  ),
-                                            `\`${
-                                                parodyTags.length !== 0
-                                                    ? parodyTags
-                                                          .join("`, `")
-                                                          .replace(
-                                                              "original",
-                                                              `${this.client.translate(
-                                                                  "main.original"
-                                                              )}`
-                                                          )
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        )
-                                        .addField(
-                                            contentTags.length > 1
-                                                ? this.client.translate(
-                                                      "main.tags"
-                                                  )
-                                                : this.client.translate(
-                                                      "main.tag"
-                                                  ),
-                                            `\`${
-                                                contentTags.length !== 0
-                                                    ? stringTag
-                                                    : this.client.translate(
-                                                          "main.none"
-                                                      )
-                                            }\``
-                                        );
-                                }
-                            );
-
-                            this.search = search;
-                            this.embeds = embeds.map((embed) => embed.toJSON());
-                            this.embed = 1;
-                            this.updatePaginator();
+                                            : this.client.translate("main.none")
+                                    }\``
+                                )
+                                .addField(
+                                    contentTags.length > 1
+                                        ? this.client.translate("main.tags")
+                                        : this.client.translate("main.tag"),
+                                    `\`${
+                                        contentTags.length !== 0
+                                            ? stringTag
+                                            : this.client.translate("main.none")
+                                    }\``
+                                );
                         });
+
+                        this.search = search;
+                        this.embeds = embeds.map((embed) => embed.toJSON());
+                        this.embed = 1;
+                        this.updatePaginator();
+                    });
 
                     interaction.deferUpdate();
                     break;

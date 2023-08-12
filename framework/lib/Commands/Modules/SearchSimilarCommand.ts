@@ -50,7 +50,9 @@ export async function searchSimilarCommand(
                         (index + 1).toString().length > 1
                             ? `${index + 1}`
                             : `${index + 1} `
-                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
+                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                        gallery.id
+                    }) - \`${
                         gallery.title.pretty.length >= 30
                             ? `${gallery.title.pretty.slice(0, 30)}...`
                             : gallery.title.pretty

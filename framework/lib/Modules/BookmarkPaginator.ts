@@ -130,14 +130,12 @@ export class BookmarkPaginator {
                     (index + 1).toString().length > 1
                         ? `${index + 1}`
                         : `${index + 1} `
-                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                    gallery.title.pretty
-                }\``
+                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                    gallery.id
+                }) - \`${gallery.title.pretty}\``
         );
         const embeds = galleries.map((gallery, index) => {
-            const artistTags: string[] = gallery.artists.map(
-                (tag) => tag.name
-            );
+            const artistTags: string[] = gallery.artists.map((tag) => tag.name);
             const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
@@ -157,7 +155,11 @@ export class BookmarkPaginator {
                     : contentTags.join("`, `");
 
             return new EmbedBuilder()
-                .setAuthor(gallery.id.toString(), undefined, `https://nhentai.net/g/${gallery.id}`)
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    `https://nhentai.net/g/${gallery.id}`
+                )
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
                     title
@@ -167,16 +169,16 @@ export class BookmarkPaginator {
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                gallery.title.pretty
-                            }\``,
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${gallery.title.pretty}\``,
                             `**\`🟥 ${
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                gallery.title.pretty
-                            }\`**`
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${gallery.title.pretty}\`**`
                         )
                 )
                 .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
@@ -275,17 +277,15 @@ export class BookmarkPaginator {
                     (index + 1).toString().length > 1
                         ? `${index + 1}`
                         : `${index + 1} `
-                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                    gallery.title.pretty
-                }\``
+                }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                    gallery.id
+                }) - \`${gallery.title.pretty}\``
         );
 
         this.bookmarkChunks = Util.arrayToChunks(userData.bookmark, 5);
 
         const embeds = this.galleries.map((gallery, index) => {
-            const artistTags: string[] = gallery.artists.map(
-                (tag) => tag.name
-            );
+            const artistTags: string[] = gallery.artists.map((tag) => tag.name);
             const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
@@ -305,7 +305,11 @@ export class BookmarkPaginator {
                     : contentTags.join("`, `");
 
             return new EmbedBuilder()
-                .setAuthor(gallery.id.toString(), undefined, `https://nhentai.net/g/${gallery.id}`)
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    `https://nhentai.net/g/${gallery.id}`
+                )
                 .setColor(this.client.config.BOT.COLOUR)
                 .setDescription(
                     title
@@ -315,16 +319,16 @@ export class BookmarkPaginator {
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                gallery.title.pretty
-                            }\``,
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${gallery.title.pretty}\``,
                             `**\`🟥 ${
                                 (index + 1).toString().length > 1
                                     ? `${index + 1}`
                                     : `${index + 1} `
-                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${gallery.id}) - \`${
-                                gallery.title.pretty
-                            }\`**`
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${gallery.title.pretty}\`**`
                         )
                 )
                 .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
@@ -689,10 +693,15 @@ export class BookmarkPaginator {
                     this.initialisePaginator();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    embed.setImage(this.client.api.getImageURL(
-                        (await this.api.getBook(parseInt(embed.toJSON().author.name)))
-                            .cover
-                    ));
+                    embed.setImage(
+                        this.client.api.getImageURL(
+                            (
+                                await this.api.getBook(
+                                    parseInt(embed.toJSON().author.name)
+                                )
+                            ).cover
+                        )
+                    );
                     this.interaction.editOriginal({
                         components: hideComponent,
                         embeds: [embed.toJSON()],

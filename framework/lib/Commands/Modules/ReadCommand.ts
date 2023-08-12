@@ -31,9 +31,7 @@ export async function readCommand(
     client.api
         .getBook(parseInt(galleryID))
         .then(async (gallery) => {
-            const artistTags: string[] = gallery.artists.map(
-                (tag) => tag.name
-            );
+            const artistTags: string[] = gallery.artists.map((tag) => tag.name);
             const characterTags: string[] = gallery.characters.map(
                 (tag) => tag.name
             );
@@ -53,7 +51,11 @@ export async function readCommand(
                     : contentTags.join("`, `");
 
             const embed = new EmbedBuilder()
-                .setAuthor(gallery.id.toString(), undefined, `https://nhentai.net/g/${gallery.id}`)
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    `https://nhentai.net/g/${gallery.id}`
+                )
                 .setColor(client.config.BOT.COLOUR)
                 .addField(
                     client.translate("main.title"),

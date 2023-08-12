@@ -78,7 +78,11 @@ export class ReadSearchPaginator {
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
             return new EmbedBuilder()
-                .setAuthor(gallery.id.toString(), undefined, this.client.api.getImageURL(page))
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    this.client.api.getImageURL(page)
+                )
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
                     client.translate("main.page", {

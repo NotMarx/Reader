@@ -69,7 +69,11 @@ export class ReadPaginator {
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
             return new EmbedBuilder()
-                .setAuthor(gallery.id.toString(), undefined, this.client.api.getImageURL(page))
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    this.client.api.getImageURL(page)
+                )
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
                     client.translate("main.page", {
@@ -194,7 +198,11 @@ export class ReadPaginator {
                 : contentTags.join("`, `");
 
         const resultEmbed = new EmbedBuilder()
-            .setAuthor(this.gallery.id.toString(), undefined, `https://nhentai.net/g/${this.gallery.id}`)
+            .setAuthor(
+                this.gallery.id.toString(),
+                undefined,
+                `https://nhentai.net/g/${this.gallery.id}`
+            )
             .setColor(this.client.config.BOT.COLOUR)
             .addField(
                 this.client.translate("main.title"),
@@ -316,7 +324,9 @@ export class ReadPaginator {
                     interaction.deferUpdate();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    resultEmbed.setImage(this.client.api.getImageURL(this.gallery.cover));
+                    resultEmbed.setImage(
+                        this.client.api.getImageURL(this.gallery.cover)
+                    );
                     this.interaction.editOriginal({
                         components: hideComponent,
                         embeds: [resultEmbed.toJSON()],
