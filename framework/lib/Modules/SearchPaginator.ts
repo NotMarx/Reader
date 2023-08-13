@@ -51,11 +51,6 @@ export class SearchPaginator {
     message: Message<TextChannel>;
 
     /**
-     * Total pages of the search
-     */
-    pages: number;
-
-    /**
      * The read paginator
      */
     paginationEmbed: ReadSearchPaginator;
@@ -87,7 +82,6 @@ export class SearchPaginator {
         this.embeds = [];
         this.interaction = interaction;
         this.onSearch = this.onSearch.bind(this);
-        this.pages = search.pages;
         this.running = false;
         this.search = search;
     }
@@ -283,7 +277,7 @@ export class SearchPaginator {
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `jumpto_result_page_${this.interaction.id}`,
-                `${this.search.page.toLocaleString()} / ${this.pages.toLocaleString()}`
+                `${this.search.page.toLocaleString()} / ${this.search.pages.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
