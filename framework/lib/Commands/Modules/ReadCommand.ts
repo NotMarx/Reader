@@ -135,21 +135,21 @@ export async function readCommand(
                     }
                 )
                 .addInteractionButton(
-                    Constants.ButtonStyles.DANGER,
-                    `stop_${interaction.id}`,
-                    undefined,
-                    {
-                        id: undefined,
-                        name: "🗑",
-                    }
-                )
-                .addInteractionButton(
                     Constants.ButtonStyles.SECONDARY,
                     `bookmark_${interaction.id}`,
                     undefined,
                     {
                         id: undefined,
                         name: "🔖",
+                    }
+                )
+                .addInteractionButton(
+                    Constants.ButtonStyles.DANGER,
+                    `stop_${interaction.id}`,
+                    undefined,
+                    {
+                        id: undefined,
+                        name: "🗑",
                     }
                 )
                 .addInteractionButton(

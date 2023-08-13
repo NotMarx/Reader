@@ -129,12 +129,12 @@ export class ReadSearchPaginator {
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
+                Constants.ButtonStyles.PRIMARY,
+                `home_result_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🗑",
+                    name: "🏠",
                 }
             )
             .addInteractionButton(
@@ -147,12 +147,12 @@ export class ReadSearchPaginator {
                 }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_result_${this.interaction.id}`,
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🏠",
+                    name: "🗑",
                 }
             )
             .toJSON();
@@ -470,12 +470,12 @@ export class ReadSearchPaginator {
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
+                Constants.ButtonStyles.PRIMARY,
+                `home_result_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🗑",
+                    name: "🏠",
                 }
             )
             .addInteractionButton(
@@ -488,12 +488,12 @@ export class ReadSearchPaginator {
                 }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_result_${this.interaction.id}`,
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🏠",
+                    name: "🗑",
                 }
             )
             .toJSON();

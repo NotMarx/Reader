@@ -119,12 +119,12 @@ export class ReadPaginator {
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
+                Constants.ButtonStyles.PRIMARY,
+                `home_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🗑",
+                    name: "🏠",
                 }
             )
             .addInteractionButton(
@@ -137,12 +137,12 @@ export class ReadPaginator {
                 }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_${this.interaction.id}`,
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🏠",
+                    name: "🗑",
                 }
             )
             .toJSON();
@@ -289,21 +289,21 @@ export class ReadPaginator {
                 }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
-                undefined,
-                {
-                    id: undefined,
-                    name: "🗑",
-                }
-            )
-            .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
                     name: "🔖",
+                }
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
                 }
             )
             .addInteractionButton(
@@ -324,21 +324,21 @@ export class ReadPaginator {
                 }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
-                undefined,
-                {
-                    id: undefined,
-                    name: "🗑",
-                }
-            )
-            .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
                     name: "🔖",
+                }
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
                 }
             )
             .addInteractionButton(
@@ -649,12 +649,12 @@ export class ReadPaginator {
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
+                Constants.ButtonStyles.PRIMARY,
+                `home_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🗑",
+                    name: "🏠",
                 }
             )
             .addInteractionButton(
@@ -667,12 +667,12 @@ export class ReadPaginator {
                 }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_${this.interaction.id}`,
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
                 undefined,
                 {
                     id: undefined,
-                    name: "🏠",
+                    name: "🗑",
                 }
             )
             .toJSON();
