@@ -76,7 +76,7 @@ export class ReadSearchPaginator {
     ) {
         this.client = client;
         this.embed = 1;
-        this.embeds = gallery.pages.map((page, index) => {
+        this.embeds = gallery.pages.map((page) => {
             return new EmbedBuilder()
                 .setAuthor(
                     gallery.id.toString(),
@@ -84,12 +84,7 @@ export class ReadSearchPaginator {
                     this.client.api.getImageURL(page)
                 )
                 .setColor(client.config.BOT.COLOUR)
-                .setFooter(
-                    client.translate("main.page", {
-                        firstIndex: index + 1,
-                        lastIndex: gallery.pages.length,
-                    })
-                )
+                .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
                 .setImage(this.client.api.getImageURL(page))
                 .setTitle(gallery.title.pretty)
                 .setURL(`https://nhentai.net/g/${gallery.id}`)
@@ -108,45 +103,57 @@ export class ReadSearchPaginator {
     public async initialisePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
+                "<"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
-                this.client.translate("main.stop")
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_page_${this.interaction.id}`,
+                `${this.embed} / ${this.embeds.length}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
-                `jumpto_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
+                `home_result_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🏠",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
+                undefined,
+                {
+                    id: undefined,
+                    name: "🔖",
+                }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_result_${this.interaction.id}`,
-                this.client.translate("main.home")
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
+                }
             )
             .toJSON();
 
@@ -332,7 +339,7 @@ export class ReadSearchPaginator {
                                 Constants.TextInputStyles.SHORT,
                                 this.client.translate("main.page.enter"),
                                 "page_number",
-                                "5"
+                                this.embed.toString()
                             )
                             .toJSON(),
                         customID: `jumpto_page_modal_${this.interaction.id}`,
@@ -437,45 +444,57 @@ export class ReadSearchPaginator {
     public updatePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
+                "<"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_${this.interaction.id}`,
-                this.client.translate("main.stop")
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_page_${this.interaction.id}`,
+                `${this.embed} / ${this.embeds.length}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
-                `jumpto_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
+                `home_result_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🏠",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
+                undefined,
+                {
+                    id: undefined,
+                    name: "🔖",
+                }
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `home_result_${this.interaction.id}`,
-                this.client.translate("main.home")
+                Constants.ButtonStyles.DANGER,
+                `stop_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
+                }
             )
             .toJSON();
 

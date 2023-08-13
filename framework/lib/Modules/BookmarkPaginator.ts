@@ -412,72 +412,83 @@ export class BookmarkPaginator {
 
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_${this.interaction.id}`,
-                this.client.translate("main.result.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_${this.interaction.id}`,
-                this.client.translate("main.result.previous")
+                "<"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_result_${this.interaction.id}`,
-                this.client.translate("main.stop")
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_${this.interaction.id}`,
+                `${this.embed.toLocaleString()} / ${this.embeds.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_${this.interaction.id}`,
-                this.client.translate("main.result.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_${this.interaction.id}`,
-                this.client.translate("main.result.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
+                "<"
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                `${this.page.toLocaleString()} / ${this.bookmarkChunks.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_${this.interaction.id}`,
-                this.client.translate("main.result.enter")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
-            )
-            .addRow()
-            .addInteractionButton(
-                Constants.ButtonStyles.SUCCESS,
                 `read_result_${this.interaction.id}`,
-                this.client.translate("main.read")
+                undefined,
+                {
+                    id: undefined,
+                    name: "📖",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
+                undefined,
+                {
+                    id: undefined,
+                    name: "🔖",
+                }
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
@@ -507,6 +518,9 @@ export class BookmarkPaginator {
         const userData: IUserSchema = await UserModel.findOne({
             id: interaction.user.id,
         });
+        const targetUserData: IUserSchema = await UserModel.findOne({
+            id: this.user.id,
+        });
 
         if (interaction.member.bot) return;
 
@@ -517,74 +531,87 @@ export class BookmarkPaginator {
                 : undefined
         );
 
+        this.bookmarkChunks = Util.arrayToChunks(targetUserData.bookmark, 5);
+
         const hideComponent = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_${this.interaction.id}`,
-                this.client.translate("main.result.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_${this.interaction.id}`,
-                this.client.translate("main.result.previous")
+                "<"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_result_${this.interaction.id}`,
-                this.client.translate("main.stop")
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_${this.interaction.id}`,
+                `${this.embed.toLocaleString()} / ${this.embeds.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_${this.interaction.id}`,
-                this.client.translate("main.result.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_${this.interaction.id}`,
-                this.client.translate("main.result.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
+                "<"
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                `${this.page.toLocaleString()} / ${this.bookmarkChunks.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_${this.interaction.id}`,
-                this.client.translate("main.result.enter")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
-            )
-            .addRow()
-            .addInteractionButton(
-                Constants.ButtonStyles.SUCCESS,
                 `read_result_${this.interaction.id}`,
-                this.client.translate("main.read")
+                undefined,
+                {
+                    id: undefined,
+                    name: "📖",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
+                undefined,
+                {
+                    id: undefined,
+                    name: "🔖",
+                }
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
@@ -595,72 +622,83 @@ export class BookmarkPaginator {
 
         const showComponent = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_${this.interaction.id}`,
-                this.client.translate("main.result.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_${this.interaction.id}`,
-                this.client.translate("main.result.previous")
+                "<"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_result_${this.interaction.id}`,
-                this.client.translate("main.stop")
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_${this.interaction.id}`,
+                `${this.embed.toLocaleString()} / ${this.embeds.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_${this.interaction.id}`,
-                this.client.translate("main.result.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_${this.interaction.id}`,
-                this.client.translate("main.result.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
+                "<"
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                `${this.page.toLocaleString()} / ${this.bookmarkChunks.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_${this.interaction.id}`,
-                this.client.translate("main.result.enter")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
-            )
-            .addRow()
-            .addInteractionButton(
-                Constants.ButtonStyles.SUCCESS,
                 `read_result_${this.interaction.id}`,
-                this.client.translate("main.read")
+                undefined,
+                {
+                    id: undefined,
+                    name: "📖",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
+                undefined,
+                {
+                    id: undefined,
+                    name: "🔖",
+                }
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
@@ -1088,72 +1126,83 @@ export class BookmarkPaginator {
     public updatePaginator() {
         const components = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_${this.interaction.id}`,
-                this.client.translate("main.result.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_${this.interaction.id}`,
-                this.client.translate("main.result.previous")
+                "<"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.DANGER,
-                `stop_result_${this.interaction.id}`,
-                this.client.translate("main.stop")
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_${this.interaction.id}`,
+                `${this.embed.toLocaleString()} / ${this.embeds.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_${this.interaction.id}`,
-                this.client.translate("main.result.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_${this.interaction.id}`,
-                this.client.translate("main.result.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `first_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.first")
+                "<<"
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `previous_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.previous")
+                "<"
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.SECONDARY,
+                `jumpto_result_page_${this.interaction.id}`,
+                `${this.page.toLocaleString()} / ${this.bookmarkChunks.length.toLocaleString()}`
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `next_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.next")
+                ">"
             )
             .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
+                Constants.ButtonStyles.SECONDARY,
                 `last_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.last")
+                ">>"
             )
             .addRow()
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_${this.interaction.id}`,
-                this.client.translate("main.result.enter")
-            )
-            .addInteractionButton(
-                Constants.ButtonStyles.PRIMARY,
-                `jumpto_result_page_${this.interaction.id}`,
-                this.client.translate("main.page.enter")
-            )
-            .addRow()
-            .addInteractionButton(
-                Constants.ButtonStyles.SUCCESS,
                 `read_result_${this.interaction.id}`,
-                this.client.translate("main.read")
+                undefined,
+                {
+                    id: undefined,
+                    name: "📖",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.SECONDARY,
                 `bookmark_${this.interaction.id}`,
-                this.client.translate("main.bookmark")
+                undefined,
+                {
+                    id: undefined,
+                    name: "🔖",
+                }
+            )
+            .addInteractionButton(
+                Constants.ButtonStyles.DANGER,
+                `stop_result_${this.interaction.id}`,
+                undefined,
+                {
+                    id: undefined,
+                    name: "🗑",
+                }
             )
             .addInteractionButton(
                 Constants.ButtonStyles.PRIMARY,
