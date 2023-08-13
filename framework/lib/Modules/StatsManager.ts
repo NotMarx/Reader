@@ -96,7 +96,7 @@ export class StatsManager {
         if (type === "bookmarked") {
             this.client.logger.log({
                 color: "#CC8899",
-                message: `${user.tag} (${user.id}) ${
+                message: `${user.username} (${user.id}) ${
                     action.charAt(0).toUpperCase() + action.slice(1)
                 } "${query}" ${
                     action === "added" ? "To" : "From"
@@ -117,8 +117,8 @@ export class StatsManager {
                 color: "#CC8899",
                 message:
                     typeof query !== "undefined"
-                        ? `${user.tag} (${user.id}): "${query}"`
-                        : `${user.tag} (${user.id})`,
+                        ? `${user.username} (${user.id}): "${query}"`
+                        : `${user.username} (${user.id})`,
                 subTitle: "NReaderFramework::Logging::Activities",
                 title: type.toUpperCase(),
                 type: "ACTIVITIES",
@@ -132,7 +132,7 @@ export class StatsManager {
         ) {
             this.client.logger.log({
                 color: "#CC8899",
-                message: `${user.tag} (${user.id}): "${query}" | ${
+                message: `${user.username} (${user.id}): "${query}" | ${
                     type === "bookmark-paginator" || type === "search-paginator"
                         ? `Page: ${page} | Result: ${result} | ID: ${queryID}`
                         : `Page: ${page}`

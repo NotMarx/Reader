@@ -32,9 +32,9 @@ export async function searchSimilarCommand(
     await setTimeout(2000);
 
     client.api
-        .getGalleryRelated(galleryID)
+        .searchAlike(parseInt(galleryID))
         .then(async (search) => {
-            if (search.result.length === 0) {
+            if (search.books.length === 0) {
                 const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)
                     .setDescription(client.translate("main.search.empty"));
@@ -44,13 +44,15 @@ export async function searchSimilarCommand(
                 });
             }
 
-            const title = search.result.map(
+            const title = search.books.map(
                 (gallery, index) =>
                     `\`⬛ ${
                         (index + 1).toString().length > 1
                             ? `${index + 1}`
                             : `${index + 1} `
-                    }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                    }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                        gallery.id
+                    }) - \`${
                         gallery.title.pretty.length >= 30
                             ? `${gallery.title.pretty.slice(0, 30)}...`
                             : gallery.title.pretty
@@ -63,7 +65,7 @@ export async function searchSimilarCommand(
                 .setTitle(
                     client.translate("main.page", {
                         firstIndex: search.page,
-                        lastIndex: search.numPages.toLocaleString(),
+                        lastIndex: search.pages.toLocaleString(),
                     })
                 );
 

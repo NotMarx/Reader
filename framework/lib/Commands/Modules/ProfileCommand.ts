@@ -69,7 +69,9 @@ export async function profileCommand(
             true
         )
         .setThumbnail(user.avatarURL())
-        .setTitle(client.translate("general.profile.title", { user: user.tag }))
+        .setTitle(
+            client.translate("general.profile.title", { user: user.username })
+        )
         .toJSON();
 
     return interaction.createMessage({

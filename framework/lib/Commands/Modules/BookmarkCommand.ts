@@ -6,7 +6,7 @@ import {
     TextChannel,
 } from "oceanic.js";
 import { ComponentBuilder, EmbedBuilder } from "@oceanicjs/builders";
-import { Gallery } from "../../API";
+import { Book } from "nhentai-api";
 import { UserModel } from "../../Models";
 import { createBookmarkPaginator } from "../../Modules/BookmarkPaginator";
 import { setTimeout } from "node:timers/promises";
@@ -72,28 +72,30 @@ export async function bookmarkCommand(
         await setTimeout(2000);
 
         const bookmarkedTitle: string[] = [];
-        const galleries: Gallery[] = [];
+        const galleries: Book[] = [];
 
         for (let i = 0; i < bookmarked.length; i++) {
             let title: string;
-            let gallery: Gallery;
+            let gallery: Book;
 
             try {
                 title = await client.api
-                    .getGallery(bookmarked[i])
+                    .getBook(parseInt(bookmarked[i]))
                     .then(
                         (gallery) =>
                             `\`⬛ ${
                                 (i + 1).toString().length > 1
                                     ? `${i + 1}`
                                     : `${i + 1} `
-                            }\` - [\`${gallery.id}\`](${gallery.url}) - \`${
+                            }\` - [\`${gallery.id}\`](https://nhentai.net/g/${
+                                gallery.id
+                            }) - \`${
                                 gallery.title.pretty.length >= 30
                                     ? `${gallery.title.pretty.slice(0, 30)}...`
                                     : gallery.title.pretty
                             }\``
                     );
-                gallery = await client.api.getGallery(bookmarked[i]);
+                gallery = await client.api.getBook(parseInt(bookmarked[i]));
             } catch (err) {
                 const embed = new EmbedBuilder()
                     .setColor(client.config.BOT.COLOUR)

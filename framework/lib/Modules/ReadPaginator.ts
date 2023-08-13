@@ -1,4 +1,4 @@
-import { Gallery } from "../API";
+import { Book } from "nhentai-api";
 import {
     CommandInteraction,
     ComponentInteraction,
@@ -37,7 +37,7 @@ export class ReadPaginator {
     /**
      * Current NHentai gallery
      */
-    gallery: Gallery;
+    gallery: Book;
 
     /**
      * Oceanic command interaction
@@ -62,14 +62,18 @@ export class ReadPaginator {
      */
     constructor(
         client: NReaderClient,
-        gallery: Gallery,
+        gallery: Book,
         interaction: CommandInteraction<TextChannel>
     ) {
         this.client = client;
         this.embed = 1;
         this.embeds = gallery.pages.map((page, index) => {
             return new EmbedBuilder()
-                .setAuthor(gallery.id, undefined, page.url)
+                .setAuthor(
+                    gallery.id.toString(),
+                    undefined,
+                    this.client.api.getImageURL(page)
+                )
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(
                     client.translate("main.page", {
@@ -77,9 +81,9 @@ export class ReadPaginator {
                         lastIndex: gallery.pages.length,
                     })
                 )
-                .setImage(page.url)
+                .setImage(this.client.api.getImageURL(page))
                 .setTitle(gallery.title.pretty)
-                .setURL(gallery.url)
+                .setURL(`https://nhentai.net/g/${gallery.id}`)
                 .toJSON();
         });
         this.gallery = gallery;
@@ -144,13 +148,13 @@ export class ReadPaginator {
         this.client.stats.updateUserHistory(
             this.interaction.user.id,
             "read",
-            this.gallery.id
+            this.gallery.id.toString()
         );
 
         this.client.stats.logActivities(
             this.interaction.user.id,
             "read-paginator",
-            this.gallery.id,
+            this.gallery.id.toString(),
             this.embed,
             undefined,
             undefined
@@ -172,29 +176,33 @@ export class ReadPaginator {
 
         if (interaction.member.bot) return;
 
-        const artistTags: string[] = this.gallery.tags.artists.map(
+        const artistTags: string[] = this.gallery.artists.map(
             (tag) => tag.name
         );
-        const characterTags: string[] = this.gallery.tags.characters.map(
+        const characterTags: string[] = this.gallery.characters.map(
             (tag) => tag.name
         );
-        const contentTags: string[] = this.gallery.tags.tags.map(
+        const contentTags: string[] = this.gallery.pureTags.map(
             (tag) => `${tag.name} (${tag.count.toLocaleString()})`
         );
-        const languageTags: string[] = this.gallery.tags.languages.map(
+        const languageTags: string[] = this.gallery.languages.map(
             (tag) => tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
         );
-        const parodyTags: string[] = this.gallery.tags.parodies.map(
+        const parodyTags: string[] = this.gallery.parodies.map(
             (tag) => tag.name
         );
-        const uploadedAt = `<t:${this.gallery.uploadDate.getTime() / 1000}:F>`;
+        const uploadedAt = `<t:${this.gallery.uploaded.getTime() / 1000}:F>`;
         const stringTag =
             contentTags.join("`, `").length >= 1024
                 ? `${contentTags.join("`, `").slice(0, 1010)}...`
                 : contentTags.join("`, `");
 
         const resultEmbed = new EmbedBuilder()
-            .setAuthor(this.gallery.id, undefined, this.gallery.url)
+            .setAuthor(
+                this.gallery.id.toString(),
+                undefined,
+                `https://nhentai.net/g/${this.gallery.id}`
+            )
             .setColor(this.client.config.BOT.COLOUR)
             .addField(
                 this.client.translate("main.title"),
@@ -260,8 +268,8 @@ export class ReadPaginator {
                         : this.client.translate("main.none")
                 }\``
             )
-            .setFooter(`⭐ ${this.gallery.favourites.toLocaleString()}`)
-            .setThumbnail(this.gallery.cover.url);
+            .setFooter(`⭐ ${this.gallery.favorites.toLocaleString()}`)
+            .setThumbnail(this.client.api.getImageURL(this.gallery.cover));
 
         const hideComponent = new ComponentBuilder<MessageActionRow>()
             .addInteractionButton(
@@ -316,7 +324,9 @@ export class ReadPaginator {
                     interaction.deferUpdate();
                     break;
                 case `show_cover_${this.interaction.id}`:
-                    resultEmbed.setImage(this.gallery.cover.url);
+                    resultEmbed.setImage(
+                        this.client.api.getImageURL(this.gallery.cover)
+                    );
                     this.interaction.editOriginal({
                         components: hideComponent,
                         embeds: [resultEmbed.toJSON()],
@@ -627,7 +637,7 @@ export class ReadPaginator {
         this.client.stats.logActivities(
             this.interaction.user.id,
             "read-paginator",
-            this.gallery.id,
+            this.gallery.id.toString(),
             this.embed,
             undefined,
             undefined
@@ -642,7 +652,7 @@ export class ReadPaginator {
 
 export async function createReadPaginator(
     client: NReaderClient,
-    gallery: Gallery,
+    gallery: Book,
     interaction: CommandInteraction<TextChannel>
 ) {
     const paginator = new ReadPaginator(client, gallery, interaction);

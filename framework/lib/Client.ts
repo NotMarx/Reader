@@ -1,12 +1,13 @@
 import { APIStats } from "./Utils/APIStats";
+import { API } from "nhentai-api";
 import { Client, ClientEvents } from "oceanic.js";
+import { CookieJar } from "tough-cookie";
 import { Collection } from "./Utils";
 import { ICommand, IConfig, IEvent, IGuildSchemaSettings } from "./Interfaces";
 import { TLocale, TranslationKey } from "./Types";
 import { connect } from "mongoose";
 import { GuildModel } from "./Models";
 import { Logger } from "./Utils/Logger";
-import { RequestHandler } from "./API";
 import { StatsManager } from "./Modules/StatsManager";
 import { join } from "path";
 import { readdirSync } from "fs";
@@ -17,13 +18,9 @@ import localeID from "./Locales/id.json";
 import localeJA from "./Locales/ja.json";
 import localeZH from "./Locales/zh.json";
 import localeEO from "./Locales/eo.json";
+import { HttpsCookieAgent } from "http-cookie-agent/http";
 
 export class NReaderClient extends Client {
-    /**
-     * NHentai API
-     */
-    public api = new RequestHandler();
-
     /**
      * BotList API Stats
      */
@@ -53,6 +50,19 @@ export class NReaderClient extends Client {
      * Manage the database stats
      */
     public stats = new StatsManager(this);
+
+    /**
+     * NHentai API
+     */
+    public get api() {
+        const jar = new CookieJar();
+        const agent = new HttpsCookieAgent({ cookies: { jar } });
+
+        jar.setCookie(this.config.API.COOKIE, "https://nhentai.net");
+
+        /* @ts-ignore */
+        return new API({ agent });
+    }
 
     /**
      * Initialise every handler for NReader
