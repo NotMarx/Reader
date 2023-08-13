@@ -105,10 +105,25 @@ export class Util {
 
         // Check if an NSFW command is run in an NSFW thread channel
         if (interaction.channel instanceof PublicThreadChannel) {
-            if (command.nsfwOnly && (interaction.guild.channels.get((interaction.channel as PublicThreadChannel).parentID) as TextChannel).nsfw) {
+            if (
+                command.nsfwOnly &&
+                (
+                    interaction.guild.channels.get(
+                        (interaction.channel as PublicThreadChannel).parentID
+                    ) as TextChannel
+                ).nsfw
+            ) {
                 return command.run(payload);
             }
-            if (command.nsfwOnly && !(interaction.guild.channels.get((interaction.channel as PublicThreadChannel).parentID) as TextChannel).nsfw) {
+
+            if (
+                command.nsfwOnly &&
+                !(
+                    interaction.guild.channels.get(
+                        (interaction.channel as PublicThreadChannel).parentID
+                    ) as TextChannel
+                ).nsfw
+            ) {
                 return interaction.createMessage({
                     embeds: [
                         embed
