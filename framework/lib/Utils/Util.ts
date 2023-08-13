@@ -3,6 +3,7 @@ import {
     CommandInteraction,
     Constants,
     ModalSubmitInteraction,
+    PublicThreadChannel,
     TextChannel,
 } from "oceanic.js";
 import { NReaderClient } from "../Client";
@@ -100,6 +101,23 @@ export class Util {
             client.config.BOT.ADMIN.includes(interaction.member.id)
         ) {
             return command.run(payload);
+        }
+
+        // Check if an NSFW command is run in an NSFW thread channel
+        if (interaction.channel instanceof PublicThreadChannel) {
+            if (command.nsfwOnly && (interaction.guild.channels.get((interaction.channel as PublicThreadChannel).parentID) as TextChannel).nsfw) {
+                return command.run(payload);
+            }
+            if (command.nsfwOnly && !(interaction.guild.channels.get((interaction.channel as PublicThreadChannel).parentID) as TextChannel).nsfw) {
+                return interaction.createMessage({
+                    embeds: [
+                        embed
+                            .setDescription(client.translate("mod.noperms"))
+                            .toJSON(),
+                    ],
+                    flags: Constants.MessageFlags.EPHEMERAL,
+                });
+            }
         }
 
         // Check if an NSFW command is run outside channels marked as NSFW
