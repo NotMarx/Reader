@@ -732,7 +732,7 @@ export class SearchPaginator {
                                 Constants.TextInputStyles.SHORT,
                                 this.client.translate("main.result.enter"),
                                 "result_number",
-                                this.embed.toString()
+                                this.embed.toLocaleString()
                             )
                             .toJSON(),
                         customID: `jumpto_result_modal_${this.interaction.id}`,
@@ -747,7 +747,7 @@ export class SearchPaginator {
                                 Constants.TextInputStyles.SHORT,
                                 this.client.translate("main.page.enter"),
                                 "result_page_number",
-                                this.search.page.toString()
+                                this.search.page.toLocaleString()
                             )
                             .toJSON(),
                         customID: `jumpto_result_page_modal_${this.interaction.id}`,
