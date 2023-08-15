@@ -78,7 +78,11 @@ export async function searchSimilarCommand(
                 .addInteractionButton(
                     Constants.ButtonStyles.DANGER,
                     `stop_result_${interaction.id}`,
-                    client.translate("main.stop")
+                    undefined,
+                    {
+                        id: undefined,
+                        name: "🗑",
+                    }
                 )
                 .toJSON();
 

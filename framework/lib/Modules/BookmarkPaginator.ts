@@ -912,7 +912,7 @@ export class BookmarkPaginator {
                                 Constants.TextInputStyles.SHORT,
                                 this.client.translate("main.result.enter"),
                                 "result_number",
-                                "10"
+                                this.embed.toLocaleString()
                             )
                             .toJSON(),
                         customID: `jumpto_result_modal_${this.interaction.id}`,
@@ -927,7 +927,7 @@ export class BookmarkPaginator {
                                 Constants.TextInputStyles.SHORT,
                                 this.client.translate("main.page.enter"),
                                 "result_page_number",
-                                "5"
+                                this.page.toLocaleString()
                             )
                             .toJSON(),
                         customID: `jumpto_result_page_modal_${this.interaction.id}`,

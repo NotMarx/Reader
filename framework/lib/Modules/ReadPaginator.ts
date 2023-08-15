@@ -518,7 +518,7 @@ export class ReadPaginator {
                                 Constants.TextInputStyles.SHORT,
                                 this.client.translate("main.page.enter"),
                                 "page_number",
-                                this.embed.toString()
+                                this.embed.toLocaleString()
                             )
                             .toJSON(),
                         customID: `jumpto_page_modal_${this.interaction.id}`,
