@@ -8,10 +8,6 @@ export async function guildCreateEvent(client: NReaderClient, guild: Guild) {
 
     if (guild) {
         if (client.config.LIST.ENABLED) {
-            client.apiStats.postStats(
-                "bhbotlist.tech",
-                client.config.LIST.BHBOTLIST.AUTH
-            );
             client.apiStats.postStats("top.gg", client.config.LIST.TOPGG.AUTH);
         }
 

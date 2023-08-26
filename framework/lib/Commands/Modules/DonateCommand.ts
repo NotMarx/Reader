@@ -10,7 +10,7 @@ export function donateCommand(
         .setColor(client.config.BOT.COLOUR)
         .setDescription(
             client.translate("general.donation", {
-                kofi: "https://ko-fi.com/reinhello/goal?g=0",
+                kofi: "https://ko-fi.com/reinhello/goal",
             })
         )
         .toJSON();
