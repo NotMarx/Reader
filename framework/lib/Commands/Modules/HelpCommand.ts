@@ -27,7 +27,11 @@ export function helpCommand(
                 client.translate("general.help.search.name"),
                 client.translate("general.help.search.value", {
                     doujin: `[nhentai.net](${NReaderConstant.Source.TAGS})`,
-                })
+                }) +
+                    "\n\n" +
+                    `> ${client.translate("general.donation", {
+                        kofi: "https://ko-fi.com/reinhello/goal",
+                    })}`
             )
             .setTitle(client.translate("general.help.title"));
 
