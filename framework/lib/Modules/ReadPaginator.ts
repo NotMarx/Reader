@@ -75,6 +75,11 @@ export class ReadPaginator {
                     this.client.api.getImageURL(page)
                 )
                 .setColor(client.config.BOT.COLOUR)
+                .setDescription(
+                    `> ${client.translate("general.donation", {
+                        kofi: "https://ko-fi.com/reinhello",
+                    })}`
+                )
                 .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
                 .setImage(this.client.api.getImageURL(page))
                 .setTitle(gallery.title.pretty)

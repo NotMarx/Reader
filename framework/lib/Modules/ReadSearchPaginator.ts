@@ -83,6 +83,11 @@ export class ReadSearchPaginator {
                     undefined,
                     this.client.api.getImageURL(page)
                 )
+                .setDescription(
+                    `> ${client.translate("general.donation", {
+                        kofi: "https://ko-fi.com/reinhello",
+                    })}`
+                )
                 .setColor(client.config.BOT.COLOUR)
                 .setFooter(`⭐ ${gallery.favorites.toLocaleString()}`)
                 .setImage(this.client.api.getImageURL(page))
